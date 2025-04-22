@@ -31,7 +31,7 @@ export default function Login() {
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       // Redirect to dashboard on success
-      window.location.href = '/';
+      window.location.href = '/dashboard';
       
     } catch {
       setError('Invalid email or password. Please try again.');

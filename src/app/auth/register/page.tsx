@@ -121,7 +121,7 @@ export default function Register() {
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       // Redirect to verification page or login page on success
-      window.location.href = '/registration-success';
+      window.location.href = '/auth/login';
       
     } catch {
       setGeneralError('An error occurred during registration. Please try again.');
