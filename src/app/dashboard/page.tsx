@@ -30,31 +30,31 @@ export default function Home() {
         <nav className="flex-1 p-4">
           <ul className="space-y-2">
             <li>
-              <a href="#" className="flex items-center p-3 text-blue-600 bg-blue-50 rounded-lg">
+              <a href="/dashboard" className="flex items-center p-3 text-blue-600 bg-blue-50 rounded-lg">
                 <PieChart className="w-5 h-5 mr-3" />
                 <span className="font-medium">Dashboard</span>
               </a>
             </li>
             <li>
-              <a href="#" className="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
+              <a href="/accounts" className="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
                 <CreditCard className="w-5 h-5 mr-3" />
                 <span>Accounts</span>
               </a>
             </li>
             <li>
-              <a href="#" className="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
+              <a href="/transfer" className="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
                 <ArrowUpRight className="w-5 h-5 mr-3" />
                 <span>Transfers</span>
               </a>
             </li>
             <li>
-              <a href="#" className="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
+              <a href="/payments" className="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
                 <ArrowDownRight className="w-5 h-5 mr-3" />
                 <span>Payments</span>
               </a>
             </li>
             <li>
-              <a href="#" className="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
+              <a href="/history" className="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
                 <Clock className="w-5 h-5 mr-3" />
                 <span>History</span>
               </a>
