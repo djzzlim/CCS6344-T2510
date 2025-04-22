@@ -9,23 +9,23 @@ export default function HomePage() {
   const [openDropdown, setOpenDropdown] = useState<number | null>(null)
 
   const features = [
-    { 
-      icon: <CreditCard className="w-10 h-10 text-blue-600" />, 
+    {
+      icon: <CreditCard className="w-10 h-10 text-blue-600" />,
       title: "Modern Banking",
       description: "Access your accounts anytime, anywhere with our secure online platform."
     },
-    { 
-      icon: <Shield className="w-10 h-10 text-blue-600" />, 
+    {
+      icon: <Shield className="w-10 h-10 text-blue-600" />,
       title: "Advanced Security",
       description: "Rest easy with our state-of-the-art encryption and fraud monitoring systems."
     },
-    { 
-      icon: <Smartphone className="w-10 h-10 text-blue-600" />, 
+    {
+      icon: <Smartphone className="w-10 h-10 text-blue-600" />,
       title: "Mobile Banking",
       description: "Manage your finances on the go with our feature-rich mobile application."
     },
-    { 
-      icon: <PiggyBank className="w-10 h-10 text-blue-600" />, 
+    {
+      icon: <PiggyBank className="w-10 h-10 text-blue-600" />,
       title: "Smart Savings",
       description: "Reach your financial goals faster with our competitive savings options."
     }
@@ -53,8 +53,8 @@ export default function HomePage() {
             {/* Desktop Navigation */}
             <nav className="hidden md:flex space-x-8">
               <div className="relative">
-                <button 
-                  className="flex items-center text-gray-700 hover:text-blue-600" 
+                <button
+                  className="flex items-center text-gray-700 hover:text-blue-600"
                   onClick={() => toggleDropdown(0)}
                 >
                   <span>Personal Banking</span>
@@ -72,8 +72,8 @@ export default function HomePage() {
                 )}
               </div>
               <div className="relative">
-                <button 
-                  className="flex items-center text-gray-700 hover:text-blue-600" 
+                <button
+                  className="flex items-center text-gray-700 hover:text-blue-600"
                   onClick={() => toggleDropdown(1)}
                 >
                   <span>Business Banking</span>
@@ -104,7 +104,7 @@ export default function HomePage() {
 
             {/* Mobile menu button */}
             <div className="md:hidden">
-              <button 
+              <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="text-gray-500"
               >
@@ -178,7 +178,13 @@ export default function HomePage() {
               </div>
             </div>
             <div className="hidden md:block">
-              <Image src="dashboard_preview.png" alt="Banking Interface Preview" className="rounded-lg shadow-lg" />
+              <Image
+                src="/dashboard_preview.png"
+                alt="Banking Interface Preview"
+                width={600}
+                height={400}
+                className="rounded-lg shadow-lg"
+              />
             </div>
           </div>
         </div>
@@ -225,7 +231,13 @@ export default function HomePage() {
                 </div>
               </div>
               <div className="hidden md:block relative">
-                <Image src="https://i2.wp.com/omoto.io/academy/wp-content/uploads/2017/11/bank-1-e1523369101984.jpg?ssl=1" alt="Happy banking customer" className="absolute inset-0 w-full h-full object-cover" />
+                <Image
+                  src="/happy_customer.webp"
+                  alt="Happy banking customer"
+                  width={500}
+                  height={600}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
               </div>
             </div>
           </div>
