@@ -8,12 +8,12 @@ type SidebarProps = {
 export default function Sidebar({ isMenuOpen, setIsMenuOpen }: SidebarProps) {
 
     return <div>
-        {/* Sidebar - Desktop */}
-        <aside className="hidden md:flex flex-col w-64 bg-white border-r border-gray-200">
+        {/* Sidebar - Desktop - Now fixed */}
+        <aside className="hidden md:flex fixed top-0 left-0 h-screen flex-col w-64 bg-white border-r border-gray-200 z-10">
             <div className="p-4 border-b border-gray-200">
                 <h1 className="text-2xl font-bold text-blue-600">BankApp</h1>
             </div>
-            <nav className="flex-1 p-4">
+            <nav className="flex-1 p-4 overflow-y-auto">
                 <ul className="space-y-2">
                     <li>
                         <a href="/dashboard" className="flex items-center p-3 text-blue-600 bg-blue-50 rounded-lg">
@@ -65,7 +65,7 @@ export default function Sidebar({ isMenuOpen, setIsMenuOpen }: SidebarProps) {
             <div className="md:hidden fixed inset-0 z-50 bg-white">
                 <div className="p-4 border-b border-gray-200 flex justify-between items-center">
                     <h1 className="text-2xl font-bold text-blue-600">BankApp</h1>
-                    <button
+                    <button 
                         onClick={() => setIsMenuOpen(false)}
                         className="text-gray-500"
                     >

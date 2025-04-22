@@ -43,7 +43,7 @@ export default function Transfers() {
             <Sidebar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
 
             {/* Main content */}
-            <main className="flex-1">
+            <main className="flex-1 md:ml-64">
                 {/* Header */}
                 <Header title="Transfers" setIsMenuOpen={setIsMenuOpen} />
 

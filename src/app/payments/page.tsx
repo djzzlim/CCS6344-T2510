@@ -43,9 +43,8 @@ export default function Payments() {
         <div className="flex min-h-screen bg-gray-50">
             <Sidebar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
 
-
             {/* Main content */}
-            <main className="flex-1">
+            <main className="flex-1 md:ml-64">
                 {/* Header */}
                 <Header title="Payments" setIsMenuOpen={setIsMenuOpen} />
 

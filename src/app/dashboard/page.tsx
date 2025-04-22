@@ -28,7 +28,7 @@ export default function Home() {
 
 
       {/* Main content */}
-      <main className="flex-1">
+      <main className="flex-1 md:ml-64">
         {/* Header */}
         <Header setIsMenuOpen={setIsMenuOpen} />
 
