@@ -1,0 +1,313 @@
+"use client";
+
+import { useState } from 'react';
+import { Bell, Menu, Search, User, CreditCard, Wallet, ArrowDownRight, ArrowUpRight, PieChart, Clock, Plus, Download, MoreHorizontal, ChevronRight } from 'lucide-react';
+import Link from 'next/link';
+
+export default function Accounts() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('all');
+
+  const accounts = [
+    { id: 1, name: "Checking Account", number: "****5678", balance: 4256.78, type: "checking" },
+    { id: 2, name: "Savings Account", number: "****9012", balance: 12785.45, type: "savings" },
+    { id: 3, name: "Credit Card", number: "****3456", balance: -1243.56, type: "credit", 
+      details: { limit: 5000, availableCredit: 3756.44, dueDate: "May 15, 2025", minPayment: 35 } },
+    { id: 4, name: "High-Yield Savings", number: "****7890", balance: 8450.32, type: "savings", 
+      details: { interestRate: "3.5% APY", lastInterestPaid: "Apr 01, 2025", nextInterestDate: "May 01, 2025" } }
+  ];
+
+  const filteredAccounts = activeTab === 'all' ? accounts : accounts.filter(account => account.type === activeTab);
+
+  return (
+    <div className="flex min-h-screen bg-gray-50">
+      {/* Sidebar - Desktop */}
+      <aside className="hidden md:flex flex-col w-64 bg-white border-r border-gray-200">
+        <div className="p-4 border-b border-gray-200">
+          <h1 className="text-2xl font-bold text-blue-600">BankApp</h1>
+        </div>
+        <nav className="flex-1 p-4">
+          <ul className="space-y-2">
+            <li>
+              <Link href="/" className="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
+                <PieChart className="w-5 h-5 mr-3" />
+                <span>Dashboard</span>
+              </Link>
+            </li>
+            <li>
+              <a href="#" className="flex items-center p-3 text-blue-600 bg-blue-50 rounded-lg">
+                <CreditCard className="w-5 h-5 mr-3" />
+                <span className="font-medium">Accounts</span>
+              </a>
+            </li>
+            <li>
+              <a href="/transfers" className="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
+                <ArrowUpRight className="w-5 h-5 mr-3" />
+                <span>Transfers</span>
+              </a>
+            </li>
+            <li>
+              <a href="/payments" className="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
+                <ArrowDownRight className="w-5 h-5 mr-3" />
+                <span>Payments</span>
+              </a>
+            </li>
+            <li>
+              <a href="/history" className="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
+                <Clock className="w-5 h-5 mr-3" />
+                <span>History</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <div className="p-4 border-t border-gray-200">
+          <div className="flex items-center">
+            <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
+              <User className="w-5 h-5" />
+            </div>
+            <div className="ml-3">
+              <p className="text-sm font-medium">Sarah Johnson</p>
+              <p className="text-xs text-gray-500">sarah.j@example.com</p>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      {/* Mobile menu */}
+      {isMenuOpen && (
+        <div className="md:hidden fixed inset-0 z-50 bg-white">
+          <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+            <h1 className="text-2xl font-bold text-blue-600">BankApp</h1>
+            <button 
+              onClick={() => setIsMenuOpen(false)}
+              className="text-gray-500"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <nav className="p-4">
+            <ul className="space-y-2">
+              <li>
+                <Link href="/" className="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
+                  <PieChart className="w-5 h-5 mr-3" />
+                  <span>Dashboard</span>
+                </Link>
+              </li>
+              <li>
+                <a href="#" className="flex items-center p-3 text-blue-600 bg-blue-50 rounded-lg">
+                  <CreditCard className="w-5 h-5 mr-3" />
+                  <span className="font-medium">Accounts</span>
+                </a>
+              </li>
+              <li>
+                <a href="/transfers" className="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
+                  <ArrowUpRight className="w-5 h-5 mr-3" />
+                  <span>Transfers</span>
+                </a>
+              </li>
+              <li>
+                <a href="/payments" className="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
+                  <ArrowDownRight className="w-5 h-5 mr-3" />
+                  <span>Payments</span>
+                </a>
+              </li>
+              <li>
+                <a href="/history" className="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
+                  <Clock className="w-5 h-5 mr-3" />
+                  <span>History</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      )}
+
+      {/* Main content */}
+      <main className="flex-1">
+        {/* Header */}
+        <header className="bg-white border-b border-gray-200 p-4">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center">
+              <button 
+                onClick={() => setIsMenuOpen(true)}
+                className="md:hidden mr-4 text-gray-500"
+              >
+                <Menu className="w-6 h-6" />
+              </button>
+              <h1 className="text-xl font-semibold md:hidden">BankApp</h1>
+              <h2 className="text-xl font-semibold hidden md:block">Accounts</h2>
+            </div>
+            <div className="flex items-center space-x-4">
+              <button className="text-gray-500">
+                <Search className="w-5 h-5" />
+              </button>
+              <button className="text-gray-500 relative">
+                <Bell className="w-5 h-5" />
+                <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+              </button>
+              <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 md:hidden">
+                <User className="w-4 h-4" />
+              </div>
+            </div>
+          </div>
+        </header>
+
+        {/* Accounts content */}
+        <div className="p-4 md:p-6">
+          {/* Page header */}
+          <div className="flex justify-between items-center mb-6">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-800">Your Accounts</h1>
+              <p className="text-gray-600">Manage all your accounts in one place</p>
+            </div>
+            <button className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg">
+              <Plus className="w-4 h-4 mr-2" />
+              Add Account
+            </button>
+          </div>
+
+          {/* Account filter tabs */}
+          <div className="mb-6">
+            <div className="flex space-x-2 border-b border-gray-200">
+              <button 
+                onClick={() => setActiveTab('all')}
+                className={`px-4 py-2 text-sm font-medium ${activeTab === 'all' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+              >
+                All Accounts
+              </button>
+              <button 
+                onClick={() => setActiveTab('checking')}
+                className={`px-4 py-2 text-sm font-medium ${activeTab === 'checking' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+              >
+                Checking
+              </button>
+              <button 
+                onClick={() => setActiveTab('savings')}
+                className={`px-4 py-2 text-sm font-medium ${activeTab === 'savings' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+              >
+                Savings
+              </button>
+              <button 
+                onClick={() => setActiveTab('credit')}
+                className={`px-4 py-2 text-sm font-medium ${activeTab === 'credit' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+              >
+                Credit Cards
+              </button>
+            </div>
+          </div>
+
+          {/* Total balance card */}
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 mb-6">
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="text-gray-500 text-sm">Total Balance</p>
+                <h2 className="text-3xl font-bold text-gray-800 mt-1">
+                  ${accounts.reduce((sum, account) => sum + (account.type !== 'credit' ? account.balance : 0), 0).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                </h2>
+              </div>
+              <div className="flex space-x-2">
+                <button className="p-2 bg-gray-100 rounded-lg text-gray-600">
+                  <Download className="w-5 h-5" />
+                </button>
+                <button className="p-2 bg-gray-100 rounded-lg text-gray-600">
+                  <MoreHorizontal className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Account list */}
+          <div className="space-y-4">
+            {filteredAccounts.map(account => (
+              <div key={account.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                <div className="p-4 flex justify-between items-center">
+                  <div className="flex items-center">
+                    <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                      account.type === 'credit' ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'
+                    }`}>
+                      {account.type === 'credit' ? 
+                        <CreditCard className="w-6 h-6" /> : 
+                        <Wallet className="w-6 h-6" />
+                      }
+                    </div>
+                    <div className="ml-4">
+                      <h3 className="font-medium text-lg">{account.name}</h3>
+                      <p className="text-sm text-gray-500">{account.number}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className={`text-xl font-semibold ${account.type === 'credit' ? "text-red-600" : "text-green-600"}`}>
+                      ${Math.abs(account.balance).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {account.type === 'credit' ? "Current Balance Due" : "Available Balance"}
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Account details section - conditionally rendered based on account type */}
+                {account.details && (
+                  <div className="px-4 py-3 bg-gray-50 border-t border-gray-200">
+                    <div className="grid grid-cols-2 gap-4">
+                      {account.type === 'credit' && (
+                        <>
+                          <div>
+                            <p className="text-xs text-gray-500">Credit Limit</p>
+                            <p className="text-sm font-medium">${account.details?.limit?.toLocaleString()}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-gray-500">Available Credit</p>
+                            <p className="text-sm font-medium">${account.details?.availableCredit?.toLocaleString()}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-gray-500">Payment Due Date</p>
+                            <p className="text-sm font-medium">{account.details.dueDate}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-gray-500">Minimum Payment</p>
+                            <p className="text-sm font-medium">${account.details.minPayment}</p>
+                          </div>
+                        </>
+                      )}
+                      {account.type === 'savings' && account.details.interestRate && (
+                        <>
+                          <div>
+                            <p className="text-xs text-gray-500">Interest Rate</p>
+                            <p className="text-sm font-medium">{account.details.interestRate}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-gray-500">Last Interest Paid</p>
+                            <p className="text-sm font-medium">{account.details.lastInterestPaid}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-gray-500">Next Interest Payment</p>
+                            <p className="text-sm font-medium">{account.details.nextInterestDate}</p>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                )}
+                
+                <div className="px-4 py-3 bg-white border-t border-gray-200">
+                  <div className="flex justify-between items-center">
+                    <div className="flex space-x-3">
+                      <button className="text-sm text-blue-600 font-medium">View Details</button>
+                      <button className="text-sm text-blue-600 font-medium">Transactions</button>
+                      <button className="text-sm text-blue-600 font-medium">Statements</button>
+                    </div>
+                    <button className="flex items-center text-gray-500">
+                      <ChevronRight className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
