@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { ArrowRight, ChevronDown, Lock, Shield, Smartphone, Users, CreditCard, PiggyBank, Building, Menu, X } from 'lucide-react';
 
 export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [openDropdown, setOpenDropdown] = useState(null);
+  const [openDropdown, setOpenDropdown] = useState<number | null>(null)
 
   const features = [
     { 
@@ -30,11 +31,11 @@ export default function HomePage() {
     }
   ];
 
-  const toggleDropdown = (index) => {
+  const toggleDropdown = (index: number) => {
     if (openDropdown === index) {
-      setOpenDropdown(null);
+      setOpenDropdown(null)
     } else {
-      setOpenDropdown(index);
+      setOpenDropdown(index)
     }
   };
 
@@ -177,7 +178,7 @@ export default function HomePage() {
               </div>
             </div>
             <div className="hidden md:block">
-              <img src="dashboard_preview.png" alt="Banking Interface Preview" className="rounded-lg shadow-lg" />
+              <Image src="dashboard_preview.png" alt="Banking Interface Preview" className="rounded-lg shadow-lg" />
             </div>
           </div>
         </div>
@@ -224,7 +225,7 @@ export default function HomePage() {
                 </div>
               </div>
               <div className="hidden md:block relative">
-                <img src="https://i2.wp.com/omoto.io/academy/wp-content/uploads/2017/11/bank-1-e1523369101984.jpg?ssl=1" alt="Happy banking customer" className="absolute inset-0 w-full h-full object-cover" />
+                <Image src="https://i2.wp.com/omoto.io/academy/wp-content/uploads/2017/11/bank-1-e1523369101984.jpg?ssl=1" alt="Happy banking customer" className="absolute inset-0 w-full h-full object-cover" />
               </div>
             </div>
           </div>
@@ -250,7 +251,7 @@ export default function HomePage() {
                   <p className="text-sm text-gray-500">Personal Banking Customer</p>
                 </div>
               </div>
-              <p className="text-gray-600">"The mobile app is incredibly intuitive. I can manage all my accounts, transfer funds, and pay bills in just a few taps."</p>
+              <p className="text-gray-600">&quot;The mobile app is incredibly intuitive. I can manage all my accounts, transfer funds, and pay bills in just a few taps.&quot;</p>
             </div>
             <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
               <div className="flex mb-4">
@@ -264,7 +265,7 @@ export default function HomePage() {
                   <p className="text-sm text-gray-500">Business Owner</p>
                 </div>
               </div>
-              <p className="text-gray-600">"Their business banking solutions have streamlined our financial operations. The customer service is exceptional when we need assistance."</p>
+              <p className="text-gray-600">&quot;Their business banking solutions have streamlined our financial operations. The customer service is exceptional when we need assistance.&quot;</p>
             </div>
             <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
               <div className="flex mb-4">
@@ -278,7 +279,7 @@ export default function HomePage() {
                   <p className="text-sm text-gray-500">Personal Banking Customer</p>
                 </div>
               </div>
-              <p className="text-gray-600">"The security features give me peace of mind. I appreciate how they've integrated modern technology while maintaining user privacy."</p>
+              <p className="text-gray-600">&quot;The security features give me peace of mind. I appreciate how they&apos;ve integrated modern technology while maintaining user privacy.&quot;</p>
             </div>
           </div>
         </div>

@@ -5,6 +5,15 @@ import { Eye, EyeOff, Lock, Mail, Check, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import { Input } from '@/components/ui/input';
 
+interface FormErrors {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  password?: string;
+  confirmPassword?: string;
+  terms?: string;
+}
+
 export default function Register() {
   const [formData, setFormData] = useState({
     firstName: '',
@@ -17,7 +26,7 @@ export default function Register() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<FormErrors>({});
   const [generalError, setGeneralError] = useState('');
   
   // Password strength indicators
@@ -30,7 +39,7 @@ export default function Register() {
     hasSpecialChar: false
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     
@@ -40,7 +49,7 @@ export default function Register() {
     }
   };
 
-  const checkPasswordStrength = (password) => {
+  const checkPasswordStrength = (password: string) => {
     const hasMinLength = password.length >= 8;
     const hasUppercase = /[A-Z]/.test(password);
     const hasLowercase = /[a-z]/.test(password);
@@ -69,7 +78,7 @@ export default function Register() {
   };
 
   const validateForm = () => {
-    const newErrors = {};
+    const newErrors: { [key: string]: string } = {};
     
     if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
     if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
@@ -98,7 +107,7 @@ export default function Register() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!validateForm()) return;
@@ -114,7 +123,7 @@ export default function Register() {
       // Redirect to verification page or login page on success
       window.location.href = '/registration-success';
       
-    } catch (err) {
+    } catch {
       setGeneralError('An error occurred during registration. Please try again.');
     } finally {
       setIsLoading(false);

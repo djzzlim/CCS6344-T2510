@@ -33,7 +33,7 @@ export default function Login() {
       // Redirect to dashboard on success
       window.location.href = '/';
       
-    } catch (err) {
+    } catch {
       setError('Invalid email or password. Please try again.');
     } finally {
       setIsLoading(false);
