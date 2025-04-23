@@ -5,10 +5,6 @@ import {
   Bell, 
   ChevronRight, 
   Lock, 
-  Moon, 
-  PaintBucket, 
-  Sun, 
-  Wallet 
 } from "lucide-react";
 import Sidebar from '@/components/client-sidebar';
 import Header from '@/components/client-header';
@@ -16,18 +12,10 @@ import Header from '@/components/client-header';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
-} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 
 export default function SettingsPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [theme, setTheme] = useState("light");
 
   return (
     <div className="flex min-h-screen bg-gray-50">
