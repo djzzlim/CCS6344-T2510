@@ -5,14 +5,24 @@ import {
     ArrowUpRight,
     Clock,
     CreditCard,
+    LogOut,
     PieChart,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from 'next/navigation';
 import { usePathname } from "next/navigation";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 type SidebarProps = {
     isMenuOpen: boolean;
@@ -28,9 +38,16 @@ const navLinks = [
 ];
 
 export default function Sidebar({ isMenuOpen, setIsMenuOpen }: SidebarProps) {
+    const router = useRouter();
     const pathname = usePathname();
 
     const isActive = (path: string) => pathname === path;
+
+    const handleLogout = () => {
+        // Handle logout logic here
+        console.log("Logging out...");
+        router.push('/');
+    };
 
     const NavList = () => (
         <ul className="space-y-1">
@@ -52,6 +69,33 @@ export default function Sidebar({ isMenuOpen, setIsMenuOpen }: SidebarProps) {
         </ul>
     );
 
+    const UserProfile = () => (
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="w-full p-0 h-auto hover:bg-gray-100 rounded-lg">
+                    <div className="flex items-center gap-3 p-2 w-full">
+                        <Avatar className="h-10 w-10">
+                            <AvatarFallback>SJ</AvatarFallback>
+                        </Avatar>
+                        <div className="text-left">
+                            <p className="text-sm font-medium">Sarah Johnson</p>
+                            <p className="text-xs text-gray-500">sarah.j@example.com</p>
+                        </div>
+                    </div>
+                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuItem className="cursor-pointer">Profile Settings</DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer">Account Preferences</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600" onClick={handleLogout}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Log out
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
+    );
+
     return (
         <>
             {/* Desktop Sidebar */}
@@ -62,16 +106,8 @@ export default function Sidebar({ isMenuOpen, setIsMenuOpen }: SidebarProps) {
                 <ScrollArea className="flex-1 p-4">
                     <NavList />
                 </ScrollArea>
-                <div className="p-4 border-t">
-                    <div className="flex items-center gap-3">
-                        <Avatar className="h-10 w-10">
-                            <AvatarFallback>SJ</AvatarFallback>
-                        </Avatar>
-                        <div>
-                            <p className="text-sm font-medium">Sarah Johnson</p>
-                            <p className="text-xs text-gray-500">sarah.j@example.com</p>
-                        </div>
-                    </div>
+                <div className="p-2 border-t">
+                    <UserProfile />
                 </div>
             </aside>
 
@@ -82,25 +118,16 @@ export default function Sidebar({ isMenuOpen, setIsMenuOpen }: SidebarProps) {
                         <SheetTitle className="text-2xl font-bold text-blue-600">BankApp</SheetTitle>
                     </SheetHeader>
 
-                    <ScrollArea className="p-4 flex-1">
+                    <ScrollArea className="flex-1 p-4">
                         <NavList />
                     </ScrollArea>
 
                     <Separator />
 
                     <div className="p-4">
-                        <div className="flex items-center gap-3">
-                            <Avatar className="h-10 w-10">
-                                <AvatarFallback>SJ</AvatarFallback>
-                            </Avatar>
-                            <div>
-                                <p className="text-sm font-medium">Sarah Johnson</p>
-                                <p className="text-xs text-gray-500">sarah.j@example.com</p>
-                            </div>
-                        </div>
+                        <UserProfile />
                     </div>
                 </SheetContent>
-
             </Sheet>
         </>
     );
