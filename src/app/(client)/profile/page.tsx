@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { UserCircle } from "lucide-react";
 import Sidebar from '@/components/client-sidebar';
 import Header from '@/components/client-header';
 
@@ -51,12 +50,6 @@ export default function ProfilePage() {
                   <CardTitle className="text-lg">Sarah Johnson</CardTitle>
                   <CardDescription>sarah.j@example.com</CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <Button variant="outline" className="w-full text-sm">
-                    <UserCircle className="mr-2 h-4 w-4" />
-                    Change Photo
-                  </Button>
-                </CardContent>
               </Card>
             </div>
 
