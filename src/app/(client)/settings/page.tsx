@@ -47,56 +47,7 @@ export default function SettingsPage() {
           </div>
 
           <div className="max-w-3xl mx-auto">
-            <div className="space-y-6">
-              {/* Appearance Settings */}
-              <Card>
-                <CardHeader className="border-b">
-                  <div className="flex items-center gap-2">
-                    <PaintBucket className="h-5 w-5 text-blue-600" />
-                    <CardTitle>Appearance</CardTitle>
-                  </div>
-                  <CardDescription>
-                    Customize how BankApp looks for you
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label htmlFor="theme">Theme</Label>
-                      <p className="text-sm text-gray-500">Choose your preferred theme</p>
-                    </div>
-                    <Select 
-                      value={theme} 
-                      onValueChange={setTheme}
-                    >
-                      <SelectTrigger className="w-36">
-                        <SelectValue placeholder="Select theme" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="light">
-                          <div className="flex items-center gap-2">
-                            <Sun className="h-4 w-4" />
-                            <span>Light</span>
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="dark">
-                          <div className="flex items-center gap-2">
-                            <Moon className="h-4 w-4" />
-                            <span>Dark</span>
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="system">
-                          <div className="flex items-center gap-2">
-                            <Wallet className="h-4 w-4" />
-                            <span>System</span>
-                          </div>
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </CardContent>
-              </Card>
-              
+            <div className="space-y-6">             
               {/* Notification Settings */}
               <Card>
                 <CardHeader className="border-b">
