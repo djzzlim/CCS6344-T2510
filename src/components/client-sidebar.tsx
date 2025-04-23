@@ -1,114 +1,104 @@
-import { ArrowDownRight, ArrowUpRight, Clock, CreditCard, PieChart, User } from "lucide-react";
+"use client";
+
+import {
+  ArrowDownRight,
+  ArrowUpRight,
+  Clock,
+  CreditCard,
+  PieChart,
+} from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 type SidebarProps = {
-    isMenuOpen: boolean;
-    setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isMenuOpen: boolean;
+  setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
+const navLinks = [
+  { path: "/dashboard", label: "Dashboard", icon: PieChart },
+  { path: "/accounts", label: "Accounts", icon: CreditCard },
+  { path: "/transfers", label: "Transfers", icon: ArrowUpRight },
+  { path: "/payments", label: "Payments", icon: ArrowDownRight },
+  { path: "/history", label: "History", icon: Clock },
+];
+
 export default function Sidebar({ isMenuOpen, setIsMenuOpen }: SidebarProps) {
+  const pathname = usePathname();
 
-    return <div>
-        {/* Sidebar - Desktop - Now fixed */}
-        <aside className="hidden md:flex fixed top-0 left-0 h-screen flex-col w-64 bg-white border-r border-gray-200 z-10">
-            <div className="p-4 border-b border-gray-200">
-                <h1 className="text-2xl font-bold text-blue-600">BankApp</h1>
-            </div>
-            <nav className="flex-1 p-4 overflow-y-auto">
-                <ul className="space-y-2">
-                    <li>
-                        <a href="/dashboard" className="flex items-center p-3 text-blue-600 bg-blue-50 rounded-lg">
-                            <PieChart className="w-5 h-5 mr-3" />
-                            <span className="font-medium">Dashboard</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/accounts" className="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
-                            <CreditCard className="w-5 h-5 mr-3" />
-                            <span>Accounts</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/transfers" className="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
-                            <ArrowUpRight className="w-5 h-5 mr-3" />
-                            <span>Transfers</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/payments" className="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
-                            <ArrowDownRight className="w-5 h-5 mr-3" />
-                            <span>Payments</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/history" className="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
-                            <Clock className="w-5 h-5 mr-3" />
-                            <span>History</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-            <div className="p-4 border-t border-gray-200">
-                <div className="flex items-center">
-                    <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
-                        <User className="w-5 h-5" />
-                    </div>
-                    <div className="ml-3">
-                        <p className="text-sm font-medium">Sarah Johnson</p>
-                        <p className="text-xs text-gray-500">sarah.j@example.com</p>
-                    </div>
-                </div>
-            </div>
-        </aside>
+  const isActive = (path: string) => pathname === path;
 
-        {/* Mobile menu */}
-        {isMenuOpen && (
-            <div className="md:hidden fixed inset-0 z-50 bg-white">
-                <div className="p-4 border-b border-gray-200 flex justify-between items-center">
-                    <h1 className="text-2xl font-bold text-blue-600">BankApp</h1>
-                    <button 
-                        onClick={() => setIsMenuOpen(false)}
-                        className="text-gray-500"
-                    >
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-                <nav className="p-4">
-                    <ul className="space-y-2">
-                        <li>
-                            <a href="/dashboard" className="flex items-center p-3 text-blue-600 bg-blue-50 rounded-lg">
-                                <PieChart className="w-5 h-5 mr-3" />
-                                <span className="font-medium">Dashboard</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/accounts" className="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
-                                <CreditCard className="w-5 h-5 mr-3" />
-                                <span>Accounts</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/transfers" className="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
-                                <ArrowUpRight className="w-5 h-5 mr-3" />
-                                <span>Transfers</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/payments" className="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
-                                <ArrowDownRight className="w-5 h-5 mr-3" />
-                                <span>Payments</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/history" className="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
-                                <Clock className="w-5 h-5 mr-3" />
-                                <span>History</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
+  const NavList = () => (
+    <ul className="space-y-1">
+      {navLinks.map(({ path, label, icon: Icon }) => (
+        <li key={path}>
+          <Link
+            href={path}
+            className={`flex items-center gap-3 p-3 rounded-lg transition-all ${
+              isActive(path)
+                ? "bg-blue-50 text-blue-600 font-medium"
+                : "text-gray-700 hover:bg-gray-100"
+            }`}
+            onClick={() => setIsMenuOpen(false)}
+          >
+            <Icon className="w-5 h-5" />
+            {label}
+          </Link>
+        </li>
+      ))}
+    </ul>
+  );
+
+  return (
+    <>
+      {/* Desktop Sidebar */}
+      <aside className="hidden md:flex fixed top-0 left-0 h-screen w-64 bg-white border-r z-10 flex-col">
+        <div className="p-4 border-b">
+          <h1 className="text-2xl font-bold text-blue-600">BankApp</h1>
+        </div>
+        <ScrollArea className="flex-1 p-4">
+          <NavList />
+        </ScrollArea>
+        <div className="p-4 border-t">
+          <div className="flex items-center gap-3">
+            <Avatar className="h-10 w-10">
+              <AvatarFallback>SJ</AvatarFallback>
+            </Avatar>
+            <div>
+              <p className="text-sm font-medium">Sarah Johnson</p>
+              <p className="text-xs text-gray-500">sarah.j@example.com</p>
             </div>
-        )}
-    </div>
+          </div>
+        </div>
+      </aside>
+
+      {/* Mobile Sidebar with Sheet */}
+      <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+        <SheetContent side="left" className="w-64 p-0">
+          <div className="p-4 border-b flex justify-between items-center">
+            <h1 className="text-2xl font-bold text-blue-600">BankApp</h1>
+          </div>
+          <ScrollArea className="p-4 flex-1">
+            <NavList />
+          </ScrollArea>
+          <Separator />
+          <div className="p-4">
+            <div className="flex items-center gap-3">
+              <Avatar className="h-10 w-10">
+                <AvatarFallback>SJ</AvatarFallback>
+              </Avatar>
+              <div>
+                <p className="text-sm font-medium">Sarah Johnson</p>
+                <p className="text-xs text-gray-500">sarah.j@example.com</p>
+              </div>
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
+    </>
+  );
 }
