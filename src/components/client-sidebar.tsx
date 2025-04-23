@@ -7,7 +7,6 @@ import {
     CreditCard,
     LogOut,
     PieChart,
-    Settings,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
@@ -88,10 +87,17 @@ export default function Sidebar({ isMenuOpen, setIsMenuOpen }: SidebarProps) {
             <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuItem asChild>
                 <Link
+                    href="/profile"
+                    className="flex items-center space-x-2 w-full h-full"
+                >
+                    <span className="text-sm">Profile</span>
+                </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+                <Link
                     href="/settings"
                     className="flex items-center space-x-2 w-full h-full"
                 >
-                    <Settings className="w-4 h-4 shrink-0" />
                     <span className="text-sm">Settings</span>
                 </Link>
             </DropdownMenuItem>
