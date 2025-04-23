@@ -9,14 +9,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { 
-  Select, 
-  SelectContent, 
-  SelectGroup, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
-} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 
 export default function ProfilePage() {
@@ -109,20 +101,7 @@ export default function ProfilePage() {
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="state">State</Label>
-                        <Select defaultValue="CA">
-                          <SelectTrigger id="state">
-                            <SelectValue placeholder="Select state" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectGroup>
-                              <SelectItem value="CA">California</SelectItem>
-                              <SelectItem value="NY">New York</SelectItem>
-                              <SelectItem value="TX">Texas</SelectItem>
-                              <SelectItem value="FL">Florida</SelectItem>
-                              <SelectItem value="IL">Illinois</SelectItem>
-                            </SelectGroup>
-                          </SelectContent>
-                        </Select>
+                        <Input id="state" defaultValue="California" />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="zip">Zip Code</Label>
