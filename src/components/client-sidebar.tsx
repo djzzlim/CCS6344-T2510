@@ -7,6 +7,7 @@ import {
     CreditCard,
     LogOut,
     PieChart,
+    Settings,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
@@ -56,8 +57,8 @@ export default function Sidebar({ isMenuOpen, setIsMenuOpen }: SidebarProps) {
                     <Link
                         href={path}
                         className={`flex items-center gap-3 p-3 rounded-lg transition-all ${isActive(path)
-                                ? "bg-blue-50 text-blue-600 font-medium"
-                                : "text-gray-700 hover:bg-gray-100"
+                            ? "bg-blue-50 text-blue-600 font-medium"
+                            : "text-gray-700 hover:bg-gray-100"
                             }`}
                         onClick={() => setIsMenuOpen(false)}
                     >
@@ -85,8 +86,15 @@ export default function Sidebar({ isMenuOpen, setIsMenuOpen }: SidebarProps) {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuItem className="cursor-pointer">Profile Settings</DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer">Account Preferences</DropdownMenuItem>
+            <DropdownMenuItem asChild>
+                <Link
+                    href="/settings"
+                    className="flex items-center space-x-2 w-full h-full"
+                >
+                    <Settings className="w-4 h-4 shrink-0" />
+                    <span className="text-sm">Settings</span>
+                </Link>
+            </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600" onClick={handleLogout}>
                     <LogOut className="mr-2 h-4 w-4" />
