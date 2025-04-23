@@ -124,7 +124,7 @@ export default function Sidebar({ isMenuOpen, setIsMenuOpen }: SidebarProps) {
 
                     <Separator />
 
-                    <div className="p-4">
+                    <div className="pb-4">
                         <UserProfile />
                     </div>
                 </SheetContent>
