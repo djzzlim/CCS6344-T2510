@@ -1,20 +1,10 @@
 "use client";
 
 import { useState } from 'react';
-import { ArrowUpRight, ChevronDown, Repeat, Users, Globe, Plus } from 'lucide-react';
+import { ArrowUpRight, ChevronDown, Repeat, Globe } from 'lucide-react';
 import Sidebar from '@/components/client-sidebar';
 import Header from '@/components/client-header';
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogFooter,
-  DialogDescription
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import Link from 'next/link';
 
 export default function Transfers() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -24,29 +14,11 @@ export default function Transfers() {
     const [amount, setAmount] = useState('');
     const [transferDate, setTransferDate] = useState('now');
     const [memo, setMemo] = useState('');
-    const [recipient, setRecipient] = useState('');
-    
-    // Contact modal states
-    const [isContactModalOpen, setIsContactModalOpen] = useState(false);
-    const [newContact, setNewContact] = useState({
-        name: '',
-        email: '',
-        phone: '',
-        bank: '',
-        routingNumber: '',
-        accountNumber: ''
-    });
 
     const accounts = [
         { id: '1', name: "Checking Account", number: "****5678", balance: 4256.78 },
         { id: '2', name: "Savings Account", number: "****9012", balance: 12785.45 },
     ];
-
-    const [savedContacts, setSavedContacts] = useState([
-        { id: 1, name: "James Smith", bank: "Chase Bank", account: "****4321" },
-        { id: 2, name: "Emily Johnson", bank: "Wells Fargo", account: "****7654" },
-        { id: 3, name: "Michael Brown", bank: "Bank of America", account: "****9876" },
-    ]);
 
     const recentTransfers = [
         { id: 1, from: "Checking Account", to: "Savings Account", amount: 500, date: "Apr 20, 2025", status: "Completed" },
@@ -59,54 +31,6 @@ export default function Transfers() {
         e.preventDefault();
         // Handle transfer submission logic here
         alert(`Transfer submitted: $${amount} from ${accounts.find(acc => acc.id === fromAccount)?.name} to ${transferType === 'between' ? accounts.find(acc => acc.id === toAccount)?.name : 'External Account'}`);
-    };
-
-    const handleRecipientChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const value = e.target.value;
-        setRecipient(value);
-        if (value === "new") {
-            // Open the modal when "Add New Contact" is selected
-            setIsContactModalOpen(true);
-            // Reset the recipient dropdown
-            setTimeout(() => setRecipient(''), 0);
-        }
-    };
-
-    const handleContactInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setNewContact(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    };
-
-    const handleAddContact = (e: { preventDefault: () => void; }) => {
-        e.preventDefault();
-        
-        // Create new contact
-        const newContactEntry = {
-            id: savedContacts.length + 1,
-            name: newContact.name,
-            bank: newContact.bank,
-            account: `****${newContact.accountNumber.slice(-4)}`,
-        };
-        
-        // Add to contacts list
-        setSavedContacts([...savedContacts, newContactEntry]);
-        
-        // Reset form and close modal
-        setNewContact({
-            name: '',
-            email: '',
-            phone: '',
-            bank: '',
-            routingNumber: '',
-            accountNumber: ''
-        });
-        setIsContactModalOpen(false);
-        
-        // Show confirmation
-        alert(`Contact ${newContactEntry.name} has been added successfully!`);
     };
 
     return (
@@ -139,15 +63,6 @@ export default function Transfers() {
                                         <div className="flex items-center justify-center">
                                             <Repeat className="w-4 h-4 mr-2" />
                                             Between Accounts
-                                        </div>
-                                    </button>
-                                    <button
-                                        className={`flex-1 py-2 rounded-lg text-sm font-medium ${transferType === 'someone' ? 'bg-white shadow-sm' : 'text-gray-600'}`}
-                                        onClick={() => setTransferType('someone')}
-                                    >
-                                        <div className="flex items-center justify-center">
-                                            <Users className="w-4 h-4 mr-2" />
-                                            To Someone
                                         </div>
                                     </button>
                                     <button
@@ -199,22 +114,6 @@ export default function Transfers() {
                                                             {account.name} (${account.balance.toLocaleString()})
                                                         </option>
                                                     ))}
-                                                </select>
-                                            )}
-
-                                            {transferType === 'someone' && (
-                                                <select 
-                                                    className="block w-full p-3 bg-gray-50 border border-gray-300 rounded-lg appearance-none pr-10"
-                                                    value={recipient}
-                                                    onChange={handleRecipientChange}
-                                                >
-                                                    <option value="">Select a contact</option>
-                                                    {savedContacts.map(contact => (
-                                                        <option key={contact.id} value={contact.id}>
-                                                            {contact.name} - {contact.bank} ({contact.account})
-                                                        </option>
-                                                    ))}
-                                                    <option value="new">+ Add New Contact</option>
                                                 </select>
                                             )}
 
@@ -291,18 +190,7 @@ export default function Transfers() {
                                                 />
                                                 <label htmlFor="scheduled" className="ml-2 text-sm text-gray-700">Schedule</label>
                                             </div>
-                                            <div className="flex items-center">
-                                                <input
-                                                    type="radio"
-                                                    id="recurring"
-                                                    name="transferDate"
-                                                    value="recurring"
-                                                    checked={transferDate === 'recurring'}
-                                                    onChange={() => setTransferDate('recurring')}
-                                                    className="w-4 h-4 text-blue-600"
-                                                />
-                                                <label htmlFor="recurring" className="ml-2 text-sm text-gray-700">Recurring</label>
-                                            </div>
+
                                         </div>
 
                                         {transferDate === 'scheduled' && (
@@ -310,22 +198,6 @@ export default function Transfers() {
                                                 <input
                                                     type="date"
                                                     className="block w-full p-3 bg-gray-50 border border-gray-300 rounded-lg"
-                                                    min={new Date().toISOString().split('T')[0]}
-                                                />
-                                            </div>
-                                        )}
-
-                                        {transferDate === 'recurring' && (
-                                            <div className="mt-3 grid grid-cols-2 gap-3">
-                                                <select className="p-3 bg-gray-50 border border-gray-300 rounded-lg appearance-none">
-                                                    <option>Weekly</option>
-                                                    <option>Bi-weekly</option>
-                                                    <option>Monthly</option>
-                                                    <option>Quarterly</option>
-                                                </select>
-                                                <input
-                                                    type="date"
-                                                    className="p-3 bg-gray-50 border border-gray-300 rounded-lg"
                                                     min={new Date().toISOString().split('T')[0]}
                                                 />
                                             </div>
@@ -386,7 +258,9 @@ export default function Transfers() {
                                 </div>
                                 <div className="p-4 border-t border-gray-200">
                                     <button className="w-full py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium">
-                                        View All Transfers
+                                        <Link href="/history" passHref>
+                                            View All Transfers
+                                        </Link>
                                     </button>
                                 </div>
                             </div>
@@ -413,122 +287,6 @@ export default function Transfers() {
                     </div>
                 </div>
             </main>
-
-            {/* Add Contact Dialog using shadcn/ui */}
-            <Dialog open={isContactModalOpen} onOpenChange={setIsContactModalOpen}>
-                <DialogContent className="sm:max-w-lg">
-                    <DialogHeader>
-                        <DialogTitle>Add New Contact</DialogTitle>
-                        <DialogDescription>
-                            Add a contact&apos;s details to make future transfers easier.
-                        </DialogDescription>
-                    </DialogHeader>
-                    
-                    <form onSubmit={handleAddContact}>
-                        <div className="grid gap-6 py-4">
-                            {/* Contact Information */}
-                            <div className="space-y-4">
-                                <h4 className="font-medium text-sm text-gray-700">Contact Information</h4>
-                                
-                                <div className="grid gap-3">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="name">Name</Label>
-                                        <Input
-                                            id="name"
-                                            name="name"
-                                            placeholder="Full Name"
-                                            value={newContact.name}
-                                            onChange={handleContactInputChange}
-                                            required
-                                        />
-                                    </div>
-                                    
-                                    <div className="space-y-2">
-                                        <Label htmlFor="email">Email (Optional)</Label>
-                                        <Input
-                                            id="email"
-                                            name="email"
-                                            type="email"
-                                            placeholder="email@example.com"
-                                            value={newContact.email}
-                                            onChange={handleContactInputChange}
-                                        />
-                                    </div>
-                                    
-                                    <div className="space-y-2">
-                                        <Label htmlFor="phone">Phone (Optional)</Label>
-                                        <Input
-                                            id="phone"
-                                            name="phone"
-                                            type="tel"
-                                            placeholder="(123) 456-7890"
-                                            value={newContact.phone}
-                                            onChange={handleContactInputChange}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            {/* Bank Information */}
-                            <div className="space-y-4">
-                                <h4 className="font-medium text-sm text-gray-700">Bank Information</h4>
-                                
-                                <div className="grid gap-3">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="bank">Bank Name</Label>
-                                        <Input
-                                            id="bank"
-                                            name="bank"
-                                            placeholder="Bank Name"
-                                            value={newContact.bank}
-                                            onChange={handleContactInputChange}
-                                            required
-                                        />
-                                    </div>
-                                    
-                                    <div className="space-y-2">
-                                        <Label htmlFor="routingNumber">Routing Number</Label>
-                                        <Input
-                                            id="routingNumber"
-                                            name="routingNumber"
-                                            placeholder="9 digit number"
-                                            value={newContact.routingNumber}
-                                            onChange={handleContactInputChange}
-                                            required
-                                        />
-                                    </div>
-                                    
-                                    <div className="space-y-2">
-                                        <Label htmlFor="accountNumber">Account Number</Label>
-                                        <Input
-                                            id="accountNumber"
-                                            name="accountNumber"
-                                            placeholder="Account Number"
-                                            value={newContact.accountNumber}
-                                            onChange={handleContactInputChange}
-                                            required
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <DialogFooter>
-                            <Button 
-                                type="button" 
-                                variant="outline" 
-                                onClick={() => setIsContactModalOpen(false)}
-                            >
-                                Cancel
-                            </Button>
-                            <Button type="submit">
-                                <Plus className="w-4 h-4 mr-2" />
-                                Add Contact
-                            </Button>
-                        </DialogFooter>
-                    </form>
-                </DialogContent>
-            </Dialog>
         </div>
     );
 }

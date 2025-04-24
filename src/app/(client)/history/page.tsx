@@ -21,18 +21,18 @@ export default function History() {
   ];
 
   const transactionHistory = [
-    { id: '1', date: 'Apr 20, 2025', description: 'Grocery Store', amount: -86.47, type: 'purchase', account: '1', category: 'Shopping', status: 'Completed' },
-    { id: '2', date: 'Apr 18, 2025', description: 'Direct Deposit - Payroll', amount: 2450.00, type: 'deposit', account: '1', category: 'Income', status: 'Completed' },
-    { id: '3', date: 'Apr 15, 2025', description: 'City Utilities', amount: -124.56, type: 'payment', account: '1', category: 'Bills', status: 'Completed' },
-    { id: '4', date: 'Apr 12, 2025', description: 'ATM Withdrawal', amount: -100.00, type: 'withdrawal', account: '1', category: 'Cash', status: 'Completed' },
-    { id: '5', date: 'Apr 10, 2025', description: 'Transfer to Savings', amount: -500.00, type: 'transfer', account: '1', category: 'Transfers', status: 'Completed' },
-    { id: '6', date: 'Apr 10, 2025', description: 'Transfer from Checking', amount: 500.00, type: 'transfer', account: '2', category: 'Transfers', status: 'Completed' },
-    { id: '7', date: 'Apr 8, 2025', description: 'Online Purchase', amount: -59.99, type: 'purchase', account: '1', category: 'Shopping', status: 'Completed' },
-    { id: '8', date: 'Apr 5, 2025', description: 'Interest Payment', amount: 12.45, type: 'interest', account: '2', category: 'Income', status: 'Completed' },
-    { id: '9', date: 'Apr 1, 2025', description: 'Mortgage Payment', amount: -1450.00, type: 'payment', account: '1', category: 'Housing', status: 'Completed' },
-    { id: '10', date: 'Mar 28, 2025', description: 'Restaurant', amount: -35.82, type: 'purchase', account: '1', category: 'Dining', status: 'Completed' },
-    { id: '11', date: 'Mar 25, 2025', description: 'Gas Station', amount: -42.50, type: 'purchase', account: '1', category: 'Transportation', status: 'Completed' },
-    { id: '12', date: 'Mar 20, 2025', description: 'Cell Phone Provider', amount: -85.99, type: 'payment', account: '1', category: 'Bills', status: 'Completed' },
+    { id: '1', date: 'Apr 20, 2025', description: 'Grocery Store', amount: -86.47, type: 'purchase', account: '1', status: 'Completed' },
+    { id: '2', date: 'Apr 18, 2025', description: 'Direct Deposit - Payroll', amount: 2450.00, type: 'deposit', account: '1', status: 'Completed' },
+    { id: '3', date: 'Apr 15, 2025', description: 'City Utilities', amount: -124.56, type: 'payment', account: '1', status: 'Completed' },
+    { id: '4', date: 'Apr 12, 2025', description: 'ATM Withdrawal', amount: -100.00, type: 'withdrawal', account: '1', status: 'Completed' },
+    { id: '5', date: 'Apr 10, 2025', description: 'Transfer to Savings', amount: -500.00, type: 'transfer', account: '1', status: 'Completed' },
+    { id: '6', date: 'Apr 10, 2025', description: 'Transfer from Checking', amount: 500.00, type: 'transfer', account: '2', status: 'Completed' },
+    { id: '7', date: 'Apr 8, 2025', description: 'Online Purchase', amount: -59.99, type: 'purchase', account: '1', status: 'Completed' },
+    { id: '8', date: 'Apr 5, 2025', description: 'Interest Payment', amount: 12.45, type: 'interest', account: '2', status: 'Completed' },
+    { id: '9', date: 'Apr 1, 2025', description: 'Mortgage Payment', amount: -1450.00, type: 'payment', account: '1', status: 'Completed' },
+    { id: '10', date: 'Mar 28, 2025', description: 'Restaurant', amount: -35.82, type: 'purchase', account: '1', status: 'Completed' },
+    { id: '11', date: 'Mar 25, 2025', description: 'Gas Station', amount: -42.50, type: 'purchase', account: '1', status: 'Completed' },
+    { id: '12', date: 'Mar 20, 2025', description: 'Cell Phone Provider', amount: -85.99, type: 'payment', account: '1', status: 'Completed' },
   ];
 
   const filterTransactions = () => {
@@ -65,20 +65,6 @@ export default function History() {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
-
-  const getCategoryIcon = (category: string) => {
-    switch (category) {
-      case 'Shopping': return '🛍️';
-      case 'Income': return '💸';
-      case 'Bills': return '📝';
-      case 'Cash': return '💰';
-      case 'Transfers': return '↔️';
-      case 'Housing': return '🏠';
-      case 'Dining': return '🍽️';
-      case 'Transportation': return '🚗';
-      default: return '📋';
-    }
-  };
 
   const resetFilters = () => {
     setSelectedAccount('all');
@@ -214,7 +200,6 @@ export default function History() {
             <div className="hidden md:grid grid-cols-6 gap-4 p-4 bg-gray-50 border-b border-gray-200 text-sm font-medium text-gray-600">
               <div className="col-span-1">Date</div>
               <div className="col-span-2">Description</div>
-              <div className="col-span-1">Category</div>
               <div className="col-span-1">Status</div>
               <div className="col-span-1 text-right">Amount</div>
             </div>
@@ -237,16 +222,9 @@ export default function History() {
                       </div>
                       <div className="font-medium mb-1">{transaction.description}</div>
                       <div className="flex justify-between items-center mb-2">
-                        <div className="flex items-center text-sm">
-                          <span className="mr-1">{getCategoryIcon(transaction.category)}</span>
-                          <span className="text-gray-700">{transaction.category}</span>
-                        </div>
                         <span className="px-2 py-1 bg-green-50 text-green-700 text-xs rounded-full">
                           {transaction.status}
                         </span>
-                      </div>
-                      <div className="text-xs text-gray-500 mb-3">
-                        {transaction.account === '1' ? 'Checking Account' : 'Savings Account'}
                       </div>
                       <div className="border-t border-gray-100 pt-2 flex justify-between">
                         <button className="text-blue-600 text-sm font-medium">View Details</button>
@@ -263,10 +241,6 @@ export default function History() {
                       </div>
                       <div className="col-span-2 font-medium">
                         <span>{transaction.description}</span>
-                      </div>
-                      <div className="col-span-1 text-sm flex items-center">
-                        <span className="mr-2">{getCategoryIcon(transaction.category)}</span>
-                        <span className="text-gray-700">{transaction.category}</span>
                       </div>
                       <div className="col-span-1">
                         <span className="px-2 py-1 bg-green-50 text-green-700 text-xs rounded-full">
