@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from 'react';
-import { ChevronDown, Wallet, DollarSign, ShieldCheck, Calendar } from 'lucide-react';
+import { ChevronDown, Wallet, DollarSign, ShieldCheck } from 'lucide-react';
 import Sidebar from '@/components/client-sidebar';
 import Header from '@/components/client-header';
+import Link from 'next/link';
 
 export default function Payments() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,7 +30,6 @@ export default function Payments() {
         { id: 1, to: "City Utilities", amount: 124.56, date: "Mar 28, 2025", status: "Completed" },
         { id: 2, to: "Mortgage Company", amount: 1450.00, date: "Mar 15, 2025", status: "Completed" },
         { id: 3, to: "Cell Phone Provider", amount: 85.99, date: "Mar 10, 2025", status: "Completed" },
-        { id: 4, to: "Credit Card Company", amount: 320.50, date: "Mar 5, 2025", status: "Completed" },
     ];
 
     const handleSubmit = (e: { preventDefault: () => void; }) => {
@@ -105,7 +105,6 @@ export default function Payments() {
                                                             {biller.name} - Account #{biller.accountNumber}
                                                         </option>
                                                     ))}
-                                                    <option value="new">+ Add New Utility</option>
                                                 </select>
 
                                                 {/* Chevron Icon fixed position */}
@@ -133,26 +132,6 @@ export default function Payments() {
                                                                 </p>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                )}
-
-                                                {selectedBiller === 'new' && (
-                                                    <div className="space-y-3">
-                                                        <input
-                                                            type="text"
-                                                            className="block w-full p-3 bg-gray-50 border border-gray-300 rounded-lg"
-                                                            placeholder="Utility Provider Name"
-                                                        />
-                                                        <input
-                                                            type="text"
-                                                            className="block w-full p-3 bg-gray-50 border border-gray-300 rounded-lg"
-                                                            placeholder="Account Number"
-                                                        />
-                                                        <input
-                                                            type="text"
-                                                            className="block w-full p-3 bg-gray-50 border border-gray-300 rounded-lg"
-                                                            placeholder="Utility Provider Address"
-                                                        />
                                                     </div>
                                                 )}
                                             </div>
@@ -204,18 +183,6 @@ export default function Payments() {
                                                 />
                                                 <label htmlFor="scheduled" className="ml-2 text-sm text-gray-700">Schedule</label>
                                             </div>
-                                            <div className="flex items-center">
-                                                <input
-                                                    type="radio"
-                                                    id="recurring"
-                                                    name="paymentDate"
-                                                    value="recurring"
-                                                    checked={paymentDate === 'recurring'}
-                                                    onChange={() => setPaymentDate('recurring')}
-                                                    className="w-4 h-4 text-blue-600"
-                                                />
-                                                <label htmlFor="recurring" className="ml-2 text-sm text-gray-700">Recurring</label>
-                                            </div>
                                         </div>
 
                                         {paymentDate === 'scheduled' && (
@@ -223,22 +190,6 @@ export default function Payments() {
                                                 <input
                                                     type="date"
                                                     className="block w-full p-3 bg-gray-50 border border-gray-300 rounded-lg"
-                                                    min={new Date().toISOString().split('T')[0]}
-                                                />
-                                            </div>
-                                        )}
-
-                                        {paymentDate === 'recurring' && (
-                                            <div className="mt-3 grid grid-cols-2 gap-3">
-                                                <select className="p-3 bg-gray-50 border border-gray-300 rounded-lg appearance-none">
-                                                    <option>Monthly</option>
-                                                    <option>Bi-monthly</option>
-                                                    <option>Quarterly</option>
-                                                    <option>Annually</option>
-                                                </select>
-                                                <input
-                                                    type="date"
-                                                    className="p-3 bg-gray-50 border border-gray-300 rounded-lg"
                                                     min={new Date().toISOString().split('T')[0]}
                                                 />
                                             </div>
@@ -298,42 +249,11 @@ export default function Payments() {
                                     ))}
                                 </div>
                                 <div className="p-4 border-t border-gray-200">
-                                    <button className="w-full py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium">
-                                        View All Payments
-                                    </button>
-                                </div>
-                            </div>
-
-                            {/* Upcoming bills */}
-                            <div className="mt-4 bg-white rounded-lg shadow-sm border border-gray-200">
-                                <div className="p-4 border-b border-gray-200">
-                                    <h2 className="font-semibold text-gray-800">Upcoming Bills</h2>
-                                </div>
-                                <div className="divide-y divide-gray-200">
-                                    {billers.slice(0, 3).map(biller => (
-                                        <div key={biller.id} className="p-4">
-                                            <div className="flex items-center justify-between mb-1">
-                                                <div className="flex items-center">
-                                                    <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center text-orange-600">
-                                                        <Calendar className="w-4 h-4" />
-                                                    </div>
-                                                    <div className="ml-3">
-                                                        <p className="font-medium text-sm">{biller.name}</p>
-                                                    </div>
-                                                </div>
-                                                <p className="font-medium text-sm">${biller.lastAmount}</p>
-                                            </div>
-                                            <div className="flex justify-between text-xs text-gray-500">
-                                                <span>Due {biller.dueDate}</span>
-                                                <button className="text-blue-600 font-medium">Pay Now</button>
-                                            </div>
+                                    <Link href="/history" className="block w-full">
+                                        <div className="w-full py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium text-center">
+                                            View All Payments
                                         </div>
-                                    ))}
-                                </div>
-                                <div className="p-4 border-t border-gray-200">
-                                    <button className="w-full py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium">
-                                        View All Bills
-                                    </button>
+                                    </Link>
                                 </div>
                             </div>
 
