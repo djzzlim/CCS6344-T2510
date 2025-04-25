@@ -133,6 +133,71 @@ exports.Prisma.CustomerScalarFieldEnum = {
   PasswordHash: 'PasswordHash'
 };
 
+exports.Prisma.OfficerScalarFieldEnum = {
+  OfficerID: 'OfficerID',
+  Username: 'Username',
+  LastName: 'LastName',
+  FirstName: 'FirstName',
+  PasswordHash: 'PasswordHash'
+};
+
+exports.Prisma.AdminScalarFieldEnum = {
+  AdminID: 'AdminID',
+  Username: 'Username',
+  FirstName: 'FirstName',
+  LastName: 'LastName',
+  PasswordHash: 'PasswordHash'
+};
+
+exports.Prisma.AccountScalarFieldEnum = {
+  AccountID: 'AccountID',
+  CustomerID: 'CustomerID',
+  Status: 'Status',
+  Balance: 'Balance',
+  AccountType: 'AccountType',
+  MonthlyFee: 'MonthlyFee',
+  DailyATMLimit: 'DailyATMLimit',
+  DailyPurchaseLimit: 'DailyPurchaseLimit',
+  OverdraftProtection: 'OverdraftProtection'
+};
+
+exports.Prisma.TransferScalarFieldEnum = {
+  TransferID: 'TransferID',
+  ToAccountID: 'ToAccountID',
+  FromAccountID: 'FromAccountID',
+  Amount: 'Amount',
+  Description: 'Description',
+  CreatedAt: 'CreatedAt',
+  UpdatedAt: 'UpdatedAt',
+  Status: 'Status',
+  TransferType: 'TransferType'
+};
+
+exports.Prisma.UtilitiesScalarFieldEnum = {
+  UtilityID: 'UtilityID',
+  AccountName: 'AccountName',
+  AccountNumber: 'AccountNumber'
+};
+
+exports.Prisma.PaymentScalarFieldEnum = {
+  PaymentID: 'PaymentID',
+  AccountID: 'AccountID',
+  UtilityID: 'UtilityID',
+  Amount: 'Amount',
+  Timestamp: 'Timestamp',
+  Description: 'Description'
+};
+
+exports.Prisma.AUDIT_LOGSScalarFieldEnum = {
+  id: 'id',
+  timestamp: 'timestamp',
+  actor_type: 'actor_type',
+  actor_id: 'actor_id',
+  action: 'action',
+  target_id: 'target_id',
+  status: 'status'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -145,7 +210,14 @@ exports.Prisma.NullsOrder = {
 
 
 exports.Prisma.ModelName = {
-  Customer: 'Customer'
+  Customer: 'Customer',
+  Officer: 'Officer',
+  Admin: 'Admin',
+  Account: 'Account',
+  Transfer: 'Transfer',
+  Utilities: 'Utilities',
+  Payment: 'Payment',
+  AUDIT_LOGS: 'AUDIT_LOGS'
 };
 
 /**

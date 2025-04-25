@@ -15,16 +15,94 @@ datasource db {
 }
 
 model Customer {
-  CustomerID    Int       @id @default(autoincrement())
+  CustomerID    String    @id @default(cuid())
   FirstName     String
   LastName      String
-  Email         String    @unique
-  ContactNumber String?
-  DateOfBirth   DateTime?
-  AddressLine1  String?
+  Email         String
+  ContactNumber String
+  DateOfBirth   DateTime
+  AddressLine1  String
   AddressLine2  String?
-  City          String?
-  State         String?
-  ZipCode       String?
+  City          String
+  State         String
+  ZipCode       String
   PasswordHash  String
+  accounts      Account[]
+}
+
+model Officer {
+  OfficerID    String @id @default(cuid())
+  Username     String @unique
+  LastName     String
+  FirstName    String
+  PasswordHash String
+}
+
+model Admin {
+  AdminID      String @id @default(cuid())
+  Username     String @unique
+  FirstName    String
+  LastName     String
+  PasswordHash String
+}
+
+model Account {
+  AccountID           String  @id @default(cuid())
+  CustomerID          String
+  Status              String
+  Balance             Float
+  AccountType         String
+  MonthlyFee          Float
+  DailyATMLimit       Float
+  DailyPurchaseLimit  Float
+  OverdraftProtection Boolean
+
+  customer      Customer   @relation(fields: [CustomerID], references: [CustomerID])
+  payments      Payment[]
+  transfersFrom Transfer[] @relation("FromTransfers")
+  transfersTo   Transfer[] @relation("ToTransfers")
+}
+
+model Transfer {
+  TransferID    String    @id @default(cuid())
+  ToAccountID   String
+  FromAccountID String
+  Amount        Float
+  Description   String
+  CreatedAt     DateTime  @default(now())
+  UpdatedAt     DateTime?
+  Status        String
+  TransferType  String
+
+  toAccount   Account @relation("ToTransfers", fields: [ToAccountID], references: [AccountID], onDelete: NoAction, onUpdate: NoAction)
+  fromAccount Account @relation("FromTransfers", fields: [FromAccountID], references: [AccountID], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Utilities {
+  UtilityID     String    @id @default(cuid())
+  AccountName   String
+  AccountNumber String
+  payments      Payment[]
+}
+
+model Payment {
+  PaymentID   String   @id @default(cuid())
+  AccountID   String
+  UtilityID   String
+  Amount      Float
+  Timestamp   DateTime @default(now())
+  Description String
+
+  account Account   @relation(fields: [AccountID], references: [AccountID])
+  utility Utilities @relation(fields: [UtilityID], references: [UtilityID])
+}
+
+model AUDIT_LOGS {
+  id         String   @id @default(cuid())
+  timestamp  DateTime @default(now())
+  actor_type String
+  actor_id   String
+  action     String
+  target_id  String
+  status     String
 }
