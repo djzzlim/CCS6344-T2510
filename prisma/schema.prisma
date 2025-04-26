@@ -25,7 +25,7 @@ model Customer {
 
 model Officer {
   OfficerID    String  @id(map: "PK__Officer__2E65579AB4F2DD00") @default(cuid()) @db.NVarChar(50)
-  Username     String @unique(map: "UQ__Officer__536C85E4821448ED") @db.NVarChar(50) @unique
+  Username     String @unique(map: "UQ__Officer__536C85E4821448ED") @db.NVarChar(50)
   LastName     String? @db.NVarChar(100)
   FirstName    String? @db.NVarChar(100)
   PasswordHash String? @db.NVarChar(255)
