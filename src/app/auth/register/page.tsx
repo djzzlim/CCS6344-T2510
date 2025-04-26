@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from 'react';
-import { Eye, EyeOff, Lock, Mail, Check, AlertCircle } from 'lucide-react';
+import { Eye, EyeOff, Lock, Mail, Phone, MapPin, Calendar, Check, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import { Input } from '@/components/ui/input';
 
@@ -9,6 +9,13 @@ interface FormErrors {
   firstName?: string;
   lastName?: string;
   email?: string;
+  phone?: string;
+  dob?: string;
+  addressLine1?: string;
+  addressLine2?: string;
+  city?: string;
+  state?: string;
+  zipCode?: string;
   password?: string;
   confirmPassword?: string;
   terms?: string;
@@ -19,6 +26,13 @@ export default function Register() {
     firstName: '',
     lastName: '',
     email: '',
+    phone: '',
+    dob: '',
+    addressLine1: '',
+    addressLine2: '',
+    city: '',
+    state: '',
+    zipCode: '',
     password: '',
     confirmPassword: ''
   });
@@ -89,6 +103,34 @@ export default function Register() {
       newErrors.email = 'Email is invalid';
     }
     
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'Phone number is required';
+    } else if (!/^\d{9,10,11}$/.test(formData.phone.replace(/\D/g, ''))) {
+      newErrors.phone = 'Please enter a valid 9-, 10- or 11-digit phone number';
+    }
+    
+    if (!formData.dob.trim()) {
+      newErrors.dob = 'Date of birth is required';
+    } else {
+      const dobDate = new Date(formData.dob);
+      const today = new Date();
+      const age = today.getFullYear() - dobDate.getFullYear();
+      if (isNaN(dobDate.getTime())) {
+        newErrors.dob = 'Please enter a valid date';
+      } else if (age < 18) {
+        newErrors.dob = 'You must be at least 18 years old';
+      }
+    }
+    
+    if (!formData.addressLine1.trim()) newErrors.addressLine1 = 'Address is required';
+    if (!formData.city.trim()) newErrors.city = 'City is required';
+    if (!formData.state.trim()) newErrors.state = 'State is required';
+    if (!formData.zipCode.trim()) {
+      newErrors.zipCode = 'ZIP code is required';
+    } else if (!/^\d{5}(-\d{4})?$/.test(formData.zipCode)) {
+      newErrors.zipCode = 'Please enter a valid ZIP code';
+    }
+    
     if (!formData.password) {
       newErrors.password = 'Password is required';
     } else if (passwordStrength.score < 3) {
@@ -108,28 +150,50 @@ export default function Register() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
+    e.preventDefault(); 
+  
     if (!validateForm()) return;
-    
+  
     setIsLoading(true);
     setGeneralError('');
-    
+  
     try {
-      // Here you would normally make an API call to your registration endpoint
-      // For demo purposes, we'll just simulate a registration delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Redirect to verification page or login page on success
-      window.location.href = '/auth/login';
-      
-    } catch {
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          contactNumber: formData.phone,
+          dateOfBirth: formData.dob,
+          addressLine1: formData.addressLine1,
+          addressLine2: formData.addressLine2,
+          city: formData.city,
+          state: formData.state,
+          zipCode: formData.zipCode,
+          password: formData.password
+        }),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        // Redirect to login page or show success message
+        window.location.href = '/auth/login'; // Redirect to login page
+      } else {
+        // Show error message
+        setGeneralError(data.message);
+      }
+    } catch (error) {
       setGeneralError('An error occurred during registration. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
-
+  
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -147,7 +211,7 @@ export default function Register() {
         </p>
       </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-2xl">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           {generalError && (
             <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center">
@@ -157,6 +221,7 @@ export default function Register() {
           )}
           
           <form className="space-y-6" onSubmit={handleSubmit}>
+            <h3 className="text-lg font-medium text-gray-900">Personal Information</h3>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div>
                 <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
@@ -203,32 +268,199 @@ export default function Register() {
               </div>
             </div>
 
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                  Email address
+                </label>
+                <div className="mt-1 relative rounded-md shadow-sm">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Mail className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className={`focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md ${
+                      errors.email ? 'border-red-300' : 'border-gray-300'
+                    }`}
+                    placeholder="name@example.com"
+                  />
+                </div>
+                {errors.email && (
+                  <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+                )}
+              </div>
+
+              <div>
+                <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                  Phone number
+                </label>
+                <div className="mt-1 relative rounded-md shadow-sm">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Phone className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <Input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    autoComplete="tel"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className={`focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md ${
+                      errors.phone ? 'border-red-300' : 'border-gray-300'
+                    }`}
+                    placeholder="(123) 456-7890"
+                  />
+                </div>
+                {errors.phone && (
+                  <p className="mt-1 text-sm text-red-600">{errors.phone}</p>
+                )}
+              </div>
+            </div>
+
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email address
+              <label htmlFor="dob" className="block text-sm font-medium text-gray-700">
+                Date of birth
               </label>
               <div className="mt-1 relative rounded-md shadow-sm">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400" />
+                  <Calendar className="h-5 w-5 text-gray-400" />
                 </div>
                 <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  value={formData.email}
+                  id="dob"
+                  name="dob"
+                  type="date"
+                  autoComplete="bday"
+                  value={formData.dob}
                   onChange={handleChange}
                   className={`focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md ${
-                    errors.email ? 'border-red-300' : 'border-gray-300'
+                    errors.dob ? 'border-red-300' : 'border-gray-300'
                   }`}
-                  placeholder="name@example.com"
                 />
               </div>
-              {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+              {errors.dob && (
+                <p className="mt-1 text-sm text-red-600">{errors.dob}</p>
               )}
             </div>
 
+            <h3 className="text-lg font-medium text-gray-900 pt-4">Address Information</h3>
+            <div>
+              <label htmlFor="addressLine1" className="block text-sm font-medium text-gray-700">
+                Address line 1
+              </label>
+              <div className="mt-1 relative rounded-md shadow-sm">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <MapPin className="h-5 w-5 text-gray-400" />
+                </div>
+                <Input
+                  id="addressLine1"
+                  name="addressLine1"
+                  type="text"
+                  autoComplete="street-address"
+                  value={formData.addressLine1}
+                  onChange={handleChange}
+                  className={`focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md ${
+                    errors.addressLine1 ? 'border-red-300' : 'border-gray-300'
+                  }`}
+                  placeholder="Street address, P.O. box, company name"
+                />
+              </div>
+              {errors.addressLine1 && (
+                <p className="mt-1 text-sm text-red-600">{errors.addressLine1}</p>
+              )}
+            </div>
+
+            <div>
+              <label htmlFor="addressLine2" className="block text-sm font-medium text-gray-700">
+                Address line 2 <span className="text-gray-400">(Optional)</span>
+              </label>
+              <div className="mt-1">
+                <Input
+                  id="addressLine2"
+                  name="addressLine2"
+                  type="text"
+                  autoComplete="address-line2"
+                  value={formData.addressLine2}
+                  onChange={handleChange}
+                  className="focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                  placeholder="Apartment, suite, unit, building, floor, etc."
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+              <div>
+                <label htmlFor="city" className="block text-sm font-medium text-gray-700">
+                  City
+                </label>
+                <div className="mt-1">
+                  <Input
+                    id="city"
+                    name="city"
+                    type="text"
+                    autoComplete="address-level2"
+                    value={formData.city}
+                    onChange={handleChange}
+                    className={`focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md ${
+                      errors.city ? 'border-red-300' : 'border-gray-300'
+                    }`}
+                  />
+                </div>
+                {errors.city && (
+                  <p className="mt-1 text-sm text-red-600">{errors.city}</p>
+                )}
+              </div>
+
+              <div>
+                <label htmlFor="state" className="block text-sm font-medium text-gray-700">
+                  State / Province
+                </label>
+                <div className="mt-1">
+                  <Input
+                    id="state"
+                    name="state"
+                    type="text"
+                    autoComplete="address-level1"
+                    value={formData.state}
+                    onChange={handleChange}
+                    className={`focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md ${
+                      errors.state ? 'border-red-300' : 'border-gray-300'
+                    }`}
+                  />
+                </div>
+                {errors.state && (
+                  <p className="mt-1 text-sm text-red-600">{errors.state}</p>
+                )}
+              </div>
+
+              <div>
+                <label htmlFor="zipCode" className="block text-sm font-medium text-gray-700">
+                  ZIP / Postal code
+                </label>
+                <div className="mt-1">
+                  <Input
+                    id="zipCode"
+                    name="zipCode"
+                    type="text"
+                    autoComplete="postal-code"
+                    value={formData.zipCode}
+                    onChange={handleChange}
+                    className={`focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md ${
+                      errors.zipCode ? 'border-red-300' : 'border-gray-300'
+                    }`}
+                  />
+                </div>
+                {errors.zipCode && (
+                  <p className="mt-1 text-sm text-red-600">{errors.zipCode}</p>
+                )}
+              </div>
+            </div>
+
+            <h3 className="text-lg font-medium text-gray-900 pt-4">Account Security</h3>
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Password
