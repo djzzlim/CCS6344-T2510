@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
@@ -15,94 +9,91 @@ datasource db {
 }
 
 model Customer {
-  CustomerID    String    @id @default(cuid())
-  FirstName     String
-  LastName      String
-  Email         String
-  ContactNumber String
-  DateOfBirth   DateTime
-  AddressLine1  String
-  AddressLine2  String?
-  City          String
-  State         String
-  ZipCode       String
-  PasswordHash  String
+  CustomerID    String    @id(map: "PK__Customer__A4AE64B802AB5CDC") @default(cuid()) @db.NVarChar(50)
+  FirstName     String?   @db.NVarChar(100)
+  LastName      String?   @db.NVarChar(100)
+  Email         String?   @db.NVarChar(255)
+  ContactNumber String?   @db.NVarChar(20)
+  DateOfBirth   DateTime? @db.Date
+  AddressLine1  String?   @db.NVarChar(255)
+  AddressLine2  String?   @db.NVarChar(255)
+  City          String?   @db.NVarChar(100)
+  State         String?   @db.NVarChar(100)
+  ZipCode       String?   @db.NVarChar(10)
+  PasswordHash  String?   @db.NVarChar(255)
   accounts      Account[]
 }
 
 model Officer {
-  OfficerID    String @id @default(cuid())
-  Username     String @unique
-  LastName     String
-  FirstName    String
-  PasswordHash String
+  OfficerID    String  @id(map: "PK__Officer__2E65579AB4F2DD00") @default(cuid()) @db.NVarChar(50)
+  Username     String? @unique(map: "UQ__Officer__536C85E4821448ED") @db.NVarChar(50)
+  LastName     String? @db.NVarChar(100)
+  FirstName    String? @db.NVarChar(100)
+  PasswordHash String? @db.NVarChar(255)
 }
 
 model Admin {
-  AdminID      String @id @default(cuid())
-  Username     String @unique
-  FirstName    String
-  LastName     String
-  PasswordHash String
+  AdminID      String  @id(map: "PK__Admin__719FE4E8CCE65A91") @default(cuid()) @db.NVarChar(50)
+  Username     String? @unique(map: "UQ__Admin__536C85E490CF1F0A") @db.NVarChar(50)
+  FirstName    String? @db.NVarChar(100)
+  LastName     String? @db.NVarChar(100)
+  PasswordHash String? @db.NVarChar(255)
 }
 
 model Account {
-  AccountID           String  @id @default(cuid())
-  CustomerID          String
-  Status              String
-  Balance             Float
-  AccountType         String
-  MonthlyFee          Float
-  DailyATMLimit       Float
-  DailyPurchaseLimit  Float
-  OverdraftProtection Boolean
-
-  customer      Customer   @relation(fields: [CustomerID], references: [CustomerID])
-  payments      Payment[]
-  transfersFrom Transfer[] @relation("FromTransfers")
-  transfersTo   Transfer[] @relation("ToTransfers")
+  AccountID           String     @id(map: "PK__Account__349DA5866C4EEDE0") @default(cuid()) @db.NVarChar(50)
+  CustomerID          String?    @db.NVarChar(50)
+  Status              String?    @db.NVarChar(50)
+  Balance             Decimal?   @db.Decimal(18, 2)
+  AccountType         String?    @db.NVarChar(50)
+  MonthlyFee          Decimal?   @db.Decimal(10, 2)
+  DailyATMLimit       Decimal?   @db.Decimal(18, 2)
+  DailyPurchaseLimit  Decimal?   @db.Decimal(18, 2)
+  OverdraftProtection Boolean?
+  customer            Customer?  @relation(fields: [CustomerID], references: [CustomerID], onDelete: NoAction, onUpdate: NoAction, map: "FK__Account__Custome__3F466844")
+  payments            Payment[]
+  transfersFrom       Transfer[] @relation("FromTransfers")
+  transfersTo         Transfer[] @relation("ToTransfers")
 }
 
 model Transfer {
-  TransferID    String    @id @default(cuid())
-  ToAccountID   String
-  FromAccountID String
-  Amount        Float
-  Description   String
-  CreatedAt     DateTime  @default(now())
-  UpdatedAt     DateTime?
-  Status        String
-  TransferType  String
-
-  toAccount   Account @relation("ToTransfers", fields: [ToAccountID], references: [AccountID], onDelete: NoAction, onUpdate: NoAction)
-  fromAccount Account @relation("FromTransfers", fields: [FromAccountID], references: [AccountID], onDelete: NoAction, onUpdate: NoAction)
+  TransferID    String    @id(map: "PK__Transfer__9549017197AAB778") @default(cuid()) @db.NVarChar(50)
+  ToAccountID   String?   @db.NVarChar(50)
+  FromAccountID String?   @db.NVarChar(50)
+  Amount        Decimal?  @db.Decimal(18, 2)
+  Description   String?   @db.NVarChar(255)
+  CreatedAt     DateTime? @default(now(), map: "DF__Transfer__Create__440B1D61") @db.DateTime
+  UpdatedAt     DateTime? @db.DateTime
+  Status        String?   @db.NVarChar(50)
+  TransferType  String?   @db.NVarChar(50)
+  fromAccount   Account?  @relation("FromTransfers", fields: [FromAccountID], references: [AccountID], onDelete: NoAction, onUpdate: NoAction, map: "FK__Transfer__FromAc__4316F928")
+  toAccount     Account?  @relation("ToTransfers", fields: [ToAccountID], references: [AccountID], onDelete: NoAction, onUpdate: NoAction, map: "FK__Transfer__ToAcco__4222D4EF")
 }
 
 model Utilities {
-  UtilityID     String    @id @default(cuid())
-  AccountName   String
-  AccountNumber String
+  UtilityID     String    @id(map: "PK__Utilitie__8B7E2E3F82A1A959") @default(cuid()) @db.NVarChar(50)
+  AccountName   String?   @db.NVarChar(255)
+  AccountNumber String?   @db.NVarChar(100)
   payments      Payment[]
 }
 
 model Payment {
-  PaymentID   String   @id @default(cuid())
-  AccountID   String
-  UtilityID   String
-  Amount      Float
-  Timestamp   DateTime @default(now())
-  Description String
-
-  account Account   @relation(fields: [AccountID], references: [AccountID])
-  utility Utilities @relation(fields: [UtilityID], references: [UtilityID])
+  PaymentID   String     @id(map: "PK__Payment__9B556A58967EF3CC") @default(cuid()) @db.NVarChar(50)
+  AccountID   String?    @db.NVarChar(50)
+  UtilityID   String?    @db.NVarChar(50)
+  Amount      Decimal?   @db.Decimal(18, 2)
+  Timestamp   DateTime?  @default(now(), map: "DF__Payment__Timesta__4AB81AF0") @db.DateTime
+  Description String?    @db.NVarChar(255)
+  account     Account?   @relation(fields: [AccountID], references: [AccountID], onDelete: NoAction, onUpdate: NoAction, map: "FK__Payment__Account__48CFD27E")
+  utility     Utilities? @relation(fields: [UtilityID], references: [UtilityID], onDelete: NoAction, onUpdate: NoAction, map: "FK__Payment__Utility__49C3F6B7")
 }
 
 model AUDIT_LOGS {
-  id         String   @id @default(cuid())
-  timestamp  DateTime @default(now())
-  actor_type String
-  actor_id   String
-  action     String
-  target_id  String
-  status     String
+  id         String    @id(map: "PK__AUDIT_LO__3213E83FC4D174A0") @default(cuid()) @db.NVarChar(50)
+  timestamp  DateTime? @default(now(), map: "DF__AUDIT_LOG__times__4D94879B") @db.DateTime
+  actor_type String?   @db.NVarChar(50)
+  actor_id   String?   @db.NVarChar(50)
+  action     String?   @db.NVarChar(255)
+  target_id  String?   @db.NVarChar(50)
+  status     String?   @db.NVarChar(50)
 }

@@ -1729,17 +1729,17 @@ export namespace Prisma {
 
   export type CustomerGroupByOutputType = {
     CustomerID: string
-    FirstName: string
-    LastName: string
-    Email: string
-    ContactNumber: string
-    DateOfBirth: Date
-    AddressLine1: string
+    FirstName: string | null
+    LastName: string | null
+    Email: string | null
+    ContactNumber: string | null
+    DateOfBirth: Date | null
+    AddressLine1: string | null
     AddressLine2: string | null
-    City: string
-    State: string
-    ZipCode: string
-    PasswordHash: string
+    City: string | null
+    State: string | null
+    ZipCode: string | null
+    PasswordHash: string | null
     _count: CustomerCountAggregateOutputType | null
     _min: CustomerMinAggregateOutputType | null
     _max: CustomerMaxAggregateOutputType | null
@@ -1806,17 +1806,17 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       CustomerID: string
-      FirstName: string
-      LastName: string
-      Email: string
-      ContactNumber: string
-      DateOfBirth: Date
-      AddressLine1: string
+      FirstName: string | null
+      LastName: string | null
+      Email: string | null
+      ContactNumber: string | null
+      DateOfBirth: Date | null
+      AddressLine1: string | null
       AddressLine2: string | null
-      City: string
-      State: string
-      ZipCode: string
-      PasswordHash: string
+      City: string | null
+      State: string | null
+      ZipCode: string | null
+      PasswordHash: string | null
     }, ExtArgs["result"]["customer"]>
     composites: {}
   }
@@ -2417,7 +2417,7 @@ export namespace Prisma {
     /**
      * The data needed to create a Customer.
      */
-    data: XOR<CustomerCreateInput, CustomerUncheckedCreateInput>
+    data?: XOR<CustomerCreateInput, CustomerUncheckedCreateInput>
   }
 
   /**
@@ -2718,10 +2718,10 @@ export namespace Prisma {
 
   export type OfficerGroupByOutputType = {
     OfficerID: string
-    Username: string
-    LastName: string
-    FirstName: string
-    PasswordHash: string
+    Username: string | null
+    LastName: string | null
+    FirstName: string | null
+    PasswordHash: string | null
     _count: OfficerCountAggregateOutputType | null
     _min: OfficerMinAggregateOutputType | null
     _max: OfficerMaxAggregateOutputType | null
@@ -2766,10 +2766,10 @@ export namespace Prisma {
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
       OfficerID: string
-      Username: string
-      LastName: string
-      FirstName: string
-      PasswordHash: string
+      Username: string | null
+      LastName: string | null
+      FirstName: string | null
+      PasswordHash: string | null
     }, ExtArgs["result"]["officer"]>
     composites: {}
   }
@@ -3338,7 +3338,7 @@ export namespace Prisma {
     /**
      * The data needed to create a Officer.
      */
-    data: XOR<OfficerCreateInput, OfficerUncheckedCreateInput>
+    data?: XOR<OfficerCreateInput, OfficerUncheckedCreateInput>
   }
 
   /**
@@ -3599,10 +3599,10 @@ export namespace Prisma {
 
   export type AdminGroupByOutputType = {
     AdminID: string
-    Username: string
-    FirstName: string
-    LastName: string
-    PasswordHash: string
+    Username: string | null
+    FirstName: string | null
+    LastName: string | null
+    PasswordHash: string | null
     _count: AdminCountAggregateOutputType | null
     _min: AdminMinAggregateOutputType | null
     _max: AdminMaxAggregateOutputType | null
@@ -3647,10 +3647,10 @@ export namespace Prisma {
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
       AdminID: string
-      Username: string
-      FirstName: string
-      LastName: string
-      PasswordHash: string
+      Username: string | null
+      FirstName: string | null
+      LastName: string | null
+      PasswordHash: string | null
     }, ExtArgs["result"]["admin"]>
     composites: {}
   }
@@ -4219,7 +4219,7 @@ export namespace Prisma {
     /**
      * The data needed to create a Admin.
      */
-    data: XOR<AdminCreateInput, AdminUncheckedCreateInput>
+    data?: XOR<AdminCreateInput, AdminUncheckedCreateInput>
   }
 
   /**
@@ -4358,28 +4358,28 @@ export namespace Prisma {
   }
 
   export type AccountAvgAggregateOutputType = {
-    Balance: number | null
-    MonthlyFee: number | null
-    DailyATMLimit: number | null
-    DailyPurchaseLimit: number | null
+    Balance: Decimal | null
+    MonthlyFee: Decimal | null
+    DailyATMLimit: Decimal | null
+    DailyPurchaseLimit: Decimal | null
   }
 
   export type AccountSumAggregateOutputType = {
-    Balance: number | null
-    MonthlyFee: number | null
-    DailyATMLimit: number | null
-    DailyPurchaseLimit: number | null
+    Balance: Decimal | null
+    MonthlyFee: Decimal | null
+    DailyATMLimit: Decimal | null
+    DailyPurchaseLimit: Decimal | null
   }
 
   export type AccountMinAggregateOutputType = {
     AccountID: string | null
     CustomerID: string | null
     Status: string | null
-    Balance: number | null
+    Balance: Decimal | null
     AccountType: string | null
-    MonthlyFee: number | null
-    DailyATMLimit: number | null
-    DailyPurchaseLimit: number | null
+    MonthlyFee: Decimal | null
+    DailyATMLimit: Decimal | null
+    DailyPurchaseLimit: Decimal | null
     OverdraftProtection: boolean | null
   }
 
@@ -4387,11 +4387,11 @@ export namespace Prisma {
     AccountID: string | null
     CustomerID: string | null
     Status: string | null
-    Balance: number | null
+    Balance: Decimal | null
     AccountType: string | null
-    MonthlyFee: number | null
-    DailyATMLimit: number | null
-    DailyPurchaseLimit: number | null
+    MonthlyFee: Decimal | null
+    DailyATMLimit: Decimal | null
+    DailyPurchaseLimit: Decimal | null
     OverdraftProtection: boolean | null
   }
 
@@ -4548,14 +4548,14 @@ export namespace Prisma {
 
   export type AccountGroupByOutputType = {
     AccountID: string
-    CustomerID: string
-    Status: string
-    Balance: number
-    AccountType: string
-    MonthlyFee: number
-    DailyATMLimit: number
-    DailyPurchaseLimit: number
-    OverdraftProtection: boolean
+    CustomerID: string | null
+    Status: string | null
+    Balance: Decimal | null
+    AccountType: string | null
+    MonthlyFee: Decimal | null
+    DailyATMLimit: Decimal | null
+    DailyPurchaseLimit: Decimal | null
+    OverdraftProtection: boolean | null
     _count: AccountCountAggregateOutputType | null
     _avg: AccountAvgAggregateOutputType | null
     _sum: AccountSumAggregateOutputType | null
@@ -4587,7 +4587,7 @@ export namespace Prisma {
     DailyATMLimit?: boolean
     DailyPurchaseLimit?: boolean
     OverdraftProtection?: boolean
-    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    customer?: boolean | Account$customerArgs<ExtArgs>
     payments?: boolean | Account$paymentsArgs<ExtArgs>
     transfersFrom?: boolean | Account$transfersFromArgs<ExtArgs>
     transfersTo?: boolean | Account$transfersToArgs<ExtArgs>
@@ -4610,7 +4610,7 @@ export namespace Prisma {
 
   export type AccountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"AccountID" | "CustomerID" | "Status" | "Balance" | "AccountType" | "MonthlyFee" | "DailyATMLimit" | "DailyPurchaseLimit" | "OverdraftProtection", ExtArgs["result"]["account"]>
   export type AccountInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    customer?: boolean | Account$customerArgs<ExtArgs>
     payments?: boolean | Account$paymentsArgs<ExtArgs>
     transfersFrom?: boolean | Account$transfersFromArgs<ExtArgs>
     transfersTo?: boolean | Account$transfersToArgs<ExtArgs>
@@ -4620,21 +4620,21 @@ export namespace Prisma {
   export type $AccountPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Account"
     objects: {
-      customer: Prisma.$CustomerPayload<ExtArgs>
+      customer: Prisma.$CustomerPayload<ExtArgs> | null
       payments: Prisma.$PaymentPayload<ExtArgs>[]
       transfersFrom: Prisma.$TransferPayload<ExtArgs>[]
       transfersTo: Prisma.$TransferPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       AccountID: string
-      CustomerID: string
-      Status: string
-      Balance: number
-      AccountType: string
-      MonthlyFee: number
-      DailyATMLimit: number
-      DailyPurchaseLimit: number
-      OverdraftProtection: boolean
+      CustomerID: string | null
+      Status: string | null
+      Balance: Prisma.Decimal | null
+      AccountType: string | null
+      MonthlyFee: Prisma.Decimal | null
+      DailyATMLimit: Prisma.Decimal | null
+      DailyPurchaseLimit: Prisma.Decimal | null
+      OverdraftProtection: boolean | null
     }, ExtArgs["result"]["account"]>
     composites: {}
   }
@@ -4975,7 +4975,7 @@ export namespace Prisma {
    */
   export interface Prisma__AccountClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    customer<T extends CustomerDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CustomerDefaultArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    customer<T extends Account$customerArgs<ExtArgs> = {}>(args?: Subset<T, Account$customerArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     payments<T extends Account$paymentsArgs<ExtArgs> = {}>(args?: Subset<T, Account$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     transfersFrom<T extends Account$transfersFromArgs<ExtArgs> = {}>(args?: Subset<T, Account$transfersFromArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     transfersTo<T extends Account$transfersToArgs<ExtArgs> = {}>(args?: Subset<T, Account$transfersToArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -5011,11 +5011,11 @@ export namespace Prisma {
     readonly AccountID: FieldRef<"Account", 'String'>
     readonly CustomerID: FieldRef<"Account", 'String'>
     readonly Status: FieldRef<"Account", 'String'>
-    readonly Balance: FieldRef<"Account", 'Float'>
+    readonly Balance: FieldRef<"Account", 'Decimal'>
     readonly AccountType: FieldRef<"Account", 'String'>
-    readonly MonthlyFee: FieldRef<"Account", 'Float'>
-    readonly DailyATMLimit: FieldRef<"Account", 'Float'>
-    readonly DailyPurchaseLimit: FieldRef<"Account", 'Float'>
+    readonly MonthlyFee: FieldRef<"Account", 'Decimal'>
+    readonly DailyATMLimit: FieldRef<"Account", 'Decimal'>
+    readonly DailyPurchaseLimit: FieldRef<"Account", 'Decimal'>
     readonly OverdraftProtection: FieldRef<"Account", 'Boolean'>
   }
     
@@ -5235,7 +5235,7 @@ export namespace Prisma {
     /**
      * The data needed to create a Account.
      */
-    data: XOR<AccountCreateInput, AccountUncheckedCreateInput>
+    data?: XOR<AccountCreateInput, AccountUncheckedCreateInput>
   }
 
   /**
@@ -5359,6 +5359,25 @@ export namespace Prisma {
   }
 
   /**
+   * Account.customer
+   */
+  export type Account$customerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Customer
+     */
+    select?: CustomerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Customer
+     */
+    omit?: CustomerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerInclude<ExtArgs> | null
+    where?: CustomerWhereInput
+  }
+
+  /**
    * Account.payments
    */
   export type Account$paymentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5462,18 +5481,18 @@ export namespace Prisma {
   }
 
   export type TransferAvgAggregateOutputType = {
-    Amount: number | null
+    Amount: Decimal | null
   }
 
   export type TransferSumAggregateOutputType = {
-    Amount: number | null
+    Amount: Decimal | null
   }
 
   export type TransferMinAggregateOutputType = {
     TransferID: string | null
     ToAccountID: string | null
     FromAccountID: string | null
-    Amount: number | null
+    Amount: Decimal | null
     Description: string | null
     CreatedAt: Date | null
     UpdatedAt: Date | null
@@ -5485,7 +5504,7 @@ export namespace Prisma {
     TransferID: string | null
     ToAccountID: string | null
     FromAccountID: string | null
-    Amount: number | null
+    Amount: Decimal | null
     Description: string | null
     CreatedAt: Date | null
     UpdatedAt: Date | null
@@ -5640,14 +5659,14 @@ export namespace Prisma {
 
   export type TransferGroupByOutputType = {
     TransferID: string
-    ToAccountID: string
-    FromAccountID: string
-    Amount: number
-    Description: string
-    CreatedAt: Date
+    ToAccountID: string | null
+    FromAccountID: string | null
+    Amount: Decimal | null
+    Description: string | null
+    CreatedAt: Date | null
     UpdatedAt: Date | null
-    Status: string
-    TransferType: string
+    Status: string | null
+    TransferType: string | null
     _count: TransferCountAggregateOutputType | null
     _avg: TransferAvgAggregateOutputType | null
     _sum: TransferSumAggregateOutputType | null
@@ -5679,8 +5698,8 @@ export namespace Prisma {
     UpdatedAt?: boolean
     Status?: boolean
     TransferType?: boolean
-    toAccount?: boolean | AccountDefaultArgs<ExtArgs>
-    fromAccount?: boolean | AccountDefaultArgs<ExtArgs>
+    fromAccount?: boolean | Transfer$fromAccountArgs<ExtArgs>
+    toAccount?: boolean | Transfer$toAccountArgs<ExtArgs>
   }, ExtArgs["result"]["transfer"]>
 
 
@@ -5699,26 +5718,26 @@ export namespace Prisma {
 
   export type TransferOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"TransferID" | "ToAccountID" | "FromAccountID" | "Amount" | "Description" | "CreatedAt" | "UpdatedAt" | "Status" | "TransferType", ExtArgs["result"]["transfer"]>
   export type TransferInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    toAccount?: boolean | AccountDefaultArgs<ExtArgs>
-    fromAccount?: boolean | AccountDefaultArgs<ExtArgs>
+    fromAccount?: boolean | Transfer$fromAccountArgs<ExtArgs>
+    toAccount?: boolean | Transfer$toAccountArgs<ExtArgs>
   }
 
   export type $TransferPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Transfer"
     objects: {
-      toAccount: Prisma.$AccountPayload<ExtArgs>
-      fromAccount: Prisma.$AccountPayload<ExtArgs>
+      fromAccount: Prisma.$AccountPayload<ExtArgs> | null
+      toAccount: Prisma.$AccountPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       TransferID: string
-      ToAccountID: string
-      FromAccountID: string
-      Amount: number
-      Description: string
-      CreatedAt: Date
+      ToAccountID: string | null
+      FromAccountID: string | null
+      Amount: Prisma.Decimal | null
+      Description: string | null
+      CreatedAt: Date | null
       UpdatedAt: Date | null
-      Status: string
-      TransferType: string
+      Status: string | null
+      TransferType: string | null
     }, ExtArgs["result"]["transfer"]>
     composites: {}
   }
@@ -6059,8 +6078,8 @@ export namespace Prisma {
    */
   export interface Prisma__TransferClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    toAccount<T extends AccountDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AccountDefaultArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    fromAccount<T extends AccountDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AccountDefaultArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    fromAccount<T extends Transfer$fromAccountArgs<ExtArgs> = {}>(args?: Subset<T, Transfer$fromAccountArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    toAccount<T extends Transfer$toAccountArgs<ExtArgs> = {}>(args?: Subset<T, Transfer$toAccountArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6093,7 +6112,7 @@ export namespace Prisma {
     readonly TransferID: FieldRef<"Transfer", 'String'>
     readonly ToAccountID: FieldRef<"Transfer", 'String'>
     readonly FromAccountID: FieldRef<"Transfer", 'String'>
-    readonly Amount: FieldRef<"Transfer", 'Float'>
+    readonly Amount: FieldRef<"Transfer", 'Decimal'>
     readonly Description: FieldRef<"Transfer", 'String'>
     readonly CreatedAt: FieldRef<"Transfer", 'DateTime'>
     readonly UpdatedAt: FieldRef<"Transfer", 'DateTime'>
@@ -6317,7 +6336,7 @@ export namespace Prisma {
     /**
      * The data needed to create a Transfer.
      */
-    data: XOR<TransferCreateInput, TransferUncheckedCreateInput>
+    data?: XOR<TransferCreateInput, TransferUncheckedCreateInput>
   }
 
   /**
@@ -6438,6 +6457,44 @@ export namespace Prisma {
      * Limit how many Transfers to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Transfer.fromAccount
+   */
+  export type Transfer$fromAccountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Account
+     */
+    select?: AccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Account
+     */
+    omit?: AccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccountInclude<ExtArgs> | null
+    where?: AccountWhereInput
+  }
+
+  /**
+   * Transfer.toAccount
+   */
+  export type Transfer$toAccountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Account
+     */
+    select?: AccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Account
+     */
+    omit?: AccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccountInclude<ExtArgs> | null
+    where?: AccountWhereInput
   }
 
   /**
@@ -6582,8 +6639,8 @@ export namespace Prisma {
 
   export type UtilitiesGroupByOutputType = {
     UtilityID: string
-    AccountName: string
-    AccountNumber: string
+    AccountName: string | null
+    AccountNumber: string | null
     _count: UtilitiesCountAggregateOutputType | null
     _min: UtilitiesMinAggregateOutputType | null
     _max: UtilitiesMaxAggregateOutputType | null
@@ -6632,8 +6689,8 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       UtilityID: string
-      AccountName: string
-      AccountNumber: string
+      AccountName: string | null
+      AccountNumber: string | null
     }, ExtArgs["result"]["utilities"]>
     composites: {}
   }
@@ -7225,7 +7282,7 @@ export namespace Prisma {
     /**
      * The data needed to create a Utilities.
      */
-    data: XOR<UtilitiesCreateInput, UtilitiesUncheckedCreateInput>
+    data?: XOR<UtilitiesCreateInput, UtilitiesUncheckedCreateInput>
   }
 
   /**
@@ -7404,18 +7461,18 @@ export namespace Prisma {
   }
 
   export type PaymentAvgAggregateOutputType = {
-    Amount: number | null
+    Amount: Decimal | null
   }
 
   export type PaymentSumAggregateOutputType = {
-    Amount: number | null
+    Amount: Decimal | null
   }
 
   export type PaymentMinAggregateOutputType = {
     PaymentID: string | null
     AccountID: string | null
     UtilityID: string | null
-    Amount: number | null
+    Amount: Decimal | null
     Timestamp: Date | null
     Description: string | null
   }
@@ -7424,7 +7481,7 @@ export namespace Prisma {
     PaymentID: string | null
     AccountID: string | null
     UtilityID: string | null
-    Amount: number | null
+    Amount: Decimal | null
     Timestamp: Date | null
     Description: string | null
   }
@@ -7564,11 +7621,11 @@ export namespace Prisma {
 
   export type PaymentGroupByOutputType = {
     PaymentID: string
-    AccountID: string
-    UtilityID: string
-    Amount: number
-    Timestamp: Date
-    Description: string
+    AccountID: string | null
+    UtilityID: string | null
+    Amount: Decimal | null
+    Timestamp: Date | null
+    Description: string | null
     _count: PaymentCountAggregateOutputType | null
     _avg: PaymentAvgAggregateOutputType | null
     _sum: PaymentSumAggregateOutputType | null
@@ -7597,8 +7654,8 @@ export namespace Prisma {
     Amount?: boolean
     Timestamp?: boolean
     Description?: boolean
-    account?: boolean | AccountDefaultArgs<ExtArgs>
-    utility?: boolean | UtilitiesDefaultArgs<ExtArgs>
+    account?: boolean | Payment$accountArgs<ExtArgs>
+    utility?: boolean | Payment$utilityArgs<ExtArgs>
   }, ExtArgs["result"]["payment"]>
 
 
@@ -7614,23 +7671,23 @@ export namespace Prisma {
 
   export type PaymentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"PaymentID" | "AccountID" | "UtilityID" | "Amount" | "Timestamp" | "Description", ExtArgs["result"]["payment"]>
   export type PaymentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    account?: boolean | AccountDefaultArgs<ExtArgs>
-    utility?: boolean | UtilitiesDefaultArgs<ExtArgs>
+    account?: boolean | Payment$accountArgs<ExtArgs>
+    utility?: boolean | Payment$utilityArgs<ExtArgs>
   }
 
   export type $PaymentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Payment"
     objects: {
-      account: Prisma.$AccountPayload<ExtArgs>
-      utility: Prisma.$UtilitiesPayload<ExtArgs>
+      account: Prisma.$AccountPayload<ExtArgs> | null
+      utility: Prisma.$UtilitiesPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       PaymentID: string
-      AccountID: string
-      UtilityID: string
-      Amount: number
-      Timestamp: Date
-      Description: string
+      AccountID: string | null
+      UtilityID: string | null
+      Amount: Prisma.Decimal | null
+      Timestamp: Date | null
+      Description: string | null
     }, ExtArgs["result"]["payment"]>
     composites: {}
   }
@@ -7971,8 +8028,8 @@ export namespace Prisma {
    */
   export interface Prisma__PaymentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    account<T extends AccountDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AccountDefaultArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    utility<T extends UtilitiesDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UtilitiesDefaultArgs<ExtArgs>>): Prisma__UtilitiesClient<$Result.GetResult<Prisma.$UtilitiesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    account<T extends Payment$accountArgs<ExtArgs> = {}>(args?: Subset<T, Payment$accountArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    utility<T extends Payment$utilityArgs<ExtArgs> = {}>(args?: Subset<T, Payment$utilityArgs<ExtArgs>>): Prisma__UtilitiesClient<$Result.GetResult<Prisma.$UtilitiesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8005,7 +8062,7 @@ export namespace Prisma {
     readonly PaymentID: FieldRef<"Payment", 'String'>
     readonly AccountID: FieldRef<"Payment", 'String'>
     readonly UtilityID: FieldRef<"Payment", 'String'>
-    readonly Amount: FieldRef<"Payment", 'Float'>
+    readonly Amount: FieldRef<"Payment", 'Decimal'>
     readonly Timestamp: FieldRef<"Payment", 'DateTime'>
     readonly Description: FieldRef<"Payment", 'String'>
   }
@@ -8226,7 +8283,7 @@ export namespace Prisma {
     /**
      * The data needed to create a Payment.
      */
-    data: XOR<PaymentCreateInput, PaymentUncheckedCreateInput>
+    data?: XOR<PaymentCreateInput, PaymentUncheckedCreateInput>
   }
 
   /**
@@ -8347,6 +8404,44 @@ export namespace Prisma {
      * Limit how many Payments to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Payment.account
+   */
+  export type Payment$accountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Account
+     */
+    select?: AccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Account
+     */
+    omit?: AccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccountInclude<ExtArgs> | null
+    where?: AccountWhereInput
+  }
+
+  /**
+   * Payment.utility
+   */
+  export type Payment$utilityArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Utilities
+     */
+    select?: UtilitiesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Utilities
+     */
+    omit?: UtilitiesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UtilitiesInclude<ExtArgs> | null
+    where?: UtilitiesWhereInput
   }
 
   /**
@@ -8515,12 +8610,12 @@ export namespace Prisma {
 
   export type AUDIT_LOGSGroupByOutputType = {
     id: string
-    timestamp: Date
-    actor_type: string
-    actor_id: string
-    action: string
-    target_id: string
-    status: string
+    timestamp: Date | null
+    actor_type: string | null
+    actor_id: string | null
+    action: string | null
+    target_id: string | null
+    status: string | null
     _count: AUDIT_LOGSCountAggregateOutputType | null
     _min: AUDIT_LOGSMinAggregateOutputType | null
     _max: AUDIT_LOGSMaxAggregateOutputType | null
@@ -8569,12 +8664,12 @@ export namespace Prisma {
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      timestamp: Date
-      actor_type: string
-      actor_id: string
-      action: string
-      target_id: string
-      status: string
+      timestamp: Date | null
+      actor_type: string | null
+      actor_id: string | null
+      action: string | null
+      target_id: string | null
+      status: string | null
     }, ExtArgs["result"]["aUDIT_LOGS"]>
     composites: {}
   }
@@ -9145,7 +9240,7 @@ export namespace Prisma {
     /**
      * The data needed to create a AUDIT_LOGS.
      */
-    data: XOR<AUDIT_LOGSCreateInput, AUDIT_LOGSUncheckedCreateInput>
+    data?: XOR<AUDIT_LOGSCreateInput, AUDIT_LOGSUncheckedCreateInput>
   }
 
   /**
@@ -9426,9 +9521,9 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Float'
+   * Reference to a field of type 'Decimal'
    */
-  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+  export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
     
 
 
@@ -9454,33 +9549,33 @@ export namespace Prisma {
     OR?: CustomerWhereInput[]
     NOT?: CustomerWhereInput | CustomerWhereInput[]
     CustomerID?: StringFilter<"Customer"> | string
-    FirstName?: StringFilter<"Customer"> | string
-    LastName?: StringFilter<"Customer"> | string
-    Email?: StringFilter<"Customer"> | string
-    ContactNumber?: StringFilter<"Customer"> | string
-    DateOfBirth?: DateTimeFilter<"Customer"> | Date | string
-    AddressLine1?: StringFilter<"Customer"> | string
+    FirstName?: StringNullableFilter<"Customer"> | string | null
+    LastName?: StringNullableFilter<"Customer"> | string | null
+    Email?: StringNullableFilter<"Customer"> | string | null
+    ContactNumber?: StringNullableFilter<"Customer"> | string | null
+    DateOfBirth?: DateTimeNullableFilter<"Customer"> | Date | string | null
+    AddressLine1?: StringNullableFilter<"Customer"> | string | null
     AddressLine2?: StringNullableFilter<"Customer"> | string | null
-    City?: StringFilter<"Customer"> | string
-    State?: StringFilter<"Customer"> | string
-    ZipCode?: StringFilter<"Customer"> | string
-    PasswordHash?: StringFilter<"Customer"> | string
+    City?: StringNullableFilter<"Customer"> | string | null
+    State?: StringNullableFilter<"Customer"> | string | null
+    ZipCode?: StringNullableFilter<"Customer"> | string | null
+    PasswordHash?: StringNullableFilter<"Customer"> | string | null
     accounts?: AccountListRelationFilter
   }
 
   export type CustomerOrderByWithRelationInput = {
     CustomerID?: SortOrder
-    FirstName?: SortOrder
-    LastName?: SortOrder
-    Email?: SortOrder
-    ContactNumber?: SortOrder
-    DateOfBirth?: SortOrder
-    AddressLine1?: SortOrder
+    FirstName?: SortOrderInput | SortOrder
+    LastName?: SortOrderInput | SortOrder
+    Email?: SortOrderInput | SortOrder
+    ContactNumber?: SortOrderInput | SortOrder
+    DateOfBirth?: SortOrderInput | SortOrder
+    AddressLine1?: SortOrderInput | SortOrder
     AddressLine2?: SortOrderInput | SortOrder
-    City?: SortOrder
-    State?: SortOrder
-    ZipCode?: SortOrder
-    PasswordHash?: SortOrder
+    City?: SortOrderInput | SortOrder
+    State?: SortOrderInput | SortOrder
+    ZipCode?: SortOrderInput | SortOrder
+    PasswordHash?: SortOrderInput | SortOrder
     accounts?: AccountOrderByRelationAggregateInput
   }
 
@@ -9489,33 +9584,33 @@ export namespace Prisma {
     AND?: CustomerWhereInput | CustomerWhereInput[]
     OR?: CustomerWhereInput[]
     NOT?: CustomerWhereInput | CustomerWhereInput[]
-    FirstName?: StringFilter<"Customer"> | string
-    LastName?: StringFilter<"Customer"> | string
-    Email?: StringFilter<"Customer"> | string
-    ContactNumber?: StringFilter<"Customer"> | string
-    DateOfBirth?: DateTimeFilter<"Customer"> | Date | string
-    AddressLine1?: StringFilter<"Customer"> | string
+    FirstName?: StringNullableFilter<"Customer"> | string | null
+    LastName?: StringNullableFilter<"Customer"> | string | null
+    Email?: StringNullableFilter<"Customer"> | string | null
+    ContactNumber?: StringNullableFilter<"Customer"> | string | null
+    DateOfBirth?: DateTimeNullableFilter<"Customer"> | Date | string | null
+    AddressLine1?: StringNullableFilter<"Customer"> | string | null
     AddressLine2?: StringNullableFilter<"Customer"> | string | null
-    City?: StringFilter<"Customer"> | string
-    State?: StringFilter<"Customer"> | string
-    ZipCode?: StringFilter<"Customer"> | string
-    PasswordHash?: StringFilter<"Customer"> | string
+    City?: StringNullableFilter<"Customer"> | string | null
+    State?: StringNullableFilter<"Customer"> | string | null
+    ZipCode?: StringNullableFilter<"Customer"> | string | null
+    PasswordHash?: StringNullableFilter<"Customer"> | string | null
     accounts?: AccountListRelationFilter
   }, "CustomerID">
 
   export type CustomerOrderByWithAggregationInput = {
     CustomerID?: SortOrder
-    FirstName?: SortOrder
-    LastName?: SortOrder
-    Email?: SortOrder
-    ContactNumber?: SortOrder
-    DateOfBirth?: SortOrder
-    AddressLine1?: SortOrder
+    FirstName?: SortOrderInput | SortOrder
+    LastName?: SortOrderInput | SortOrder
+    Email?: SortOrderInput | SortOrder
+    ContactNumber?: SortOrderInput | SortOrder
+    DateOfBirth?: SortOrderInput | SortOrder
+    AddressLine1?: SortOrderInput | SortOrder
     AddressLine2?: SortOrderInput | SortOrder
-    City?: SortOrder
-    State?: SortOrder
-    ZipCode?: SortOrder
-    PasswordHash?: SortOrder
+    City?: SortOrderInput | SortOrder
+    State?: SortOrderInput | SortOrder
+    ZipCode?: SortOrderInput | SortOrder
+    PasswordHash?: SortOrderInput | SortOrder
     _count?: CustomerCountOrderByAggregateInput
     _max?: CustomerMaxOrderByAggregateInput
     _min?: CustomerMinOrderByAggregateInput
@@ -9526,17 +9621,17 @@ export namespace Prisma {
     OR?: CustomerScalarWhereWithAggregatesInput[]
     NOT?: CustomerScalarWhereWithAggregatesInput | CustomerScalarWhereWithAggregatesInput[]
     CustomerID?: StringWithAggregatesFilter<"Customer"> | string
-    FirstName?: StringWithAggregatesFilter<"Customer"> | string
-    LastName?: StringWithAggregatesFilter<"Customer"> | string
-    Email?: StringWithAggregatesFilter<"Customer"> | string
-    ContactNumber?: StringWithAggregatesFilter<"Customer"> | string
-    DateOfBirth?: DateTimeWithAggregatesFilter<"Customer"> | Date | string
-    AddressLine1?: StringWithAggregatesFilter<"Customer"> | string
+    FirstName?: StringNullableWithAggregatesFilter<"Customer"> | string | null
+    LastName?: StringNullableWithAggregatesFilter<"Customer"> | string | null
+    Email?: StringNullableWithAggregatesFilter<"Customer"> | string | null
+    ContactNumber?: StringNullableWithAggregatesFilter<"Customer"> | string | null
+    DateOfBirth?: DateTimeNullableWithAggregatesFilter<"Customer"> | Date | string | null
+    AddressLine1?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     AddressLine2?: StringNullableWithAggregatesFilter<"Customer"> | string | null
-    City?: StringWithAggregatesFilter<"Customer"> | string
-    State?: StringWithAggregatesFilter<"Customer"> | string
-    ZipCode?: StringWithAggregatesFilter<"Customer"> | string
-    PasswordHash?: StringWithAggregatesFilter<"Customer"> | string
+    City?: StringNullableWithAggregatesFilter<"Customer"> | string | null
+    State?: StringNullableWithAggregatesFilter<"Customer"> | string | null
+    ZipCode?: StringNullableWithAggregatesFilter<"Customer"> | string | null
+    PasswordHash?: StringNullableWithAggregatesFilter<"Customer"> | string | null
   }
 
   export type OfficerWhereInput = {
@@ -9544,18 +9639,18 @@ export namespace Prisma {
     OR?: OfficerWhereInput[]
     NOT?: OfficerWhereInput | OfficerWhereInput[]
     OfficerID?: StringFilter<"Officer"> | string
-    Username?: StringFilter<"Officer"> | string
-    LastName?: StringFilter<"Officer"> | string
-    FirstName?: StringFilter<"Officer"> | string
-    PasswordHash?: StringFilter<"Officer"> | string
+    Username?: StringNullableFilter<"Officer"> | string | null
+    LastName?: StringNullableFilter<"Officer"> | string | null
+    FirstName?: StringNullableFilter<"Officer"> | string | null
+    PasswordHash?: StringNullableFilter<"Officer"> | string | null
   }
 
   export type OfficerOrderByWithRelationInput = {
     OfficerID?: SortOrder
-    Username?: SortOrder
-    LastName?: SortOrder
-    FirstName?: SortOrder
-    PasswordHash?: SortOrder
+    Username?: SortOrderInput | SortOrder
+    LastName?: SortOrderInput | SortOrder
+    FirstName?: SortOrderInput | SortOrder
+    PasswordHash?: SortOrderInput | SortOrder
   }
 
   export type OfficerWhereUniqueInput = Prisma.AtLeast<{
@@ -9564,17 +9659,17 @@ export namespace Prisma {
     AND?: OfficerWhereInput | OfficerWhereInput[]
     OR?: OfficerWhereInput[]
     NOT?: OfficerWhereInput | OfficerWhereInput[]
-    LastName?: StringFilter<"Officer"> | string
-    FirstName?: StringFilter<"Officer"> | string
-    PasswordHash?: StringFilter<"Officer"> | string
+    LastName?: StringNullableFilter<"Officer"> | string | null
+    FirstName?: StringNullableFilter<"Officer"> | string | null
+    PasswordHash?: StringNullableFilter<"Officer"> | string | null
   }, "OfficerID" | "Username">
 
   export type OfficerOrderByWithAggregationInput = {
     OfficerID?: SortOrder
-    Username?: SortOrder
-    LastName?: SortOrder
-    FirstName?: SortOrder
-    PasswordHash?: SortOrder
+    Username?: SortOrderInput | SortOrder
+    LastName?: SortOrderInput | SortOrder
+    FirstName?: SortOrderInput | SortOrder
+    PasswordHash?: SortOrderInput | SortOrder
     _count?: OfficerCountOrderByAggregateInput
     _max?: OfficerMaxOrderByAggregateInput
     _min?: OfficerMinOrderByAggregateInput
@@ -9585,10 +9680,10 @@ export namespace Prisma {
     OR?: OfficerScalarWhereWithAggregatesInput[]
     NOT?: OfficerScalarWhereWithAggregatesInput | OfficerScalarWhereWithAggregatesInput[]
     OfficerID?: StringWithAggregatesFilter<"Officer"> | string
-    Username?: StringWithAggregatesFilter<"Officer"> | string
-    LastName?: StringWithAggregatesFilter<"Officer"> | string
-    FirstName?: StringWithAggregatesFilter<"Officer"> | string
-    PasswordHash?: StringWithAggregatesFilter<"Officer"> | string
+    Username?: StringNullableWithAggregatesFilter<"Officer"> | string | null
+    LastName?: StringNullableWithAggregatesFilter<"Officer"> | string | null
+    FirstName?: StringNullableWithAggregatesFilter<"Officer"> | string | null
+    PasswordHash?: StringNullableWithAggregatesFilter<"Officer"> | string | null
   }
 
   export type AdminWhereInput = {
@@ -9596,18 +9691,18 @@ export namespace Prisma {
     OR?: AdminWhereInput[]
     NOT?: AdminWhereInput | AdminWhereInput[]
     AdminID?: StringFilter<"Admin"> | string
-    Username?: StringFilter<"Admin"> | string
-    FirstName?: StringFilter<"Admin"> | string
-    LastName?: StringFilter<"Admin"> | string
-    PasswordHash?: StringFilter<"Admin"> | string
+    Username?: StringNullableFilter<"Admin"> | string | null
+    FirstName?: StringNullableFilter<"Admin"> | string | null
+    LastName?: StringNullableFilter<"Admin"> | string | null
+    PasswordHash?: StringNullableFilter<"Admin"> | string | null
   }
 
   export type AdminOrderByWithRelationInput = {
     AdminID?: SortOrder
-    Username?: SortOrder
-    FirstName?: SortOrder
-    LastName?: SortOrder
-    PasswordHash?: SortOrder
+    Username?: SortOrderInput | SortOrder
+    FirstName?: SortOrderInput | SortOrder
+    LastName?: SortOrderInput | SortOrder
+    PasswordHash?: SortOrderInput | SortOrder
   }
 
   export type AdminWhereUniqueInput = Prisma.AtLeast<{
@@ -9616,17 +9711,17 @@ export namespace Prisma {
     AND?: AdminWhereInput | AdminWhereInput[]
     OR?: AdminWhereInput[]
     NOT?: AdminWhereInput | AdminWhereInput[]
-    FirstName?: StringFilter<"Admin"> | string
-    LastName?: StringFilter<"Admin"> | string
-    PasswordHash?: StringFilter<"Admin"> | string
+    FirstName?: StringNullableFilter<"Admin"> | string | null
+    LastName?: StringNullableFilter<"Admin"> | string | null
+    PasswordHash?: StringNullableFilter<"Admin"> | string | null
   }, "AdminID" | "Username">
 
   export type AdminOrderByWithAggregationInput = {
     AdminID?: SortOrder
-    Username?: SortOrder
-    FirstName?: SortOrder
-    LastName?: SortOrder
-    PasswordHash?: SortOrder
+    Username?: SortOrderInput | SortOrder
+    FirstName?: SortOrderInput | SortOrder
+    LastName?: SortOrderInput | SortOrder
+    PasswordHash?: SortOrderInput | SortOrder
     _count?: AdminCountOrderByAggregateInput
     _max?: AdminMaxOrderByAggregateInput
     _min?: AdminMinOrderByAggregateInput
@@ -9637,10 +9732,10 @@ export namespace Prisma {
     OR?: AdminScalarWhereWithAggregatesInput[]
     NOT?: AdminScalarWhereWithAggregatesInput | AdminScalarWhereWithAggregatesInput[]
     AdminID?: StringWithAggregatesFilter<"Admin"> | string
-    Username?: StringWithAggregatesFilter<"Admin"> | string
-    FirstName?: StringWithAggregatesFilter<"Admin"> | string
-    LastName?: StringWithAggregatesFilter<"Admin"> | string
-    PasswordHash?: StringWithAggregatesFilter<"Admin"> | string
+    Username?: StringNullableWithAggregatesFilter<"Admin"> | string | null
+    FirstName?: StringNullableWithAggregatesFilter<"Admin"> | string | null
+    LastName?: StringNullableWithAggregatesFilter<"Admin"> | string | null
+    PasswordHash?: StringNullableWithAggregatesFilter<"Admin"> | string | null
   }
 
   export type AccountWhereInput = {
@@ -9648,15 +9743,15 @@ export namespace Prisma {
     OR?: AccountWhereInput[]
     NOT?: AccountWhereInput | AccountWhereInput[]
     AccountID?: StringFilter<"Account"> | string
-    CustomerID?: StringFilter<"Account"> | string
-    Status?: StringFilter<"Account"> | string
-    Balance?: FloatFilter<"Account"> | number
-    AccountType?: StringFilter<"Account"> | string
-    MonthlyFee?: FloatFilter<"Account"> | number
-    DailyATMLimit?: FloatFilter<"Account"> | number
-    DailyPurchaseLimit?: FloatFilter<"Account"> | number
-    OverdraftProtection?: BoolFilter<"Account"> | boolean
-    customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
+    CustomerID?: StringNullableFilter<"Account"> | string | null
+    Status?: StringNullableFilter<"Account"> | string | null
+    Balance?: DecimalNullableFilter<"Account"> | Decimal | DecimalJsLike | number | string | null
+    AccountType?: StringNullableFilter<"Account"> | string | null
+    MonthlyFee?: DecimalNullableFilter<"Account"> | Decimal | DecimalJsLike | number | string | null
+    DailyATMLimit?: DecimalNullableFilter<"Account"> | Decimal | DecimalJsLike | number | string | null
+    DailyPurchaseLimit?: DecimalNullableFilter<"Account"> | Decimal | DecimalJsLike | number | string | null
+    OverdraftProtection?: BoolNullableFilter<"Account"> | boolean | null
+    customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
     payments?: PaymentListRelationFilter
     transfersFrom?: TransferListRelationFilter
     transfersTo?: TransferListRelationFilter
@@ -9664,14 +9759,14 @@ export namespace Prisma {
 
   export type AccountOrderByWithRelationInput = {
     AccountID?: SortOrder
-    CustomerID?: SortOrder
-    Status?: SortOrder
-    Balance?: SortOrder
-    AccountType?: SortOrder
-    MonthlyFee?: SortOrder
-    DailyATMLimit?: SortOrder
-    DailyPurchaseLimit?: SortOrder
-    OverdraftProtection?: SortOrder
+    CustomerID?: SortOrderInput | SortOrder
+    Status?: SortOrderInput | SortOrder
+    Balance?: SortOrderInput | SortOrder
+    AccountType?: SortOrderInput | SortOrder
+    MonthlyFee?: SortOrderInput | SortOrder
+    DailyATMLimit?: SortOrderInput | SortOrder
+    DailyPurchaseLimit?: SortOrderInput | SortOrder
+    OverdraftProtection?: SortOrderInput | SortOrder
     customer?: CustomerOrderByWithRelationInput
     payments?: PaymentOrderByRelationAggregateInput
     transfersFrom?: TransferOrderByRelationAggregateInput
@@ -9683,15 +9778,15 @@ export namespace Prisma {
     AND?: AccountWhereInput | AccountWhereInput[]
     OR?: AccountWhereInput[]
     NOT?: AccountWhereInput | AccountWhereInput[]
-    CustomerID?: StringFilter<"Account"> | string
-    Status?: StringFilter<"Account"> | string
-    Balance?: FloatFilter<"Account"> | number
-    AccountType?: StringFilter<"Account"> | string
-    MonthlyFee?: FloatFilter<"Account"> | number
-    DailyATMLimit?: FloatFilter<"Account"> | number
-    DailyPurchaseLimit?: FloatFilter<"Account"> | number
-    OverdraftProtection?: BoolFilter<"Account"> | boolean
-    customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
+    CustomerID?: StringNullableFilter<"Account"> | string | null
+    Status?: StringNullableFilter<"Account"> | string | null
+    Balance?: DecimalNullableFilter<"Account"> | Decimal | DecimalJsLike | number | string | null
+    AccountType?: StringNullableFilter<"Account"> | string | null
+    MonthlyFee?: DecimalNullableFilter<"Account"> | Decimal | DecimalJsLike | number | string | null
+    DailyATMLimit?: DecimalNullableFilter<"Account"> | Decimal | DecimalJsLike | number | string | null
+    DailyPurchaseLimit?: DecimalNullableFilter<"Account"> | Decimal | DecimalJsLike | number | string | null
+    OverdraftProtection?: BoolNullableFilter<"Account"> | boolean | null
+    customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
     payments?: PaymentListRelationFilter
     transfersFrom?: TransferListRelationFilter
     transfersTo?: TransferListRelationFilter
@@ -9699,14 +9794,14 @@ export namespace Prisma {
 
   export type AccountOrderByWithAggregationInput = {
     AccountID?: SortOrder
-    CustomerID?: SortOrder
-    Status?: SortOrder
-    Balance?: SortOrder
-    AccountType?: SortOrder
-    MonthlyFee?: SortOrder
-    DailyATMLimit?: SortOrder
-    DailyPurchaseLimit?: SortOrder
-    OverdraftProtection?: SortOrder
+    CustomerID?: SortOrderInput | SortOrder
+    Status?: SortOrderInput | SortOrder
+    Balance?: SortOrderInput | SortOrder
+    AccountType?: SortOrderInput | SortOrder
+    MonthlyFee?: SortOrderInput | SortOrder
+    DailyATMLimit?: SortOrderInput | SortOrder
+    DailyPurchaseLimit?: SortOrderInput | SortOrder
+    OverdraftProtection?: SortOrderInput | SortOrder
     _count?: AccountCountOrderByAggregateInput
     _avg?: AccountAvgOrderByAggregateInput
     _max?: AccountMaxOrderByAggregateInput
@@ -9719,14 +9814,14 @@ export namespace Prisma {
     OR?: AccountScalarWhereWithAggregatesInput[]
     NOT?: AccountScalarWhereWithAggregatesInput | AccountScalarWhereWithAggregatesInput[]
     AccountID?: StringWithAggregatesFilter<"Account"> | string
-    CustomerID?: StringWithAggregatesFilter<"Account"> | string
-    Status?: StringWithAggregatesFilter<"Account"> | string
-    Balance?: FloatWithAggregatesFilter<"Account"> | number
-    AccountType?: StringWithAggregatesFilter<"Account"> | string
-    MonthlyFee?: FloatWithAggregatesFilter<"Account"> | number
-    DailyATMLimit?: FloatWithAggregatesFilter<"Account"> | number
-    DailyPurchaseLimit?: FloatWithAggregatesFilter<"Account"> | number
-    OverdraftProtection?: BoolWithAggregatesFilter<"Account"> | boolean
+    CustomerID?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    Status?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    Balance?: DecimalNullableWithAggregatesFilter<"Account"> | Decimal | DecimalJsLike | number | string | null
+    AccountType?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    MonthlyFee?: DecimalNullableWithAggregatesFilter<"Account"> | Decimal | DecimalJsLike | number | string | null
+    DailyATMLimit?: DecimalNullableWithAggregatesFilter<"Account"> | Decimal | DecimalJsLike | number | string | null
+    DailyPurchaseLimit?: DecimalNullableWithAggregatesFilter<"Account"> | Decimal | DecimalJsLike | number | string | null
+    OverdraftProtection?: BoolNullableWithAggregatesFilter<"Account"> | boolean | null
   }
 
   export type TransferWhereInput = {
@@ -9734,30 +9829,30 @@ export namespace Prisma {
     OR?: TransferWhereInput[]
     NOT?: TransferWhereInput | TransferWhereInput[]
     TransferID?: StringFilter<"Transfer"> | string
-    ToAccountID?: StringFilter<"Transfer"> | string
-    FromAccountID?: StringFilter<"Transfer"> | string
-    Amount?: FloatFilter<"Transfer"> | number
-    Description?: StringFilter<"Transfer"> | string
-    CreatedAt?: DateTimeFilter<"Transfer"> | Date | string
+    ToAccountID?: StringNullableFilter<"Transfer"> | string | null
+    FromAccountID?: StringNullableFilter<"Transfer"> | string | null
+    Amount?: DecimalNullableFilter<"Transfer"> | Decimal | DecimalJsLike | number | string | null
+    Description?: StringNullableFilter<"Transfer"> | string | null
+    CreatedAt?: DateTimeNullableFilter<"Transfer"> | Date | string | null
     UpdatedAt?: DateTimeNullableFilter<"Transfer"> | Date | string | null
-    Status?: StringFilter<"Transfer"> | string
-    TransferType?: StringFilter<"Transfer"> | string
-    toAccount?: XOR<AccountScalarRelationFilter, AccountWhereInput>
-    fromAccount?: XOR<AccountScalarRelationFilter, AccountWhereInput>
+    Status?: StringNullableFilter<"Transfer"> | string | null
+    TransferType?: StringNullableFilter<"Transfer"> | string | null
+    fromAccount?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
+    toAccount?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
   }
 
   export type TransferOrderByWithRelationInput = {
     TransferID?: SortOrder
-    ToAccountID?: SortOrder
-    FromAccountID?: SortOrder
-    Amount?: SortOrder
-    Description?: SortOrder
-    CreatedAt?: SortOrder
+    ToAccountID?: SortOrderInput | SortOrder
+    FromAccountID?: SortOrderInput | SortOrder
+    Amount?: SortOrderInput | SortOrder
+    Description?: SortOrderInput | SortOrder
+    CreatedAt?: SortOrderInput | SortOrder
     UpdatedAt?: SortOrderInput | SortOrder
-    Status?: SortOrder
-    TransferType?: SortOrder
-    toAccount?: AccountOrderByWithRelationInput
+    Status?: SortOrderInput | SortOrder
+    TransferType?: SortOrderInput | SortOrder
     fromAccount?: AccountOrderByWithRelationInput
+    toAccount?: AccountOrderByWithRelationInput
   }
 
   export type TransferWhereUniqueInput = Prisma.AtLeast<{
@@ -9765,28 +9860,28 @@ export namespace Prisma {
     AND?: TransferWhereInput | TransferWhereInput[]
     OR?: TransferWhereInput[]
     NOT?: TransferWhereInput | TransferWhereInput[]
-    ToAccountID?: StringFilter<"Transfer"> | string
-    FromAccountID?: StringFilter<"Transfer"> | string
-    Amount?: FloatFilter<"Transfer"> | number
-    Description?: StringFilter<"Transfer"> | string
-    CreatedAt?: DateTimeFilter<"Transfer"> | Date | string
+    ToAccountID?: StringNullableFilter<"Transfer"> | string | null
+    FromAccountID?: StringNullableFilter<"Transfer"> | string | null
+    Amount?: DecimalNullableFilter<"Transfer"> | Decimal | DecimalJsLike | number | string | null
+    Description?: StringNullableFilter<"Transfer"> | string | null
+    CreatedAt?: DateTimeNullableFilter<"Transfer"> | Date | string | null
     UpdatedAt?: DateTimeNullableFilter<"Transfer"> | Date | string | null
-    Status?: StringFilter<"Transfer"> | string
-    TransferType?: StringFilter<"Transfer"> | string
-    toAccount?: XOR<AccountScalarRelationFilter, AccountWhereInput>
-    fromAccount?: XOR<AccountScalarRelationFilter, AccountWhereInput>
+    Status?: StringNullableFilter<"Transfer"> | string | null
+    TransferType?: StringNullableFilter<"Transfer"> | string | null
+    fromAccount?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
+    toAccount?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
   }, "TransferID">
 
   export type TransferOrderByWithAggregationInput = {
     TransferID?: SortOrder
-    ToAccountID?: SortOrder
-    FromAccountID?: SortOrder
-    Amount?: SortOrder
-    Description?: SortOrder
-    CreatedAt?: SortOrder
+    ToAccountID?: SortOrderInput | SortOrder
+    FromAccountID?: SortOrderInput | SortOrder
+    Amount?: SortOrderInput | SortOrder
+    Description?: SortOrderInput | SortOrder
+    CreatedAt?: SortOrderInput | SortOrder
     UpdatedAt?: SortOrderInput | SortOrder
-    Status?: SortOrder
-    TransferType?: SortOrder
+    Status?: SortOrderInput | SortOrder
+    TransferType?: SortOrderInput | SortOrder
     _count?: TransferCountOrderByAggregateInput
     _avg?: TransferAvgOrderByAggregateInput
     _max?: TransferMaxOrderByAggregateInput
@@ -9799,14 +9894,14 @@ export namespace Prisma {
     OR?: TransferScalarWhereWithAggregatesInput[]
     NOT?: TransferScalarWhereWithAggregatesInput | TransferScalarWhereWithAggregatesInput[]
     TransferID?: StringWithAggregatesFilter<"Transfer"> | string
-    ToAccountID?: StringWithAggregatesFilter<"Transfer"> | string
-    FromAccountID?: StringWithAggregatesFilter<"Transfer"> | string
-    Amount?: FloatWithAggregatesFilter<"Transfer"> | number
-    Description?: StringWithAggregatesFilter<"Transfer"> | string
-    CreatedAt?: DateTimeWithAggregatesFilter<"Transfer"> | Date | string
+    ToAccountID?: StringNullableWithAggregatesFilter<"Transfer"> | string | null
+    FromAccountID?: StringNullableWithAggregatesFilter<"Transfer"> | string | null
+    Amount?: DecimalNullableWithAggregatesFilter<"Transfer"> | Decimal | DecimalJsLike | number | string | null
+    Description?: StringNullableWithAggregatesFilter<"Transfer"> | string | null
+    CreatedAt?: DateTimeNullableWithAggregatesFilter<"Transfer"> | Date | string | null
     UpdatedAt?: DateTimeNullableWithAggregatesFilter<"Transfer"> | Date | string | null
-    Status?: StringWithAggregatesFilter<"Transfer"> | string
-    TransferType?: StringWithAggregatesFilter<"Transfer"> | string
+    Status?: StringNullableWithAggregatesFilter<"Transfer"> | string | null
+    TransferType?: StringNullableWithAggregatesFilter<"Transfer"> | string | null
   }
 
   export type UtilitiesWhereInput = {
@@ -9814,15 +9909,15 @@ export namespace Prisma {
     OR?: UtilitiesWhereInput[]
     NOT?: UtilitiesWhereInput | UtilitiesWhereInput[]
     UtilityID?: StringFilter<"Utilities"> | string
-    AccountName?: StringFilter<"Utilities"> | string
-    AccountNumber?: StringFilter<"Utilities"> | string
+    AccountName?: StringNullableFilter<"Utilities"> | string | null
+    AccountNumber?: StringNullableFilter<"Utilities"> | string | null
     payments?: PaymentListRelationFilter
   }
 
   export type UtilitiesOrderByWithRelationInput = {
     UtilityID?: SortOrder
-    AccountName?: SortOrder
-    AccountNumber?: SortOrder
+    AccountName?: SortOrderInput | SortOrder
+    AccountNumber?: SortOrderInput | SortOrder
     payments?: PaymentOrderByRelationAggregateInput
   }
 
@@ -9831,15 +9926,15 @@ export namespace Prisma {
     AND?: UtilitiesWhereInput | UtilitiesWhereInput[]
     OR?: UtilitiesWhereInput[]
     NOT?: UtilitiesWhereInput | UtilitiesWhereInput[]
-    AccountName?: StringFilter<"Utilities"> | string
-    AccountNumber?: StringFilter<"Utilities"> | string
+    AccountName?: StringNullableFilter<"Utilities"> | string | null
+    AccountNumber?: StringNullableFilter<"Utilities"> | string | null
     payments?: PaymentListRelationFilter
   }, "UtilityID">
 
   export type UtilitiesOrderByWithAggregationInput = {
     UtilityID?: SortOrder
-    AccountName?: SortOrder
-    AccountNumber?: SortOrder
+    AccountName?: SortOrderInput | SortOrder
+    AccountNumber?: SortOrderInput | SortOrder
     _count?: UtilitiesCountOrderByAggregateInput
     _max?: UtilitiesMaxOrderByAggregateInput
     _min?: UtilitiesMinOrderByAggregateInput
@@ -9850,8 +9945,8 @@ export namespace Prisma {
     OR?: UtilitiesScalarWhereWithAggregatesInput[]
     NOT?: UtilitiesScalarWhereWithAggregatesInput | UtilitiesScalarWhereWithAggregatesInput[]
     UtilityID?: StringWithAggregatesFilter<"Utilities"> | string
-    AccountName?: StringWithAggregatesFilter<"Utilities"> | string
-    AccountNumber?: StringWithAggregatesFilter<"Utilities"> | string
+    AccountName?: StringNullableWithAggregatesFilter<"Utilities"> | string | null
+    AccountNumber?: StringNullableWithAggregatesFilter<"Utilities"> | string | null
   }
 
   export type PaymentWhereInput = {
@@ -9859,22 +9954,22 @@ export namespace Prisma {
     OR?: PaymentWhereInput[]
     NOT?: PaymentWhereInput | PaymentWhereInput[]
     PaymentID?: StringFilter<"Payment"> | string
-    AccountID?: StringFilter<"Payment"> | string
-    UtilityID?: StringFilter<"Payment"> | string
-    Amount?: FloatFilter<"Payment"> | number
-    Timestamp?: DateTimeFilter<"Payment"> | Date | string
-    Description?: StringFilter<"Payment"> | string
-    account?: XOR<AccountScalarRelationFilter, AccountWhereInput>
-    utility?: XOR<UtilitiesScalarRelationFilter, UtilitiesWhereInput>
+    AccountID?: StringNullableFilter<"Payment"> | string | null
+    UtilityID?: StringNullableFilter<"Payment"> | string | null
+    Amount?: DecimalNullableFilter<"Payment"> | Decimal | DecimalJsLike | number | string | null
+    Timestamp?: DateTimeNullableFilter<"Payment"> | Date | string | null
+    Description?: StringNullableFilter<"Payment"> | string | null
+    account?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
+    utility?: XOR<UtilitiesNullableScalarRelationFilter, UtilitiesWhereInput> | null
   }
 
   export type PaymentOrderByWithRelationInput = {
     PaymentID?: SortOrder
-    AccountID?: SortOrder
-    UtilityID?: SortOrder
-    Amount?: SortOrder
-    Timestamp?: SortOrder
-    Description?: SortOrder
+    AccountID?: SortOrderInput | SortOrder
+    UtilityID?: SortOrderInput | SortOrder
+    Amount?: SortOrderInput | SortOrder
+    Timestamp?: SortOrderInput | SortOrder
+    Description?: SortOrderInput | SortOrder
     account?: AccountOrderByWithRelationInput
     utility?: UtilitiesOrderByWithRelationInput
   }
@@ -9884,22 +9979,22 @@ export namespace Prisma {
     AND?: PaymentWhereInput | PaymentWhereInput[]
     OR?: PaymentWhereInput[]
     NOT?: PaymentWhereInput | PaymentWhereInput[]
-    AccountID?: StringFilter<"Payment"> | string
-    UtilityID?: StringFilter<"Payment"> | string
-    Amount?: FloatFilter<"Payment"> | number
-    Timestamp?: DateTimeFilter<"Payment"> | Date | string
-    Description?: StringFilter<"Payment"> | string
-    account?: XOR<AccountScalarRelationFilter, AccountWhereInput>
-    utility?: XOR<UtilitiesScalarRelationFilter, UtilitiesWhereInput>
+    AccountID?: StringNullableFilter<"Payment"> | string | null
+    UtilityID?: StringNullableFilter<"Payment"> | string | null
+    Amount?: DecimalNullableFilter<"Payment"> | Decimal | DecimalJsLike | number | string | null
+    Timestamp?: DateTimeNullableFilter<"Payment"> | Date | string | null
+    Description?: StringNullableFilter<"Payment"> | string | null
+    account?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
+    utility?: XOR<UtilitiesNullableScalarRelationFilter, UtilitiesWhereInput> | null
   }, "PaymentID">
 
   export type PaymentOrderByWithAggregationInput = {
     PaymentID?: SortOrder
-    AccountID?: SortOrder
-    UtilityID?: SortOrder
-    Amount?: SortOrder
-    Timestamp?: SortOrder
-    Description?: SortOrder
+    AccountID?: SortOrderInput | SortOrder
+    UtilityID?: SortOrderInput | SortOrder
+    Amount?: SortOrderInput | SortOrder
+    Timestamp?: SortOrderInput | SortOrder
+    Description?: SortOrderInput | SortOrder
     _count?: PaymentCountOrderByAggregateInput
     _avg?: PaymentAvgOrderByAggregateInput
     _max?: PaymentMaxOrderByAggregateInput
@@ -9912,11 +10007,11 @@ export namespace Prisma {
     OR?: PaymentScalarWhereWithAggregatesInput[]
     NOT?: PaymentScalarWhereWithAggregatesInput | PaymentScalarWhereWithAggregatesInput[]
     PaymentID?: StringWithAggregatesFilter<"Payment"> | string
-    AccountID?: StringWithAggregatesFilter<"Payment"> | string
-    UtilityID?: StringWithAggregatesFilter<"Payment"> | string
-    Amount?: FloatWithAggregatesFilter<"Payment"> | number
-    Timestamp?: DateTimeWithAggregatesFilter<"Payment"> | Date | string
-    Description?: StringWithAggregatesFilter<"Payment"> | string
+    AccountID?: StringNullableWithAggregatesFilter<"Payment"> | string | null
+    UtilityID?: StringNullableWithAggregatesFilter<"Payment"> | string | null
+    Amount?: DecimalNullableWithAggregatesFilter<"Payment"> | Decimal | DecimalJsLike | number | string | null
+    Timestamp?: DateTimeNullableWithAggregatesFilter<"Payment"> | Date | string | null
+    Description?: StringNullableWithAggregatesFilter<"Payment"> | string | null
   }
 
   export type AUDIT_LOGSWhereInput = {
@@ -9924,22 +10019,22 @@ export namespace Prisma {
     OR?: AUDIT_LOGSWhereInput[]
     NOT?: AUDIT_LOGSWhereInput | AUDIT_LOGSWhereInput[]
     id?: StringFilter<"AUDIT_LOGS"> | string
-    timestamp?: DateTimeFilter<"AUDIT_LOGS"> | Date | string
-    actor_type?: StringFilter<"AUDIT_LOGS"> | string
-    actor_id?: StringFilter<"AUDIT_LOGS"> | string
-    action?: StringFilter<"AUDIT_LOGS"> | string
-    target_id?: StringFilter<"AUDIT_LOGS"> | string
-    status?: StringFilter<"AUDIT_LOGS"> | string
+    timestamp?: DateTimeNullableFilter<"AUDIT_LOGS"> | Date | string | null
+    actor_type?: StringNullableFilter<"AUDIT_LOGS"> | string | null
+    actor_id?: StringNullableFilter<"AUDIT_LOGS"> | string | null
+    action?: StringNullableFilter<"AUDIT_LOGS"> | string | null
+    target_id?: StringNullableFilter<"AUDIT_LOGS"> | string | null
+    status?: StringNullableFilter<"AUDIT_LOGS"> | string | null
   }
 
   export type AUDIT_LOGSOrderByWithRelationInput = {
     id?: SortOrder
-    timestamp?: SortOrder
-    actor_type?: SortOrder
-    actor_id?: SortOrder
-    action?: SortOrder
-    target_id?: SortOrder
-    status?: SortOrder
+    timestamp?: SortOrderInput | SortOrder
+    actor_type?: SortOrderInput | SortOrder
+    actor_id?: SortOrderInput | SortOrder
+    action?: SortOrderInput | SortOrder
+    target_id?: SortOrderInput | SortOrder
+    status?: SortOrderInput | SortOrder
   }
 
   export type AUDIT_LOGSWhereUniqueInput = Prisma.AtLeast<{
@@ -9947,22 +10042,22 @@ export namespace Prisma {
     AND?: AUDIT_LOGSWhereInput | AUDIT_LOGSWhereInput[]
     OR?: AUDIT_LOGSWhereInput[]
     NOT?: AUDIT_LOGSWhereInput | AUDIT_LOGSWhereInput[]
-    timestamp?: DateTimeFilter<"AUDIT_LOGS"> | Date | string
-    actor_type?: StringFilter<"AUDIT_LOGS"> | string
-    actor_id?: StringFilter<"AUDIT_LOGS"> | string
-    action?: StringFilter<"AUDIT_LOGS"> | string
-    target_id?: StringFilter<"AUDIT_LOGS"> | string
-    status?: StringFilter<"AUDIT_LOGS"> | string
+    timestamp?: DateTimeNullableFilter<"AUDIT_LOGS"> | Date | string | null
+    actor_type?: StringNullableFilter<"AUDIT_LOGS"> | string | null
+    actor_id?: StringNullableFilter<"AUDIT_LOGS"> | string | null
+    action?: StringNullableFilter<"AUDIT_LOGS"> | string | null
+    target_id?: StringNullableFilter<"AUDIT_LOGS"> | string | null
+    status?: StringNullableFilter<"AUDIT_LOGS"> | string | null
   }, "id">
 
   export type AUDIT_LOGSOrderByWithAggregationInput = {
     id?: SortOrder
-    timestamp?: SortOrder
-    actor_type?: SortOrder
-    actor_id?: SortOrder
-    action?: SortOrder
-    target_id?: SortOrder
-    status?: SortOrder
+    timestamp?: SortOrderInput | SortOrder
+    actor_type?: SortOrderInput | SortOrder
+    actor_id?: SortOrderInput | SortOrder
+    action?: SortOrderInput | SortOrder
+    target_id?: SortOrderInput | SortOrder
+    status?: SortOrderInput | SortOrder
     _count?: AUDIT_LOGSCountOrderByAggregateInput
     _max?: AUDIT_LOGSMaxOrderByAggregateInput
     _min?: AUDIT_LOGSMinOrderByAggregateInput
@@ -9973,245 +10068,245 @@ export namespace Prisma {
     OR?: AUDIT_LOGSScalarWhereWithAggregatesInput[]
     NOT?: AUDIT_LOGSScalarWhereWithAggregatesInput | AUDIT_LOGSScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"AUDIT_LOGS"> | string
-    timestamp?: DateTimeWithAggregatesFilter<"AUDIT_LOGS"> | Date | string
-    actor_type?: StringWithAggregatesFilter<"AUDIT_LOGS"> | string
-    actor_id?: StringWithAggregatesFilter<"AUDIT_LOGS"> | string
-    action?: StringWithAggregatesFilter<"AUDIT_LOGS"> | string
-    target_id?: StringWithAggregatesFilter<"AUDIT_LOGS"> | string
-    status?: StringWithAggregatesFilter<"AUDIT_LOGS"> | string
+    timestamp?: DateTimeNullableWithAggregatesFilter<"AUDIT_LOGS"> | Date | string | null
+    actor_type?: StringNullableWithAggregatesFilter<"AUDIT_LOGS"> | string | null
+    actor_id?: StringNullableWithAggregatesFilter<"AUDIT_LOGS"> | string | null
+    action?: StringNullableWithAggregatesFilter<"AUDIT_LOGS"> | string | null
+    target_id?: StringNullableWithAggregatesFilter<"AUDIT_LOGS"> | string | null
+    status?: StringNullableWithAggregatesFilter<"AUDIT_LOGS"> | string | null
   }
 
   export type CustomerCreateInput = {
     CustomerID?: string
-    FirstName: string
-    LastName: string
-    Email: string
-    ContactNumber: string
-    DateOfBirth: Date | string
-    AddressLine1: string
+    FirstName?: string | null
+    LastName?: string | null
+    Email?: string | null
+    ContactNumber?: string | null
+    DateOfBirth?: Date | string | null
+    AddressLine1?: string | null
     AddressLine2?: string | null
-    City: string
-    State: string
-    ZipCode: string
-    PasswordHash: string
+    City?: string | null
+    State?: string | null
+    ZipCode?: string | null
+    PasswordHash?: string | null
     accounts?: AccountCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateInput = {
     CustomerID?: string
-    FirstName: string
-    LastName: string
-    Email: string
-    ContactNumber: string
-    DateOfBirth: Date | string
-    AddressLine1: string
+    FirstName?: string | null
+    LastName?: string | null
+    Email?: string | null
+    ContactNumber?: string | null
+    DateOfBirth?: Date | string | null
+    AddressLine1?: string | null
     AddressLine2?: string | null
-    City: string
-    State: string
-    ZipCode: string
-    PasswordHash: string
+    City?: string | null
+    State?: string | null
+    ZipCode?: string | null
+    PasswordHash?: string | null
     accounts?: AccountUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUpdateInput = {
     CustomerID?: StringFieldUpdateOperationsInput | string
-    FirstName?: StringFieldUpdateOperationsInput | string
-    LastName?: StringFieldUpdateOperationsInput | string
-    Email?: StringFieldUpdateOperationsInput | string
-    ContactNumber?: StringFieldUpdateOperationsInput | string
-    DateOfBirth?: DateTimeFieldUpdateOperationsInput | Date | string
-    AddressLine1?: StringFieldUpdateOperationsInput | string
+    FirstName?: NullableStringFieldUpdateOperationsInput | string | null
+    LastName?: NullableStringFieldUpdateOperationsInput | string | null
+    Email?: NullableStringFieldUpdateOperationsInput | string | null
+    ContactNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    DateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    AddressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     AddressLine2?: NullableStringFieldUpdateOperationsInput | string | null
-    City?: StringFieldUpdateOperationsInput | string
-    State?: StringFieldUpdateOperationsInput | string
-    ZipCode?: StringFieldUpdateOperationsInput | string
-    PasswordHash?: StringFieldUpdateOperationsInput | string
+    City?: NullableStringFieldUpdateOperationsInput | string | null
+    State?: NullableStringFieldUpdateOperationsInput | string | null
+    ZipCode?: NullableStringFieldUpdateOperationsInput | string | null
+    PasswordHash?: NullableStringFieldUpdateOperationsInput | string | null
     accounts?: AccountUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateInput = {
     CustomerID?: StringFieldUpdateOperationsInput | string
-    FirstName?: StringFieldUpdateOperationsInput | string
-    LastName?: StringFieldUpdateOperationsInput | string
-    Email?: StringFieldUpdateOperationsInput | string
-    ContactNumber?: StringFieldUpdateOperationsInput | string
-    DateOfBirth?: DateTimeFieldUpdateOperationsInput | Date | string
-    AddressLine1?: StringFieldUpdateOperationsInput | string
+    FirstName?: NullableStringFieldUpdateOperationsInput | string | null
+    LastName?: NullableStringFieldUpdateOperationsInput | string | null
+    Email?: NullableStringFieldUpdateOperationsInput | string | null
+    ContactNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    DateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    AddressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     AddressLine2?: NullableStringFieldUpdateOperationsInput | string | null
-    City?: StringFieldUpdateOperationsInput | string
-    State?: StringFieldUpdateOperationsInput | string
-    ZipCode?: StringFieldUpdateOperationsInput | string
-    PasswordHash?: StringFieldUpdateOperationsInput | string
+    City?: NullableStringFieldUpdateOperationsInput | string | null
+    State?: NullableStringFieldUpdateOperationsInput | string | null
+    ZipCode?: NullableStringFieldUpdateOperationsInput | string | null
+    PasswordHash?: NullableStringFieldUpdateOperationsInput | string | null
     accounts?: AccountUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerCreateManyInput = {
     CustomerID?: string
-    FirstName: string
-    LastName: string
-    Email: string
-    ContactNumber: string
-    DateOfBirth: Date | string
-    AddressLine1: string
+    FirstName?: string | null
+    LastName?: string | null
+    Email?: string | null
+    ContactNumber?: string | null
+    DateOfBirth?: Date | string | null
+    AddressLine1?: string | null
     AddressLine2?: string | null
-    City: string
-    State: string
-    ZipCode: string
-    PasswordHash: string
+    City?: string | null
+    State?: string | null
+    ZipCode?: string | null
+    PasswordHash?: string | null
   }
 
   export type CustomerUpdateManyMutationInput = {
     CustomerID?: StringFieldUpdateOperationsInput | string
-    FirstName?: StringFieldUpdateOperationsInput | string
-    LastName?: StringFieldUpdateOperationsInput | string
-    Email?: StringFieldUpdateOperationsInput | string
-    ContactNumber?: StringFieldUpdateOperationsInput | string
-    DateOfBirth?: DateTimeFieldUpdateOperationsInput | Date | string
-    AddressLine1?: StringFieldUpdateOperationsInput | string
+    FirstName?: NullableStringFieldUpdateOperationsInput | string | null
+    LastName?: NullableStringFieldUpdateOperationsInput | string | null
+    Email?: NullableStringFieldUpdateOperationsInput | string | null
+    ContactNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    DateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    AddressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     AddressLine2?: NullableStringFieldUpdateOperationsInput | string | null
-    City?: StringFieldUpdateOperationsInput | string
-    State?: StringFieldUpdateOperationsInput | string
-    ZipCode?: StringFieldUpdateOperationsInput | string
-    PasswordHash?: StringFieldUpdateOperationsInput | string
+    City?: NullableStringFieldUpdateOperationsInput | string | null
+    State?: NullableStringFieldUpdateOperationsInput | string | null
+    ZipCode?: NullableStringFieldUpdateOperationsInput | string | null
+    PasswordHash?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CustomerUncheckedUpdateManyInput = {
     CustomerID?: StringFieldUpdateOperationsInput | string
-    FirstName?: StringFieldUpdateOperationsInput | string
-    LastName?: StringFieldUpdateOperationsInput | string
-    Email?: StringFieldUpdateOperationsInput | string
-    ContactNumber?: StringFieldUpdateOperationsInput | string
-    DateOfBirth?: DateTimeFieldUpdateOperationsInput | Date | string
-    AddressLine1?: StringFieldUpdateOperationsInput | string
+    FirstName?: NullableStringFieldUpdateOperationsInput | string | null
+    LastName?: NullableStringFieldUpdateOperationsInput | string | null
+    Email?: NullableStringFieldUpdateOperationsInput | string | null
+    ContactNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    DateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    AddressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     AddressLine2?: NullableStringFieldUpdateOperationsInput | string | null
-    City?: StringFieldUpdateOperationsInput | string
-    State?: StringFieldUpdateOperationsInput | string
-    ZipCode?: StringFieldUpdateOperationsInput | string
-    PasswordHash?: StringFieldUpdateOperationsInput | string
+    City?: NullableStringFieldUpdateOperationsInput | string | null
+    State?: NullableStringFieldUpdateOperationsInput | string | null
+    ZipCode?: NullableStringFieldUpdateOperationsInput | string | null
+    PasswordHash?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type OfficerCreateInput = {
     OfficerID?: string
-    Username: string
-    LastName: string
-    FirstName: string
-    PasswordHash: string
+    Username?: string | null
+    LastName?: string | null
+    FirstName?: string | null
+    PasswordHash?: string | null
   }
 
   export type OfficerUncheckedCreateInput = {
     OfficerID?: string
-    Username: string
-    LastName: string
-    FirstName: string
-    PasswordHash: string
+    Username?: string | null
+    LastName?: string | null
+    FirstName?: string | null
+    PasswordHash?: string | null
   }
 
   export type OfficerUpdateInput = {
     OfficerID?: StringFieldUpdateOperationsInput | string
-    Username?: StringFieldUpdateOperationsInput | string
-    LastName?: StringFieldUpdateOperationsInput | string
-    FirstName?: StringFieldUpdateOperationsInput | string
-    PasswordHash?: StringFieldUpdateOperationsInput | string
+    Username?: NullableStringFieldUpdateOperationsInput | string | null
+    LastName?: NullableStringFieldUpdateOperationsInput | string | null
+    FirstName?: NullableStringFieldUpdateOperationsInput | string | null
+    PasswordHash?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type OfficerUncheckedUpdateInput = {
     OfficerID?: StringFieldUpdateOperationsInput | string
-    Username?: StringFieldUpdateOperationsInput | string
-    LastName?: StringFieldUpdateOperationsInput | string
-    FirstName?: StringFieldUpdateOperationsInput | string
-    PasswordHash?: StringFieldUpdateOperationsInput | string
+    Username?: NullableStringFieldUpdateOperationsInput | string | null
+    LastName?: NullableStringFieldUpdateOperationsInput | string | null
+    FirstName?: NullableStringFieldUpdateOperationsInput | string | null
+    PasswordHash?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type OfficerCreateManyInput = {
     OfficerID?: string
-    Username: string
-    LastName: string
-    FirstName: string
-    PasswordHash: string
+    Username?: string | null
+    LastName?: string | null
+    FirstName?: string | null
+    PasswordHash?: string | null
   }
 
   export type OfficerUpdateManyMutationInput = {
     OfficerID?: StringFieldUpdateOperationsInput | string
-    Username?: StringFieldUpdateOperationsInput | string
-    LastName?: StringFieldUpdateOperationsInput | string
-    FirstName?: StringFieldUpdateOperationsInput | string
-    PasswordHash?: StringFieldUpdateOperationsInput | string
+    Username?: NullableStringFieldUpdateOperationsInput | string | null
+    LastName?: NullableStringFieldUpdateOperationsInput | string | null
+    FirstName?: NullableStringFieldUpdateOperationsInput | string | null
+    PasswordHash?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type OfficerUncheckedUpdateManyInput = {
     OfficerID?: StringFieldUpdateOperationsInput | string
-    Username?: StringFieldUpdateOperationsInput | string
-    LastName?: StringFieldUpdateOperationsInput | string
-    FirstName?: StringFieldUpdateOperationsInput | string
-    PasswordHash?: StringFieldUpdateOperationsInput | string
+    Username?: NullableStringFieldUpdateOperationsInput | string | null
+    LastName?: NullableStringFieldUpdateOperationsInput | string | null
+    FirstName?: NullableStringFieldUpdateOperationsInput | string | null
+    PasswordHash?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AdminCreateInput = {
     AdminID?: string
-    Username: string
-    FirstName: string
-    LastName: string
-    PasswordHash: string
+    Username?: string | null
+    FirstName?: string | null
+    LastName?: string | null
+    PasswordHash?: string | null
   }
 
   export type AdminUncheckedCreateInput = {
     AdminID?: string
-    Username: string
-    FirstName: string
-    LastName: string
-    PasswordHash: string
+    Username?: string | null
+    FirstName?: string | null
+    LastName?: string | null
+    PasswordHash?: string | null
   }
 
   export type AdminUpdateInput = {
     AdminID?: StringFieldUpdateOperationsInput | string
-    Username?: StringFieldUpdateOperationsInput | string
-    FirstName?: StringFieldUpdateOperationsInput | string
-    LastName?: StringFieldUpdateOperationsInput | string
-    PasswordHash?: StringFieldUpdateOperationsInput | string
+    Username?: NullableStringFieldUpdateOperationsInput | string | null
+    FirstName?: NullableStringFieldUpdateOperationsInput | string | null
+    LastName?: NullableStringFieldUpdateOperationsInput | string | null
+    PasswordHash?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AdminUncheckedUpdateInput = {
     AdminID?: StringFieldUpdateOperationsInput | string
-    Username?: StringFieldUpdateOperationsInput | string
-    FirstName?: StringFieldUpdateOperationsInput | string
-    LastName?: StringFieldUpdateOperationsInput | string
-    PasswordHash?: StringFieldUpdateOperationsInput | string
+    Username?: NullableStringFieldUpdateOperationsInput | string | null
+    FirstName?: NullableStringFieldUpdateOperationsInput | string | null
+    LastName?: NullableStringFieldUpdateOperationsInput | string | null
+    PasswordHash?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AdminCreateManyInput = {
     AdminID?: string
-    Username: string
-    FirstName: string
-    LastName: string
-    PasswordHash: string
+    Username?: string | null
+    FirstName?: string | null
+    LastName?: string | null
+    PasswordHash?: string | null
   }
 
   export type AdminUpdateManyMutationInput = {
     AdminID?: StringFieldUpdateOperationsInput | string
-    Username?: StringFieldUpdateOperationsInput | string
-    FirstName?: StringFieldUpdateOperationsInput | string
-    LastName?: StringFieldUpdateOperationsInput | string
-    PasswordHash?: StringFieldUpdateOperationsInput | string
+    Username?: NullableStringFieldUpdateOperationsInput | string | null
+    FirstName?: NullableStringFieldUpdateOperationsInput | string | null
+    LastName?: NullableStringFieldUpdateOperationsInput | string | null
+    PasswordHash?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AdminUncheckedUpdateManyInput = {
     AdminID?: StringFieldUpdateOperationsInput | string
-    Username?: StringFieldUpdateOperationsInput | string
-    FirstName?: StringFieldUpdateOperationsInput | string
-    LastName?: StringFieldUpdateOperationsInput | string
-    PasswordHash?: StringFieldUpdateOperationsInput | string
+    Username?: NullableStringFieldUpdateOperationsInput | string | null
+    FirstName?: NullableStringFieldUpdateOperationsInput | string | null
+    LastName?: NullableStringFieldUpdateOperationsInput | string | null
+    PasswordHash?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AccountCreateInput = {
     AccountID?: string
-    Status: string
-    Balance: number
-    AccountType: string
-    MonthlyFee: number
-    DailyATMLimit: number
-    DailyPurchaseLimit: number
-    OverdraftProtection: boolean
-    customer: CustomerCreateNestedOneWithoutAccountsInput
+    Status?: string | null
+    Balance?: Decimal | DecimalJsLike | number | string | null
+    AccountType?: string | null
+    MonthlyFee?: Decimal | DecimalJsLike | number | string | null
+    DailyATMLimit?: Decimal | DecimalJsLike | number | string | null
+    DailyPurchaseLimit?: Decimal | DecimalJsLike | number | string | null
+    OverdraftProtection?: boolean | null
+    customer?: CustomerCreateNestedOneWithoutAccountsInput
     payments?: PaymentCreateNestedManyWithoutAccountInput
     transfersFrom?: TransferCreateNestedManyWithoutFromAccountInput
     transfersTo?: TransferCreateNestedManyWithoutToAccountInput
@@ -10219,14 +10314,14 @@ export namespace Prisma {
 
   export type AccountUncheckedCreateInput = {
     AccountID?: string
-    CustomerID: string
-    Status: string
-    Balance: number
-    AccountType: string
-    MonthlyFee: number
-    DailyATMLimit: number
-    DailyPurchaseLimit: number
-    OverdraftProtection: boolean
+    CustomerID?: string | null
+    Status?: string | null
+    Balance?: Decimal | DecimalJsLike | number | string | null
+    AccountType?: string | null
+    MonthlyFee?: Decimal | DecimalJsLike | number | string | null
+    DailyATMLimit?: Decimal | DecimalJsLike | number | string | null
+    DailyPurchaseLimit?: Decimal | DecimalJsLike | number | string | null
+    OverdraftProtection?: boolean | null
     payments?: PaymentUncheckedCreateNestedManyWithoutAccountInput
     transfersFrom?: TransferUncheckedCreateNestedManyWithoutFromAccountInput
     transfersTo?: TransferUncheckedCreateNestedManyWithoutToAccountInput
@@ -10234,14 +10329,14 @@ export namespace Prisma {
 
   export type AccountUpdateInput = {
     AccountID?: StringFieldUpdateOperationsInput | string
-    Status?: StringFieldUpdateOperationsInput | string
-    Balance?: FloatFieldUpdateOperationsInput | number
-    AccountType?: StringFieldUpdateOperationsInput | string
-    MonthlyFee?: FloatFieldUpdateOperationsInput | number
-    DailyATMLimit?: FloatFieldUpdateOperationsInput | number
-    DailyPurchaseLimit?: FloatFieldUpdateOperationsInput | number
-    OverdraftProtection?: BoolFieldUpdateOperationsInput | boolean
-    customer?: CustomerUpdateOneRequiredWithoutAccountsNestedInput
+    Status?: NullableStringFieldUpdateOperationsInput | string | null
+    Balance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    AccountType?: NullableStringFieldUpdateOperationsInput | string | null
+    MonthlyFee?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    DailyATMLimit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    DailyPurchaseLimit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    OverdraftProtection?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    customer?: CustomerUpdateOneWithoutAccountsNestedInput
     payments?: PaymentUpdateManyWithoutAccountNestedInput
     transfersFrom?: TransferUpdateManyWithoutFromAccountNestedInput
     transfersTo?: TransferUpdateManyWithoutToAccountNestedInput
@@ -10249,14 +10344,14 @@ export namespace Prisma {
 
   export type AccountUncheckedUpdateInput = {
     AccountID?: StringFieldUpdateOperationsInput | string
-    CustomerID?: StringFieldUpdateOperationsInput | string
-    Status?: StringFieldUpdateOperationsInput | string
-    Balance?: FloatFieldUpdateOperationsInput | number
-    AccountType?: StringFieldUpdateOperationsInput | string
-    MonthlyFee?: FloatFieldUpdateOperationsInput | number
-    DailyATMLimit?: FloatFieldUpdateOperationsInput | number
-    DailyPurchaseLimit?: FloatFieldUpdateOperationsInput | number
-    OverdraftProtection?: BoolFieldUpdateOperationsInput | boolean
+    CustomerID?: NullableStringFieldUpdateOperationsInput | string | null
+    Status?: NullableStringFieldUpdateOperationsInput | string | null
+    Balance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    AccountType?: NullableStringFieldUpdateOperationsInput | string | null
+    MonthlyFee?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    DailyATMLimit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    DailyPurchaseLimit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    OverdraftProtection?: NullableBoolFieldUpdateOperationsInput | boolean | null
     payments?: PaymentUncheckedUpdateManyWithoutAccountNestedInput
     transfersFrom?: TransferUncheckedUpdateManyWithoutFromAccountNestedInput
     transfersTo?: TransferUncheckedUpdateManyWithoutToAccountNestedInput
@@ -10264,296 +10359,296 @@ export namespace Prisma {
 
   export type AccountCreateManyInput = {
     AccountID?: string
-    CustomerID: string
-    Status: string
-    Balance: number
-    AccountType: string
-    MonthlyFee: number
-    DailyATMLimit: number
-    DailyPurchaseLimit: number
-    OverdraftProtection: boolean
+    CustomerID?: string | null
+    Status?: string | null
+    Balance?: Decimal | DecimalJsLike | number | string | null
+    AccountType?: string | null
+    MonthlyFee?: Decimal | DecimalJsLike | number | string | null
+    DailyATMLimit?: Decimal | DecimalJsLike | number | string | null
+    DailyPurchaseLimit?: Decimal | DecimalJsLike | number | string | null
+    OverdraftProtection?: boolean | null
   }
 
   export type AccountUpdateManyMutationInput = {
     AccountID?: StringFieldUpdateOperationsInput | string
-    Status?: StringFieldUpdateOperationsInput | string
-    Balance?: FloatFieldUpdateOperationsInput | number
-    AccountType?: StringFieldUpdateOperationsInput | string
-    MonthlyFee?: FloatFieldUpdateOperationsInput | number
-    DailyATMLimit?: FloatFieldUpdateOperationsInput | number
-    DailyPurchaseLimit?: FloatFieldUpdateOperationsInput | number
-    OverdraftProtection?: BoolFieldUpdateOperationsInput | boolean
+    Status?: NullableStringFieldUpdateOperationsInput | string | null
+    Balance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    AccountType?: NullableStringFieldUpdateOperationsInput | string | null
+    MonthlyFee?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    DailyATMLimit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    DailyPurchaseLimit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    OverdraftProtection?: NullableBoolFieldUpdateOperationsInput | boolean | null
   }
 
   export type AccountUncheckedUpdateManyInput = {
     AccountID?: StringFieldUpdateOperationsInput | string
-    CustomerID?: StringFieldUpdateOperationsInput | string
-    Status?: StringFieldUpdateOperationsInput | string
-    Balance?: FloatFieldUpdateOperationsInput | number
-    AccountType?: StringFieldUpdateOperationsInput | string
-    MonthlyFee?: FloatFieldUpdateOperationsInput | number
-    DailyATMLimit?: FloatFieldUpdateOperationsInput | number
-    DailyPurchaseLimit?: FloatFieldUpdateOperationsInput | number
-    OverdraftProtection?: BoolFieldUpdateOperationsInput | boolean
+    CustomerID?: NullableStringFieldUpdateOperationsInput | string | null
+    Status?: NullableStringFieldUpdateOperationsInput | string | null
+    Balance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    AccountType?: NullableStringFieldUpdateOperationsInput | string | null
+    MonthlyFee?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    DailyATMLimit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    DailyPurchaseLimit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    OverdraftProtection?: NullableBoolFieldUpdateOperationsInput | boolean | null
   }
 
   export type TransferCreateInput = {
     TransferID?: string
-    Amount: number
-    Description: string
-    CreatedAt?: Date | string
+    Amount?: Decimal | DecimalJsLike | number | string | null
+    Description?: string | null
+    CreatedAt?: Date | string | null
     UpdatedAt?: Date | string | null
-    Status: string
-    TransferType: string
-    toAccount: AccountCreateNestedOneWithoutTransfersToInput
-    fromAccount: AccountCreateNestedOneWithoutTransfersFromInput
+    Status?: string | null
+    TransferType?: string | null
+    fromAccount?: AccountCreateNestedOneWithoutTransfersFromInput
+    toAccount?: AccountCreateNestedOneWithoutTransfersToInput
   }
 
   export type TransferUncheckedCreateInput = {
     TransferID?: string
-    ToAccountID: string
-    FromAccountID: string
-    Amount: number
-    Description: string
-    CreatedAt?: Date | string
+    ToAccountID?: string | null
+    FromAccountID?: string | null
+    Amount?: Decimal | DecimalJsLike | number | string | null
+    Description?: string | null
+    CreatedAt?: Date | string | null
     UpdatedAt?: Date | string | null
-    Status: string
-    TransferType: string
+    Status?: string | null
+    TransferType?: string | null
   }
 
   export type TransferUpdateInput = {
     TransferID?: StringFieldUpdateOperationsInput | string
-    Amount?: FloatFieldUpdateOperationsInput | number
-    Description?: StringFieldUpdateOperationsInput | string
-    CreatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    Amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    Description?: NullableStringFieldUpdateOperationsInput | string | null
+    CreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     UpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    Status?: StringFieldUpdateOperationsInput | string
-    TransferType?: StringFieldUpdateOperationsInput | string
-    toAccount?: AccountUpdateOneRequiredWithoutTransfersToNestedInput
-    fromAccount?: AccountUpdateOneRequiredWithoutTransfersFromNestedInput
+    Status?: NullableStringFieldUpdateOperationsInput | string | null
+    TransferType?: NullableStringFieldUpdateOperationsInput | string | null
+    fromAccount?: AccountUpdateOneWithoutTransfersFromNestedInput
+    toAccount?: AccountUpdateOneWithoutTransfersToNestedInput
   }
 
   export type TransferUncheckedUpdateInput = {
     TransferID?: StringFieldUpdateOperationsInput | string
-    ToAccountID?: StringFieldUpdateOperationsInput | string
-    FromAccountID?: StringFieldUpdateOperationsInput | string
-    Amount?: FloatFieldUpdateOperationsInput | number
-    Description?: StringFieldUpdateOperationsInput | string
-    CreatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ToAccountID?: NullableStringFieldUpdateOperationsInput | string | null
+    FromAccountID?: NullableStringFieldUpdateOperationsInput | string | null
+    Amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    Description?: NullableStringFieldUpdateOperationsInput | string | null
+    CreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     UpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    Status?: StringFieldUpdateOperationsInput | string
-    TransferType?: StringFieldUpdateOperationsInput | string
+    Status?: NullableStringFieldUpdateOperationsInput | string | null
+    TransferType?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type TransferCreateManyInput = {
     TransferID?: string
-    ToAccountID: string
-    FromAccountID: string
-    Amount: number
-    Description: string
-    CreatedAt?: Date | string
+    ToAccountID?: string | null
+    FromAccountID?: string | null
+    Amount?: Decimal | DecimalJsLike | number | string | null
+    Description?: string | null
+    CreatedAt?: Date | string | null
     UpdatedAt?: Date | string | null
-    Status: string
-    TransferType: string
+    Status?: string | null
+    TransferType?: string | null
   }
 
   export type TransferUpdateManyMutationInput = {
     TransferID?: StringFieldUpdateOperationsInput | string
-    Amount?: FloatFieldUpdateOperationsInput | number
-    Description?: StringFieldUpdateOperationsInput | string
-    CreatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    Amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    Description?: NullableStringFieldUpdateOperationsInput | string | null
+    CreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     UpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    Status?: StringFieldUpdateOperationsInput | string
-    TransferType?: StringFieldUpdateOperationsInput | string
+    Status?: NullableStringFieldUpdateOperationsInput | string | null
+    TransferType?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type TransferUncheckedUpdateManyInput = {
     TransferID?: StringFieldUpdateOperationsInput | string
-    ToAccountID?: StringFieldUpdateOperationsInput | string
-    FromAccountID?: StringFieldUpdateOperationsInput | string
-    Amount?: FloatFieldUpdateOperationsInput | number
-    Description?: StringFieldUpdateOperationsInput | string
-    CreatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ToAccountID?: NullableStringFieldUpdateOperationsInput | string | null
+    FromAccountID?: NullableStringFieldUpdateOperationsInput | string | null
+    Amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    Description?: NullableStringFieldUpdateOperationsInput | string | null
+    CreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     UpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    Status?: StringFieldUpdateOperationsInput | string
-    TransferType?: StringFieldUpdateOperationsInput | string
+    Status?: NullableStringFieldUpdateOperationsInput | string | null
+    TransferType?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UtilitiesCreateInput = {
     UtilityID?: string
-    AccountName: string
-    AccountNumber: string
+    AccountName?: string | null
+    AccountNumber?: string | null
     payments?: PaymentCreateNestedManyWithoutUtilityInput
   }
 
   export type UtilitiesUncheckedCreateInput = {
     UtilityID?: string
-    AccountName: string
-    AccountNumber: string
+    AccountName?: string | null
+    AccountNumber?: string | null
     payments?: PaymentUncheckedCreateNestedManyWithoutUtilityInput
   }
 
   export type UtilitiesUpdateInput = {
     UtilityID?: StringFieldUpdateOperationsInput | string
-    AccountName?: StringFieldUpdateOperationsInput | string
-    AccountNumber?: StringFieldUpdateOperationsInput | string
+    AccountName?: NullableStringFieldUpdateOperationsInput | string | null
+    AccountNumber?: NullableStringFieldUpdateOperationsInput | string | null
     payments?: PaymentUpdateManyWithoutUtilityNestedInput
   }
 
   export type UtilitiesUncheckedUpdateInput = {
     UtilityID?: StringFieldUpdateOperationsInput | string
-    AccountName?: StringFieldUpdateOperationsInput | string
-    AccountNumber?: StringFieldUpdateOperationsInput | string
+    AccountName?: NullableStringFieldUpdateOperationsInput | string | null
+    AccountNumber?: NullableStringFieldUpdateOperationsInput | string | null
     payments?: PaymentUncheckedUpdateManyWithoutUtilityNestedInput
   }
 
   export type UtilitiesCreateManyInput = {
     UtilityID?: string
-    AccountName: string
-    AccountNumber: string
+    AccountName?: string | null
+    AccountNumber?: string | null
   }
 
   export type UtilitiesUpdateManyMutationInput = {
     UtilityID?: StringFieldUpdateOperationsInput | string
-    AccountName?: StringFieldUpdateOperationsInput | string
-    AccountNumber?: StringFieldUpdateOperationsInput | string
+    AccountName?: NullableStringFieldUpdateOperationsInput | string | null
+    AccountNumber?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UtilitiesUncheckedUpdateManyInput = {
     UtilityID?: StringFieldUpdateOperationsInput | string
-    AccountName?: StringFieldUpdateOperationsInput | string
-    AccountNumber?: StringFieldUpdateOperationsInput | string
+    AccountName?: NullableStringFieldUpdateOperationsInput | string | null
+    AccountNumber?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PaymentCreateInput = {
     PaymentID?: string
-    Amount: number
-    Timestamp?: Date | string
-    Description: string
-    account: AccountCreateNestedOneWithoutPaymentsInput
-    utility: UtilitiesCreateNestedOneWithoutPaymentsInput
+    Amount?: Decimal | DecimalJsLike | number | string | null
+    Timestamp?: Date | string | null
+    Description?: string | null
+    account?: AccountCreateNestedOneWithoutPaymentsInput
+    utility?: UtilitiesCreateNestedOneWithoutPaymentsInput
   }
 
   export type PaymentUncheckedCreateInput = {
     PaymentID?: string
-    AccountID: string
-    UtilityID: string
-    Amount: number
-    Timestamp?: Date | string
-    Description: string
+    AccountID?: string | null
+    UtilityID?: string | null
+    Amount?: Decimal | DecimalJsLike | number | string | null
+    Timestamp?: Date | string | null
+    Description?: string | null
   }
 
   export type PaymentUpdateInput = {
     PaymentID?: StringFieldUpdateOperationsInput | string
-    Amount?: FloatFieldUpdateOperationsInput | number
-    Timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
-    Description?: StringFieldUpdateOperationsInput | string
-    account?: AccountUpdateOneRequiredWithoutPaymentsNestedInput
-    utility?: UtilitiesUpdateOneRequiredWithoutPaymentsNestedInput
+    Amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    Timestamp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    Description?: NullableStringFieldUpdateOperationsInput | string | null
+    account?: AccountUpdateOneWithoutPaymentsNestedInput
+    utility?: UtilitiesUpdateOneWithoutPaymentsNestedInput
   }
 
   export type PaymentUncheckedUpdateInput = {
     PaymentID?: StringFieldUpdateOperationsInput | string
-    AccountID?: StringFieldUpdateOperationsInput | string
-    UtilityID?: StringFieldUpdateOperationsInput | string
-    Amount?: FloatFieldUpdateOperationsInput | number
-    Timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
-    Description?: StringFieldUpdateOperationsInput | string
+    AccountID?: NullableStringFieldUpdateOperationsInput | string | null
+    UtilityID?: NullableStringFieldUpdateOperationsInput | string | null
+    Amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    Timestamp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    Description?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PaymentCreateManyInput = {
     PaymentID?: string
-    AccountID: string
-    UtilityID: string
-    Amount: number
-    Timestamp?: Date | string
-    Description: string
+    AccountID?: string | null
+    UtilityID?: string | null
+    Amount?: Decimal | DecimalJsLike | number | string | null
+    Timestamp?: Date | string | null
+    Description?: string | null
   }
 
   export type PaymentUpdateManyMutationInput = {
     PaymentID?: StringFieldUpdateOperationsInput | string
-    Amount?: FloatFieldUpdateOperationsInput | number
-    Timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
-    Description?: StringFieldUpdateOperationsInput | string
+    Amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    Timestamp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    Description?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PaymentUncheckedUpdateManyInput = {
     PaymentID?: StringFieldUpdateOperationsInput | string
-    AccountID?: StringFieldUpdateOperationsInput | string
-    UtilityID?: StringFieldUpdateOperationsInput | string
-    Amount?: FloatFieldUpdateOperationsInput | number
-    Timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
-    Description?: StringFieldUpdateOperationsInput | string
+    AccountID?: NullableStringFieldUpdateOperationsInput | string | null
+    UtilityID?: NullableStringFieldUpdateOperationsInput | string | null
+    Amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    Timestamp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    Description?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AUDIT_LOGSCreateInput = {
     id?: string
-    timestamp?: Date | string
-    actor_type: string
-    actor_id: string
-    action: string
-    target_id: string
-    status: string
+    timestamp?: Date | string | null
+    actor_type?: string | null
+    actor_id?: string | null
+    action?: string | null
+    target_id?: string | null
+    status?: string | null
   }
 
   export type AUDIT_LOGSUncheckedCreateInput = {
     id?: string
-    timestamp?: Date | string
-    actor_type: string
-    actor_id: string
-    action: string
-    target_id: string
-    status: string
+    timestamp?: Date | string | null
+    actor_type?: string | null
+    actor_id?: string | null
+    action?: string | null
+    target_id?: string | null
+    status?: string | null
   }
 
   export type AUDIT_LOGSUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
-    actor_type?: StringFieldUpdateOperationsInput | string
-    actor_id?: StringFieldUpdateOperationsInput | string
-    action?: StringFieldUpdateOperationsInput | string
-    target_id?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    timestamp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actor_type?: NullableStringFieldUpdateOperationsInput | string | null
+    actor_id?: NullableStringFieldUpdateOperationsInput | string | null
+    action?: NullableStringFieldUpdateOperationsInput | string | null
+    target_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AUDIT_LOGSUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
-    actor_type?: StringFieldUpdateOperationsInput | string
-    actor_id?: StringFieldUpdateOperationsInput | string
-    action?: StringFieldUpdateOperationsInput | string
-    target_id?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    timestamp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actor_type?: NullableStringFieldUpdateOperationsInput | string | null
+    actor_id?: NullableStringFieldUpdateOperationsInput | string | null
+    action?: NullableStringFieldUpdateOperationsInput | string | null
+    target_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AUDIT_LOGSCreateManyInput = {
     id?: string
-    timestamp?: Date | string
-    actor_type: string
-    actor_id: string
-    action: string
-    target_id: string
-    status: string
+    timestamp?: Date | string | null
+    actor_type?: string | null
+    actor_id?: string | null
+    action?: string | null
+    target_id?: string | null
+    status?: string | null
   }
 
   export type AUDIT_LOGSUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
-    actor_type?: StringFieldUpdateOperationsInput | string
-    actor_id?: StringFieldUpdateOperationsInput | string
-    action?: StringFieldUpdateOperationsInput | string
-    target_id?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    timestamp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actor_type?: NullableStringFieldUpdateOperationsInput | string | null
+    actor_id?: NullableStringFieldUpdateOperationsInput | string | null
+    action?: NullableStringFieldUpdateOperationsInput | string | null
+    target_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AUDIT_LOGSUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
-    actor_type?: StringFieldUpdateOperationsInput | string
-    actor_id?: StringFieldUpdateOperationsInput | string
-    action?: StringFieldUpdateOperationsInput | string
-    target_id?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    timestamp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actor_type?: NullableStringFieldUpdateOperationsInput | string | null
+    actor_id?: NullableStringFieldUpdateOperationsInput | string | null
+    action?: NullableStringFieldUpdateOperationsInput | string | null
+    target_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -10570,17 +10665,6 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
-  export type DateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[]
-    notIn?: Date[] | string[]
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
-  }
-
   export type StringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | null
@@ -10593,6 +10677,17 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type AccountListRelationFilter = {
@@ -10672,20 +10767,6 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
-  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[]
-    notIn?: Date[] | string[]
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | null
@@ -10701,6 +10782,20 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type OfficerCountOrderByAggregateInput = {
@@ -10751,25 +10846,25 @@ export namespace Prisma {
     PasswordHash?: SortOrder
   }
 
-  export type FloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
+  export type DecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
+  export type BoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
   }
 
-  export type CustomerScalarRelationFilter = {
-    is?: CustomerWhereInput
-    isNot?: CustomerWhereInput
+  export type CustomerNullableScalarRelationFilter = {
+    is?: CustomerWhereInput | null
+    isNot?: CustomerWhereInput | null
   }
 
   export type PaymentListRelationFilter = {
@@ -10842,44 +10937,33 @@ export namespace Prisma {
     DailyPurchaseLimit?: SortOrder
   }
 
-  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedFloatFilter<$PrismaModel>
-    _min?: NestedFloatFilter<$PrismaModel>
-    _max?: NestedFloatFilter<$PrismaModel>
+  export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
+  export type BoolNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBoolNullableFilter<$PrismaModel>
+    _max?: NestedBoolNullableFilter<$PrismaModel>
   }
 
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
-  export type AccountScalarRelationFilter = {
-    is?: AccountWhereInput
-    isNot?: AccountWhereInput
+  export type AccountNullableScalarRelationFilter = {
+    is?: AccountWhereInput | null
+    isNot?: AccountWhereInput | null
   }
 
   export type TransferCountOrderByAggregateInput = {
@@ -10926,20 +11010,6 @@ export namespace Prisma {
     Amount?: SortOrder
   }
 
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
-  }
-
   export type UtilitiesCountOrderByAggregateInput = {
     UtilityID?: SortOrder
     AccountName?: SortOrder
@@ -10958,9 +11028,9 @@ export namespace Prisma {
     AccountNumber?: SortOrder
   }
 
-  export type UtilitiesScalarRelationFilter = {
-    is?: UtilitiesWhereInput
-    isNot?: UtilitiesWhereInput
+  export type UtilitiesNullableScalarRelationFilter = {
+    is?: UtilitiesWhereInput | null
+    isNot?: UtilitiesWhereInput | null
   }
 
   export type PaymentCountOrderByAggregateInput = {
@@ -11046,12 +11116,12 @@ export namespace Prisma {
     set?: string
   }
 
-  export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
-  }
-
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
   }
 
   export type AccountUpdateManyWithoutCustomerNestedInput = {
@@ -11130,22 +11200,24 @@ export namespace Prisma {
     connect?: TransferWhereUniqueInput | TransferWhereUniqueInput[]
   }
 
-  export type FloatFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
+  export type NullableDecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string | null
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
   }
 
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
+  export type NullableBoolFieldUpdateOperationsInput = {
+    set?: boolean | null
   }
 
-  export type CustomerUpdateOneRequiredWithoutAccountsNestedInput = {
+  export type CustomerUpdateOneWithoutAccountsNestedInput = {
     create?: XOR<CustomerCreateWithoutAccountsInput, CustomerUncheckedCreateWithoutAccountsInput>
     connectOrCreate?: CustomerCreateOrConnectWithoutAccountsInput
     upsert?: CustomerUpsertWithoutAccountsInput
+    disconnect?: CustomerWhereInput | boolean
+    delete?: CustomerWhereInput | boolean
     connect?: CustomerWhereUniqueInput
     update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutAccountsInput, CustomerUpdateWithoutAccountsInput>, CustomerUncheckedUpdateWithoutAccountsInput>
   }
@@ -11234,36 +11306,36 @@ export namespace Prisma {
     deleteMany?: TransferScalarWhereInput | TransferScalarWhereInput[]
   }
 
-  export type AccountCreateNestedOneWithoutTransfersToInput = {
-    create?: XOR<AccountCreateWithoutTransfersToInput, AccountUncheckedCreateWithoutTransfersToInput>
-    connectOrCreate?: AccountCreateOrConnectWithoutTransfersToInput
-    connect?: AccountWhereUniqueInput
-  }
-
   export type AccountCreateNestedOneWithoutTransfersFromInput = {
     create?: XOR<AccountCreateWithoutTransfersFromInput, AccountUncheckedCreateWithoutTransfersFromInput>
     connectOrCreate?: AccountCreateOrConnectWithoutTransfersFromInput
     connect?: AccountWhereUniqueInput
   }
 
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
-  }
-
-  export type AccountUpdateOneRequiredWithoutTransfersToNestedInput = {
+  export type AccountCreateNestedOneWithoutTransfersToInput = {
     create?: XOR<AccountCreateWithoutTransfersToInput, AccountUncheckedCreateWithoutTransfersToInput>
     connectOrCreate?: AccountCreateOrConnectWithoutTransfersToInput
-    upsert?: AccountUpsertWithoutTransfersToInput
     connect?: AccountWhereUniqueInput
-    update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutTransfersToInput, AccountUpdateWithoutTransfersToInput>, AccountUncheckedUpdateWithoutTransfersToInput>
   }
 
-  export type AccountUpdateOneRequiredWithoutTransfersFromNestedInput = {
+  export type AccountUpdateOneWithoutTransfersFromNestedInput = {
     create?: XOR<AccountCreateWithoutTransfersFromInput, AccountUncheckedCreateWithoutTransfersFromInput>
     connectOrCreate?: AccountCreateOrConnectWithoutTransfersFromInput
     upsert?: AccountUpsertWithoutTransfersFromInput
+    disconnect?: AccountWhereInput | boolean
+    delete?: AccountWhereInput | boolean
     connect?: AccountWhereUniqueInput
     update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutTransfersFromInput, AccountUpdateWithoutTransfersFromInput>, AccountUncheckedUpdateWithoutTransfersFromInput>
+  }
+
+  export type AccountUpdateOneWithoutTransfersToNestedInput = {
+    create?: XOR<AccountCreateWithoutTransfersToInput, AccountUncheckedCreateWithoutTransfersToInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutTransfersToInput
+    upsert?: AccountUpsertWithoutTransfersToInput
+    disconnect?: AccountWhereInput | boolean
+    delete?: AccountWhereInput | boolean
+    connect?: AccountWhereUniqueInput
+    update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutTransfersToInput, AccountUpdateWithoutTransfersToInput>, AccountUncheckedUpdateWithoutTransfersToInput>
   }
 
   export type PaymentCreateNestedManyWithoutUtilityInput = {
@@ -11320,18 +11392,22 @@ export namespace Prisma {
     connect?: UtilitiesWhereUniqueInput
   }
 
-  export type AccountUpdateOneRequiredWithoutPaymentsNestedInput = {
+  export type AccountUpdateOneWithoutPaymentsNestedInput = {
     create?: XOR<AccountCreateWithoutPaymentsInput, AccountUncheckedCreateWithoutPaymentsInput>
     connectOrCreate?: AccountCreateOrConnectWithoutPaymentsInput
     upsert?: AccountUpsertWithoutPaymentsInput
+    disconnect?: AccountWhereInput | boolean
+    delete?: AccountWhereInput | boolean
     connect?: AccountWhereUniqueInput
     update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutPaymentsInput, AccountUpdateWithoutPaymentsInput>, AccountUncheckedUpdateWithoutPaymentsInput>
   }
 
-  export type UtilitiesUpdateOneRequiredWithoutPaymentsNestedInput = {
+  export type UtilitiesUpdateOneWithoutPaymentsNestedInput = {
     create?: XOR<UtilitiesCreateWithoutPaymentsInput, UtilitiesUncheckedCreateWithoutPaymentsInput>
     connectOrCreate?: UtilitiesCreateOrConnectWithoutPaymentsInput
     upsert?: UtilitiesUpsertWithoutPaymentsInput
+    disconnect?: UtilitiesWhereInput | boolean
+    delete?: UtilitiesWhereInput | boolean
     connect?: UtilitiesWhereUniqueInput
     update?: XOR<XOR<UtilitiesUpdateToOneWithWhereWithoutPaymentsInput, UtilitiesUpdateWithoutPaymentsInput>, UtilitiesUncheckedUpdateWithoutPaymentsInput>
   }
@@ -11350,17 +11426,6 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
-  export type NestedDateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[]
-    notIn?: Date[] | string[]
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
-  }
-
   export type NestedStringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | null
@@ -11373,6 +11438,17 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
@@ -11403,20 +11479,6 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
-  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[]
-    notIn?: Date[] | string[]
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | null
@@ -11445,57 +11507,6 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
-  export type NestedFloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
-  }
-
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
-  export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedFloatFilter<$PrismaModel>
-    _min?: NestedFloatFilter<$PrismaModel>
-    _max?: NestedFloatFilter<$PrismaModel>
-  }
-
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
-  }
-
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | null
@@ -11510,15 +11521,55 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
+  export type NestedDecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
+  export type NestedBoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+  }
+
+  export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
+  }
+
+  export type NestedBoolNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBoolNullableFilter<$PrismaModel>
+    _max?: NestedBoolNullableFilter<$PrismaModel>
+  }
+
   export type AccountCreateWithoutCustomerInput = {
     AccountID?: string
-    Status: string
-    Balance: number
-    AccountType: string
-    MonthlyFee: number
-    DailyATMLimit: number
-    DailyPurchaseLimit: number
-    OverdraftProtection: boolean
+    Status?: string | null
+    Balance?: Decimal | DecimalJsLike | number | string | null
+    AccountType?: string | null
+    MonthlyFee?: Decimal | DecimalJsLike | number | string | null
+    DailyATMLimit?: Decimal | DecimalJsLike | number | string | null
+    DailyPurchaseLimit?: Decimal | DecimalJsLike | number | string | null
+    OverdraftProtection?: boolean | null
     payments?: PaymentCreateNestedManyWithoutAccountInput
     transfersFrom?: TransferCreateNestedManyWithoutFromAccountInput
     transfersTo?: TransferCreateNestedManyWithoutToAccountInput
@@ -11526,13 +11577,13 @@ export namespace Prisma {
 
   export type AccountUncheckedCreateWithoutCustomerInput = {
     AccountID?: string
-    Status: string
-    Balance: number
-    AccountType: string
-    MonthlyFee: number
-    DailyATMLimit: number
-    DailyPurchaseLimit: number
-    OverdraftProtection: boolean
+    Status?: string | null
+    Balance?: Decimal | DecimalJsLike | number | string | null
+    AccountType?: string | null
+    MonthlyFee?: Decimal | DecimalJsLike | number | string | null
+    DailyATMLimit?: Decimal | DecimalJsLike | number | string | null
+    DailyPurchaseLimit?: Decimal | DecimalJsLike | number | string | null
+    OverdraftProtection?: boolean | null
     payments?: PaymentUncheckedCreateNestedManyWithoutAccountInput
     transfersFrom?: TransferUncheckedCreateNestedManyWithoutFromAccountInput
     transfersTo?: TransferUncheckedCreateNestedManyWithoutToAccountInput
@@ -11568,44 +11619,44 @@ export namespace Prisma {
     OR?: AccountScalarWhereInput[]
     NOT?: AccountScalarWhereInput | AccountScalarWhereInput[]
     AccountID?: StringFilter<"Account"> | string
-    CustomerID?: StringFilter<"Account"> | string
-    Status?: StringFilter<"Account"> | string
-    Balance?: FloatFilter<"Account"> | number
-    AccountType?: StringFilter<"Account"> | string
-    MonthlyFee?: FloatFilter<"Account"> | number
-    DailyATMLimit?: FloatFilter<"Account"> | number
-    DailyPurchaseLimit?: FloatFilter<"Account"> | number
-    OverdraftProtection?: BoolFilter<"Account"> | boolean
+    CustomerID?: StringNullableFilter<"Account"> | string | null
+    Status?: StringNullableFilter<"Account"> | string | null
+    Balance?: DecimalNullableFilter<"Account"> | Decimal | DecimalJsLike | number | string | null
+    AccountType?: StringNullableFilter<"Account"> | string | null
+    MonthlyFee?: DecimalNullableFilter<"Account"> | Decimal | DecimalJsLike | number | string | null
+    DailyATMLimit?: DecimalNullableFilter<"Account"> | Decimal | DecimalJsLike | number | string | null
+    DailyPurchaseLimit?: DecimalNullableFilter<"Account"> | Decimal | DecimalJsLike | number | string | null
+    OverdraftProtection?: BoolNullableFilter<"Account"> | boolean | null
   }
 
   export type CustomerCreateWithoutAccountsInput = {
     CustomerID?: string
-    FirstName: string
-    LastName: string
-    Email: string
-    ContactNumber: string
-    DateOfBirth: Date | string
-    AddressLine1: string
+    FirstName?: string | null
+    LastName?: string | null
+    Email?: string | null
+    ContactNumber?: string | null
+    DateOfBirth?: Date | string | null
+    AddressLine1?: string | null
     AddressLine2?: string | null
-    City: string
-    State: string
-    ZipCode: string
-    PasswordHash: string
+    City?: string | null
+    State?: string | null
+    ZipCode?: string | null
+    PasswordHash?: string | null
   }
 
   export type CustomerUncheckedCreateWithoutAccountsInput = {
     CustomerID?: string
-    FirstName: string
-    LastName: string
-    Email: string
-    ContactNumber: string
-    DateOfBirth: Date | string
-    AddressLine1: string
+    FirstName?: string | null
+    LastName?: string | null
+    Email?: string | null
+    ContactNumber?: string | null
+    DateOfBirth?: Date | string | null
+    AddressLine1?: string | null
     AddressLine2?: string | null
-    City: string
-    State: string
-    ZipCode: string
-    PasswordHash: string
+    City?: string | null
+    State?: string | null
+    ZipCode?: string | null
+    PasswordHash?: string | null
   }
 
   export type CustomerCreateOrConnectWithoutAccountsInput = {
@@ -11615,18 +11666,18 @@ export namespace Prisma {
 
   export type PaymentCreateWithoutAccountInput = {
     PaymentID?: string
-    Amount: number
-    Timestamp?: Date | string
-    Description: string
-    utility: UtilitiesCreateNestedOneWithoutPaymentsInput
+    Amount?: Decimal | DecimalJsLike | number | string | null
+    Timestamp?: Date | string | null
+    Description?: string | null
+    utility?: UtilitiesCreateNestedOneWithoutPaymentsInput
   }
 
   export type PaymentUncheckedCreateWithoutAccountInput = {
     PaymentID?: string
-    UtilityID: string
-    Amount: number
-    Timestamp?: Date | string
-    Description: string
+    UtilityID?: string | null
+    Amount?: Decimal | DecimalJsLike | number | string | null
+    Timestamp?: Date | string | null
+    Description?: string | null
   }
 
   export type PaymentCreateOrConnectWithoutAccountInput = {
@@ -11640,24 +11691,24 @@ export namespace Prisma {
 
   export type TransferCreateWithoutFromAccountInput = {
     TransferID?: string
-    Amount: number
-    Description: string
-    CreatedAt?: Date | string
+    Amount?: Decimal | DecimalJsLike | number | string | null
+    Description?: string | null
+    CreatedAt?: Date | string | null
     UpdatedAt?: Date | string | null
-    Status: string
-    TransferType: string
-    toAccount: AccountCreateNestedOneWithoutTransfersToInput
+    Status?: string | null
+    TransferType?: string | null
+    toAccount?: AccountCreateNestedOneWithoutTransfersToInput
   }
 
   export type TransferUncheckedCreateWithoutFromAccountInput = {
     TransferID?: string
-    ToAccountID: string
-    Amount: number
-    Description: string
-    CreatedAt?: Date | string
+    ToAccountID?: string | null
+    Amount?: Decimal | DecimalJsLike | number | string | null
+    Description?: string | null
+    CreatedAt?: Date | string | null
     UpdatedAt?: Date | string | null
-    Status: string
-    TransferType: string
+    Status?: string | null
+    TransferType?: string | null
   }
 
   export type TransferCreateOrConnectWithoutFromAccountInput = {
@@ -11671,24 +11722,24 @@ export namespace Prisma {
 
   export type TransferCreateWithoutToAccountInput = {
     TransferID?: string
-    Amount: number
-    Description: string
-    CreatedAt?: Date | string
+    Amount?: Decimal | DecimalJsLike | number | string | null
+    Description?: string | null
+    CreatedAt?: Date | string | null
     UpdatedAt?: Date | string | null
-    Status: string
-    TransferType: string
-    fromAccount: AccountCreateNestedOneWithoutTransfersFromInput
+    Status?: string | null
+    TransferType?: string | null
+    fromAccount?: AccountCreateNestedOneWithoutTransfersFromInput
   }
 
   export type TransferUncheckedCreateWithoutToAccountInput = {
     TransferID?: string
-    FromAccountID: string
-    Amount: number
-    Description: string
-    CreatedAt?: Date | string
+    FromAccountID?: string | null
+    Amount?: Decimal | DecimalJsLike | number | string | null
+    Description?: string | null
+    CreatedAt?: Date | string | null
     UpdatedAt?: Date | string | null
-    Status: string
-    TransferType: string
+    Status?: string | null
+    TransferType?: string | null
   }
 
   export type TransferCreateOrConnectWithoutToAccountInput = {
@@ -11713,32 +11764,32 @@ export namespace Prisma {
 
   export type CustomerUpdateWithoutAccountsInput = {
     CustomerID?: StringFieldUpdateOperationsInput | string
-    FirstName?: StringFieldUpdateOperationsInput | string
-    LastName?: StringFieldUpdateOperationsInput | string
-    Email?: StringFieldUpdateOperationsInput | string
-    ContactNumber?: StringFieldUpdateOperationsInput | string
-    DateOfBirth?: DateTimeFieldUpdateOperationsInput | Date | string
-    AddressLine1?: StringFieldUpdateOperationsInput | string
+    FirstName?: NullableStringFieldUpdateOperationsInput | string | null
+    LastName?: NullableStringFieldUpdateOperationsInput | string | null
+    Email?: NullableStringFieldUpdateOperationsInput | string | null
+    ContactNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    DateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    AddressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     AddressLine2?: NullableStringFieldUpdateOperationsInput | string | null
-    City?: StringFieldUpdateOperationsInput | string
-    State?: StringFieldUpdateOperationsInput | string
-    ZipCode?: StringFieldUpdateOperationsInput | string
-    PasswordHash?: StringFieldUpdateOperationsInput | string
+    City?: NullableStringFieldUpdateOperationsInput | string | null
+    State?: NullableStringFieldUpdateOperationsInput | string | null
+    ZipCode?: NullableStringFieldUpdateOperationsInput | string | null
+    PasswordHash?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CustomerUncheckedUpdateWithoutAccountsInput = {
     CustomerID?: StringFieldUpdateOperationsInput | string
-    FirstName?: StringFieldUpdateOperationsInput | string
-    LastName?: StringFieldUpdateOperationsInput | string
-    Email?: StringFieldUpdateOperationsInput | string
-    ContactNumber?: StringFieldUpdateOperationsInput | string
-    DateOfBirth?: DateTimeFieldUpdateOperationsInput | Date | string
-    AddressLine1?: StringFieldUpdateOperationsInput | string
+    FirstName?: NullableStringFieldUpdateOperationsInput | string | null
+    LastName?: NullableStringFieldUpdateOperationsInput | string | null
+    Email?: NullableStringFieldUpdateOperationsInput | string | null
+    ContactNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    DateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    AddressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     AddressLine2?: NullableStringFieldUpdateOperationsInput | string | null
-    City?: StringFieldUpdateOperationsInput | string
-    State?: StringFieldUpdateOperationsInput | string
-    ZipCode?: StringFieldUpdateOperationsInput | string
-    PasswordHash?: StringFieldUpdateOperationsInput | string
+    City?: NullableStringFieldUpdateOperationsInput | string | null
+    State?: NullableStringFieldUpdateOperationsInput | string | null
+    ZipCode?: NullableStringFieldUpdateOperationsInput | string | null
+    PasswordHash?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PaymentUpsertWithWhereUniqueWithoutAccountInput = {
@@ -11762,11 +11813,11 @@ export namespace Prisma {
     OR?: PaymentScalarWhereInput[]
     NOT?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
     PaymentID?: StringFilter<"Payment"> | string
-    AccountID?: StringFilter<"Payment"> | string
-    UtilityID?: StringFilter<"Payment"> | string
-    Amount?: FloatFilter<"Payment"> | number
-    Timestamp?: DateTimeFilter<"Payment"> | Date | string
-    Description?: StringFilter<"Payment"> | string
+    AccountID?: StringNullableFilter<"Payment"> | string | null
+    UtilityID?: StringNullableFilter<"Payment"> | string | null
+    Amount?: DecimalNullableFilter<"Payment"> | Decimal | DecimalJsLike | number | string | null
+    Timestamp?: DateTimeNullableFilter<"Payment"> | Date | string | null
+    Description?: StringNullableFilter<"Payment"> | string | null
   }
 
   export type TransferUpsertWithWhereUniqueWithoutFromAccountInput = {
@@ -11790,14 +11841,14 @@ export namespace Prisma {
     OR?: TransferScalarWhereInput[]
     NOT?: TransferScalarWhereInput | TransferScalarWhereInput[]
     TransferID?: StringFilter<"Transfer"> | string
-    ToAccountID?: StringFilter<"Transfer"> | string
-    FromAccountID?: StringFilter<"Transfer"> | string
-    Amount?: FloatFilter<"Transfer"> | number
-    Description?: StringFilter<"Transfer"> | string
-    CreatedAt?: DateTimeFilter<"Transfer"> | Date | string
+    ToAccountID?: StringNullableFilter<"Transfer"> | string | null
+    FromAccountID?: StringNullableFilter<"Transfer"> | string | null
+    Amount?: DecimalNullableFilter<"Transfer"> | Decimal | DecimalJsLike | number | string | null
+    Description?: StringNullableFilter<"Transfer"> | string | null
+    CreatedAt?: DateTimeNullableFilter<"Transfer"> | Date | string | null
     UpdatedAt?: DateTimeNullableFilter<"Transfer"> | Date | string | null
-    Status?: StringFilter<"Transfer"> | string
-    TransferType?: StringFilter<"Transfer"> | string
+    Status?: StringNullableFilter<"Transfer"> | string | null
+    TransferType?: StringNullableFilter<"Transfer"> | string | null
   }
 
   export type TransferUpsertWithWhereUniqueWithoutToAccountInput = {
@@ -11816,63 +11867,30 @@ export namespace Prisma {
     data: XOR<TransferUpdateManyMutationInput, TransferUncheckedUpdateManyWithoutToAccountInput>
   }
 
-  export type AccountCreateWithoutTransfersToInput = {
-    AccountID?: string
-    Status: string
-    Balance: number
-    AccountType: string
-    MonthlyFee: number
-    DailyATMLimit: number
-    DailyPurchaseLimit: number
-    OverdraftProtection: boolean
-    customer: CustomerCreateNestedOneWithoutAccountsInput
-    payments?: PaymentCreateNestedManyWithoutAccountInput
-    transfersFrom?: TransferCreateNestedManyWithoutFromAccountInput
-  }
-
-  export type AccountUncheckedCreateWithoutTransfersToInput = {
-    AccountID?: string
-    CustomerID: string
-    Status: string
-    Balance: number
-    AccountType: string
-    MonthlyFee: number
-    DailyATMLimit: number
-    DailyPurchaseLimit: number
-    OverdraftProtection: boolean
-    payments?: PaymentUncheckedCreateNestedManyWithoutAccountInput
-    transfersFrom?: TransferUncheckedCreateNestedManyWithoutFromAccountInput
-  }
-
-  export type AccountCreateOrConnectWithoutTransfersToInput = {
-    where: AccountWhereUniqueInput
-    create: XOR<AccountCreateWithoutTransfersToInput, AccountUncheckedCreateWithoutTransfersToInput>
-  }
-
   export type AccountCreateWithoutTransfersFromInput = {
     AccountID?: string
-    Status: string
-    Balance: number
-    AccountType: string
-    MonthlyFee: number
-    DailyATMLimit: number
-    DailyPurchaseLimit: number
-    OverdraftProtection: boolean
-    customer: CustomerCreateNestedOneWithoutAccountsInput
+    Status?: string | null
+    Balance?: Decimal | DecimalJsLike | number | string | null
+    AccountType?: string | null
+    MonthlyFee?: Decimal | DecimalJsLike | number | string | null
+    DailyATMLimit?: Decimal | DecimalJsLike | number | string | null
+    DailyPurchaseLimit?: Decimal | DecimalJsLike | number | string | null
+    OverdraftProtection?: boolean | null
+    customer?: CustomerCreateNestedOneWithoutAccountsInput
     payments?: PaymentCreateNestedManyWithoutAccountInput
     transfersTo?: TransferCreateNestedManyWithoutToAccountInput
   }
 
   export type AccountUncheckedCreateWithoutTransfersFromInput = {
     AccountID?: string
-    CustomerID: string
-    Status: string
-    Balance: number
-    AccountType: string
-    MonthlyFee: number
-    DailyATMLimit: number
-    DailyPurchaseLimit: number
-    OverdraftProtection: boolean
+    CustomerID?: string | null
+    Status?: string | null
+    Balance?: Decimal | DecimalJsLike | number | string | null
+    AccountType?: string | null
+    MonthlyFee?: Decimal | DecimalJsLike | number | string | null
+    DailyATMLimit?: Decimal | DecimalJsLike | number | string | null
+    DailyPurchaseLimit?: Decimal | DecimalJsLike | number | string | null
+    OverdraftProtection?: boolean | null
     payments?: PaymentUncheckedCreateNestedManyWithoutAccountInput
     transfersTo?: TransferUncheckedCreateNestedManyWithoutToAccountInput
   }
@@ -11882,43 +11900,37 @@ export namespace Prisma {
     create: XOR<AccountCreateWithoutTransfersFromInput, AccountUncheckedCreateWithoutTransfersFromInput>
   }
 
-  export type AccountUpsertWithoutTransfersToInput = {
-    update: XOR<AccountUpdateWithoutTransfersToInput, AccountUncheckedUpdateWithoutTransfersToInput>
+  export type AccountCreateWithoutTransfersToInput = {
+    AccountID?: string
+    Status?: string | null
+    Balance?: Decimal | DecimalJsLike | number | string | null
+    AccountType?: string | null
+    MonthlyFee?: Decimal | DecimalJsLike | number | string | null
+    DailyATMLimit?: Decimal | DecimalJsLike | number | string | null
+    DailyPurchaseLimit?: Decimal | DecimalJsLike | number | string | null
+    OverdraftProtection?: boolean | null
+    customer?: CustomerCreateNestedOneWithoutAccountsInput
+    payments?: PaymentCreateNestedManyWithoutAccountInput
+    transfersFrom?: TransferCreateNestedManyWithoutFromAccountInput
+  }
+
+  export type AccountUncheckedCreateWithoutTransfersToInput = {
+    AccountID?: string
+    CustomerID?: string | null
+    Status?: string | null
+    Balance?: Decimal | DecimalJsLike | number | string | null
+    AccountType?: string | null
+    MonthlyFee?: Decimal | DecimalJsLike | number | string | null
+    DailyATMLimit?: Decimal | DecimalJsLike | number | string | null
+    DailyPurchaseLimit?: Decimal | DecimalJsLike | number | string | null
+    OverdraftProtection?: boolean | null
+    payments?: PaymentUncheckedCreateNestedManyWithoutAccountInput
+    transfersFrom?: TransferUncheckedCreateNestedManyWithoutFromAccountInput
+  }
+
+  export type AccountCreateOrConnectWithoutTransfersToInput = {
+    where: AccountWhereUniqueInput
     create: XOR<AccountCreateWithoutTransfersToInput, AccountUncheckedCreateWithoutTransfersToInput>
-    where?: AccountWhereInput
-  }
-
-  export type AccountUpdateToOneWithWhereWithoutTransfersToInput = {
-    where?: AccountWhereInput
-    data: XOR<AccountUpdateWithoutTransfersToInput, AccountUncheckedUpdateWithoutTransfersToInput>
-  }
-
-  export type AccountUpdateWithoutTransfersToInput = {
-    AccountID?: StringFieldUpdateOperationsInput | string
-    Status?: StringFieldUpdateOperationsInput | string
-    Balance?: FloatFieldUpdateOperationsInput | number
-    AccountType?: StringFieldUpdateOperationsInput | string
-    MonthlyFee?: FloatFieldUpdateOperationsInput | number
-    DailyATMLimit?: FloatFieldUpdateOperationsInput | number
-    DailyPurchaseLimit?: FloatFieldUpdateOperationsInput | number
-    OverdraftProtection?: BoolFieldUpdateOperationsInput | boolean
-    customer?: CustomerUpdateOneRequiredWithoutAccountsNestedInput
-    payments?: PaymentUpdateManyWithoutAccountNestedInput
-    transfersFrom?: TransferUpdateManyWithoutFromAccountNestedInput
-  }
-
-  export type AccountUncheckedUpdateWithoutTransfersToInput = {
-    AccountID?: StringFieldUpdateOperationsInput | string
-    CustomerID?: StringFieldUpdateOperationsInput | string
-    Status?: StringFieldUpdateOperationsInput | string
-    Balance?: FloatFieldUpdateOperationsInput | number
-    AccountType?: StringFieldUpdateOperationsInput | string
-    MonthlyFee?: FloatFieldUpdateOperationsInput | number
-    DailyATMLimit?: FloatFieldUpdateOperationsInput | number
-    DailyPurchaseLimit?: FloatFieldUpdateOperationsInput | number
-    OverdraftProtection?: BoolFieldUpdateOperationsInput | boolean
-    payments?: PaymentUncheckedUpdateManyWithoutAccountNestedInput
-    transfersFrom?: TransferUncheckedUpdateManyWithoutFromAccountNestedInput
   }
 
   export type AccountUpsertWithoutTransfersFromInput = {
@@ -11934,46 +11946,85 @@ export namespace Prisma {
 
   export type AccountUpdateWithoutTransfersFromInput = {
     AccountID?: StringFieldUpdateOperationsInput | string
-    Status?: StringFieldUpdateOperationsInput | string
-    Balance?: FloatFieldUpdateOperationsInput | number
-    AccountType?: StringFieldUpdateOperationsInput | string
-    MonthlyFee?: FloatFieldUpdateOperationsInput | number
-    DailyATMLimit?: FloatFieldUpdateOperationsInput | number
-    DailyPurchaseLimit?: FloatFieldUpdateOperationsInput | number
-    OverdraftProtection?: BoolFieldUpdateOperationsInput | boolean
-    customer?: CustomerUpdateOneRequiredWithoutAccountsNestedInput
+    Status?: NullableStringFieldUpdateOperationsInput | string | null
+    Balance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    AccountType?: NullableStringFieldUpdateOperationsInput | string | null
+    MonthlyFee?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    DailyATMLimit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    DailyPurchaseLimit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    OverdraftProtection?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    customer?: CustomerUpdateOneWithoutAccountsNestedInput
     payments?: PaymentUpdateManyWithoutAccountNestedInput
     transfersTo?: TransferUpdateManyWithoutToAccountNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutTransfersFromInput = {
     AccountID?: StringFieldUpdateOperationsInput | string
-    CustomerID?: StringFieldUpdateOperationsInput | string
-    Status?: StringFieldUpdateOperationsInput | string
-    Balance?: FloatFieldUpdateOperationsInput | number
-    AccountType?: StringFieldUpdateOperationsInput | string
-    MonthlyFee?: FloatFieldUpdateOperationsInput | number
-    DailyATMLimit?: FloatFieldUpdateOperationsInput | number
-    DailyPurchaseLimit?: FloatFieldUpdateOperationsInput | number
-    OverdraftProtection?: BoolFieldUpdateOperationsInput | boolean
+    CustomerID?: NullableStringFieldUpdateOperationsInput | string | null
+    Status?: NullableStringFieldUpdateOperationsInput | string | null
+    Balance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    AccountType?: NullableStringFieldUpdateOperationsInput | string | null
+    MonthlyFee?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    DailyATMLimit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    DailyPurchaseLimit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    OverdraftProtection?: NullableBoolFieldUpdateOperationsInput | boolean | null
     payments?: PaymentUncheckedUpdateManyWithoutAccountNestedInput
     transfersTo?: TransferUncheckedUpdateManyWithoutToAccountNestedInput
   }
 
+  export type AccountUpsertWithoutTransfersToInput = {
+    update: XOR<AccountUpdateWithoutTransfersToInput, AccountUncheckedUpdateWithoutTransfersToInput>
+    create: XOR<AccountCreateWithoutTransfersToInput, AccountUncheckedCreateWithoutTransfersToInput>
+    where?: AccountWhereInput
+  }
+
+  export type AccountUpdateToOneWithWhereWithoutTransfersToInput = {
+    where?: AccountWhereInput
+    data: XOR<AccountUpdateWithoutTransfersToInput, AccountUncheckedUpdateWithoutTransfersToInput>
+  }
+
+  export type AccountUpdateWithoutTransfersToInput = {
+    AccountID?: StringFieldUpdateOperationsInput | string
+    Status?: NullableStringFieldUpdateOperationsInput | string | null
+    Balance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    AccountType?: NullableStringFieldUpdateOperationsInput | string | null
+    MonthlyFee?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    DailyATMLimit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    DailyPurchaseLimit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    OverdraftProtection?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    customer?: CustomerUpdateOneWithoutAccountsNestedInput
+    payments?: PaymentUpdateManyWithoutAccountNestedInput
+    transfersFrom?: TransferUpdateManyWithoutFromAccountNestedInput
+  }
+
+  export type AccountUncheckedUpdateWithoutTransfersToInput = {
+    AccountID?: StringFieldUpdateOperationsInput | string
+    CustomerID?: NullableStringFieldUpdateOperationsInput | string | null
+    Status?: NullableStringFieldUpdateOperationsInput | string | null
+    Balance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    AccountType?: NullableStringFieldUpdateOperationsInput | string | null
+    MonthlyFee?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    DailyATMLimit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    DailyPurchaseLimit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    OverdraftProtection?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    payments?: PaymentUncheckedUpdateManyWithoutAccountNestedInput
+    transfersFrom?: TransferUncheckedUpdateManyWithoutFromAccountNestedInput
+  }
+
   export type PaymentCreateWithoutUtilityInput = {
     PaymentID?: string
-    Amount: number
-    Timestamp?: Date | string
-    Description: string
-    account: AccountCreateNestedOneWithoutPaymentsInput
+    Amount?: Decimal | DecimalJsLike | number | string | null
+    Timestamp?: Date | string | null
+    Description?: string | null
+    account?: AccountCreateNestedOneWithoutPaymentsInput
   }
 
   export type PaymentUncheckedCreateWithoutUtilityInput = {
     PaymentID?: string
-    AccountID: string
-    Amount: number
-    Timestamp?: Date | string
-    Description: string
+    AccountID?: string | null
+    Amount?: Decimal | DecimalJsLike | number | string | null
+    Timestamp?: Date | string | null
+    Description?: string | null
   }
 
   export type PaymentCreateOrConnectWithoutUtilityInput = {
@@ -12003,28 +12054,28 @@ export namespace Prisma {
 
   export type AccountCreateWithoutPaymentsInput = {
     AccountID?: string
-    Status: string
-    Balance: number
-    AccountType: string
-    MonthlyFee: number
-    DailyATMLimit: number
-    DailyPurchaseLimit: number
-    OverdraftProtection: boolean
-    customer: CustomerCreateNestedOneWithoutAccountsInput
+    Status?: string | null
+    Balance?: Decimal | DecimalJsLike | number | string | null
+    AccountType?: string | null
+    MonthlyFee?: Decimal | DecimalJsLike | number | string | null
+    DailyATMLimit?: Decimal | DecimalJsLike | number | string | null
+    DailyPurchaseLimit?: Decimal | DecimalJsLike | number | string | null
+    OverdraftProtection?: boolean | null
+    customer?: CustomerCreateNestedOneWithoutAccountsInput
     transfersFrom?: TransferCreateNestedManyWithoutFromAccountInput
     transfersTo?: TransferCreateNestedManyWithoutToAccountInput
   }
 
   export type AccountUncheckedCreateWithoutPaymentsInput = {
     AccountID?: string
-    CustomerID: string
-    Status: string
-    Balance: number
-    AccountType: string
-    MonthlyFee: number
-    DailyATMLimit: number
-    DailyPurchaseLimit: number
-    OverdraftProtection: boolean
+    CustomerID?: string | null
+    Status?: string | null
+    Balance?: Decimal | DecimalJsLike | number | string | null
+    AccountType?: string | null
+    MonthlyFee?: Decimal | DecimalJsLike | number | string | null
+    DailyATMLimit?: Decimal | DecimalJsLike | number | string | null
+    DailyPurchaseLimit?: Decimal | DecimalJsLike | number | string | null
+    OverdraftProtection?: boolean | null
     transfersFrom?: TransferUncheckedCreateNestedManyWithoutFromAccountInput
     transfersTo?: TransferUncheckedCreateNestedManyWithoutToAccountInput
   }
@@ -12036,14 +12087,14 @@ export namespace Prisma {
 
   export type UtilitiesCreateWithoutPaymentsInput = {
     UtilityID?: string
-    AccountName: string
-    AccountNumber: string
+    AccountName?: string | null
+    AccountNumber?: string | null
   }
 
   export type UtilitiesUncheckedCreateWithoutPaymentsInput = {
     UtilityID?: string
-    AccountName: string
-    AccountNumber: string
+    AccountName?: string | null
+    AccountNumber?: string | null
   }
 
   export type UtilitiesCreateOrConnectWithoutPaymentsInput = {
@@ -12064,28 +12115,28 @@ export namespace Prisma {
 
   export type AccountUpdateWithoutPaymentsInput = {
     AccountID?: StringFieldUpdateOperationsInput | string
-    Status?: StringFieldUpdateOperationsInput | string
-    Balance?: FloatFieldUpdateOperationsInput | number
-    AccountType?: StringFieldUpdateOperationsInput | string
-    MonthlyFee?: FloatFieldUpdateOperationsInput | number
-    DailyATMLimit?: FloatFieldUpdateOperationsInput | number
-    DailyPurchaseLimit?: FloatFieldUpdateOperationsInput | number
-    OverdraftProtection?: BoolFieldUpdateOperationsInput | boolean
-    customer?: CustomerUpdateOneRequiredWithoutAccountsNestedInput
+    Status?: NullableStringFieldUpdateOperationsInput | string | null
+    Balance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    AccountType?: NullableStringFieldUpdateOperationsInput | string | null
+    MonthlyFee?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    DailyATMLimit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    DailyPurchaseLimit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    OverdraftProtection?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    customer?: CustomerUpdateOneWithoutAccountsNestedInput
     transfersFrom?: TransferUpdateManyWithoutFromAccountNestedInput
     transfersTo?: TransferUpdateManyWithoutToAccountNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutPaymentsInput = {
     AccountID?: StringFieldUpdateOperationsInput | string
-    CustomerID?: StringFieldUpdateOperationsInput | string
-    Status?: StringFieldUpdateOperationsInput | string
-    Balance?: FloatFieldUpdateOperationsInput | number
-    AccountType?: StringFieldUpdateOperationsInput | string
-    MonthlyFee?: FloatFieldUpdateOperationsInput | number
-    DailyATMLimit?: FloatFieldUpdateOperationsInput | number
-    DailyPurchaseLimit?: FloatFieldUpdateOperationsInput | number
-    OverdraftProtection?: BoolFieldUpdateOperationsInput | boolean
+    CustomerID?: NullableStringFieldUpdateOperationsInput | string | null
+    Status?: NullableStringFieldUpdateOperationsInput | string | null
+    Balance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    AccountType?: NullableStringFieldUpdateOperationsInput | string | null
+    MonthlyFee?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    DailyATMLimit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    DailyPurchaseLimit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    OverdraftProtection?: NullableBoolFieldUpdateOperationsInput | boolean | null
     transfersFrom?: TransferUncheckedUpdateManyWithoutFromAccountNestedInput
     transfersTo?: TransferUncheckedUpdateManyWithoutToAccountNestedInput
   }
@@ -12103,36 +12154,36 @@ export namespace Prisma {
 
   export type UtilitiesUpdateWithoutPaymentsInput = {
     UtilityID?: StringFieldUpdateOperationsInput | string
-    AccountName?: StringFieldUpdateOperationsInput | string
-    AccountNumber?: StringFieldUpdateOperationsInput | string
+    AccountName?: NullableStringFieldUpdateOperationsInput | string | null
+    AccountNumber?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UtilitiesUncheckedUpdateWithoutPaymentsInput = {
     UtilityID?: StringFieldUpdateOperationsInput | string
-    AccountName?: StringFieldUpdateOperationsInput | string
-    AccountNumber?: StringFieldUpdateOperationsInput | string
+    AccountName?: NullableStringFieldUpdateOperationsInput | string | null
+    AccountNumber?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AccountCreateManyCustomerInput = {
     AccountID?: string
-    Status: string
-    Balance: number
-    AccountType: string
-    MonthlyFee: number
-    DailyATMLimit: number
-    DailyPurchaseLimit: number
-    OverdraftProtection: boolean
+    Status?: string | null
+    Balance?: Decimal | DecimalJsLike | number | string | null
+    AccountType?: string | null
+    MonthlyFee?: Decimal | DecimalJsLike | number | string | null
+    DailyATMLimit?: Decimal | DecimalJsLike | number | string | null
+    DailyPurchaseLimit?: Decimal | DecimalJsLike | number | string | null
+    OverdraftProtection?: boolean | null
   }
 
   export type AccountUpdateWithoutCustomerInput = {
     AccountID?: StringFieldUpdateOperationsInput | string
-    Status?: StringFieldUpdateOperationsInput | string
-    Balance?: FloatFieldUpdateOperationsInput | number
-    AccountType?: StringFieldUpdateOperationsInput | string
-    MonthlyFee?: FloatFieldUpdateOperationsInput | number
-    DailyATMLimit?: FloatFieldUpdateOperationsInput | number
-    DailyPurchaseLimit?: FloatFieldUpdateOperationsInput | number
-    OverdraftProtection?: BoolFieldUpdateOperationsInput | boolean
+    Status?: NullableStringFieldUpdateOperationsInput | string | null
+    Balance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    AccountType?: NullableStringFieldUpdateOperationsInput | string | null
+    MonthlyFee?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    DailyATMLimit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    DailyPurchaseLimit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    OverdraftProtection?: NullableBoolFieldUpdateOperationsInput | boolean | null
     payments?: PaymentUpdateManyWithoutAccountNestedInput
     transfersFrom?: TransferUpdateManyWithoutFromAccountNestedInput
     transfersTo?: TransferUpdateManyWithoutToAccountNestedInput
@@ -12140,13 +12191,13 @@ export namespace Prisma {
 
   export type AccountUncheckedUpdateWithoutCustomerInput = {
     AccountID?: StringFieldUpdateOperationsInput | string
-    Status?: StringFieldUpdateOperationsInput | string
-    Balance?: FloatFieldUpdateOperationsInput | number
-    AccountType?: StringFieldUpdateOperationsInput | string
-    MonthlyFee?: FloatFieldUpdateOperationsInput | number
-    DailyATMLimit?: FloatFieldUpdateOperationsInput | number
-    DailyPurchaseLimit?: FloatFieldUpdateOperationsInput | number
-    OverdraftProtection?: BoolFieldUpdateOperationsInput | boolean
+    Status?: NullableStringFieldUpdateOperationsInput | string | null
+    Balance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    AccountType?: NullableStringFieldUpdateOperationsInput | string | null
+    MonthlyFee?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    DailyATMLimit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    DailyPurchaseLimit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    OverdraftProtection?: NullableBoolFieldUpdateOperationsInput | boolean | null
     payments?: PaymentUncheckedUpdateManyWithoutAccountNestedInput
     transfersFrom?: TransferUncheckedUpdateManyWithoutFromAccountNestedInput
     transfersTo?: TransferUncheckedUpdateManyWithoutToAccountNestedInput
@@ -12154,165 +12205,165 @@ export namespace Prisma {
 
   export type AccountUncheckedUpdateManyWithoutCustomerInput = {
     AccountID?: StringFieldUpdateOperationsInput | string
-    Status?: StringFieldUpdateOperationsInput | string
-    Balance?: FloatFieldUpdateOperationsInput | number
-    AccountType?: StringFieldUpdateOperationsInput | string
-    MonthlyFee?: FloatFieldUpdateOperationsInput | number
-    DailyATMLimit?: FloatFieldUpdateOperationsInput | number
-    DailyPurchaseLimit?: FloatFieldUpdateOperationsInput | number
-    OverdraftProtection?: BoolFieldUpdateOperationsInput | boolean
+    Status?: NullableStringFieldUpdateOperationsInput | string | null
+    Balance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    AccountType?: NullableStringFieldUpdateOperationsInput | string | null
+    MonthlyFee?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    DailyATMLimit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    DailyPurchaseLimit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    OverdraftProtection?: NullableBoolFieldUpdateOperationsInput | boolean | null
   }
 
   export type PaymentCreateManyAccountInput = {
     PaymentID?: string
-    UtilityID: string
-    Amount: number
-    Timestamp?: Date | string
-    Description: string
+    UtilityID?: string | null
+    Amount?: Decimal | DecimalJsLike | number | string | null
+    Timestamp?: Date | string | null
+    Description?: string | null
   }
 
   export type TransferCreateManyFromAccountInput = {
     TransferID?: string
-    ToAccountID: string
-    Amount: number
-    Description: string
-    CreatedAt?: Date | string
+    ToAccountID?: string | null
+    Amount?: Decimal | DecimalJsLike | number | string | null
+    Description?: string | null
+    CreatedAt?: Date | string | null
     UpdatedAt?: Date | string | null
-    Status: string
-    TransferType: string
+    Status?: string | null
+    TransferType?: string | null
   }
 
   export type TransferCreateManyToAccountInput = {
     TransferID?: string
-    FromAccountID: string
-    Amount: number
-    Description: string
-    CreatedAt?: Date | string
+    FromAccountID?: string | null
+    Amount?: Decimal | DecimalJsLike | number | string | null
+    Description?: string | null
+    CreatedAt?: Date | string | null
     UpdatedAt?: Date | string | null
-    Status: string
-    TransferType: string
+    Status?: string | null
+    TransferType?: string | null
   }
 
   export type PaymentUpdateWithoutAccountInput = {
     PaymentID?: StringFieldUpdateOperationsInput | string
-    Amount?: FloatFieldUpdateOperationsInput | number
-    Timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
-    Description?: StringFieldUpdateOperationsInput | string
-    utility?: UtilitiesUpdateOneRequiredWithoutPaymentsNestedInput
+    Amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    Timestamp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    Description?: NullableStringFieldUpdateOperationsInput | string | null
+    utility?: UtilitiesUpdateOneWithoutPaymentsNestedInput
   }
 
   export type PaymentUncheckedUpdateWithoutAccountInput = {
     PaymentID?: StringFieldUpdateOperationsInput | string
-    UtilityID?: StringFieldUpdateOperationsInput | string
-    Amount?: FloatFieldUpdateOperationsInput | number
-    Timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
-    Description?: StringFieldUpdateOperationsInput | string
+    UtilityID?: NullableStringFieldUpdateOperationsInput | string | null
+    Amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    Timestamp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    Description?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PaymentUncheckedUpdateManyWithoutAccountInput = {
     PaymentID?: StringFieldUpdateOperationsInput | string
-    UtilityID?: StringFieldUpdateOperationsInput | string
-    Amount?: FloatFieldUpdateOperationsInput | number
-    Timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
-    Description?: StringFieldUpdateOperationsInput | string
+    UtilityID?: NullableStringFieldUpdateOperationsInput | string | null
+    Amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    Timestamp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    Description?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type TransferUpdateWithoutFromAccountInput = {
     TransferID?: StringFieldUpdateOperationsInput | string
-    Amount?: FloatFieldUpdateOperationsInput | number
-    Description?: StringFieldUpdateOperationsInput | string
-    CreatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    Amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    Description?: NullableStringFieldUpdateOperationsInput | string | null
+    CreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     UpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    Status?: StringFieldUpdateOperationsInput | string
-    TransferType?: StringFieldUpdateOperationsInput | string
-    toAccount?: AccountUpdateOneRequiredWithoutTransfersToNestedInput
+    Status?: NullableStringFieldUpdateOperationsInput | string | null
+    TransferType?: NullableStringFieldUpdateOperationsInput | string | null
+    toAccount?: AccountUpdateOneWithoutTransfersToNestedInput
   }
 
   export type TransferUncheckedUpdateWithoutFromAccountInput = {
     TransferID?: StringFieldUpdateOperationsInput | string
-    ToAccountID?: StringFieldUpdateOperationsInput | string
-    Amount?: FloatFieldUpdateOperationsInput | number
-    Description?: StringFieldUpdateOperationsInput | string
-    CreatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ToAccountID?: NullableStringFieldUpdateOperationsInput | string | null
+    Amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    Description?: NullableStringFieldUpdateOperationsInput | string | null
+    CreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     UpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    Status?: StringFieldUpdateOperationsInput | string
-    TransferType?: StringFieldUpdateOperationsInput | string
+    Status?: NullableStringFieldUpdateOperationsInput | string | null
+    TransferType?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type TransferUncheckedUpdateManyWithoutFromAccountInput = {
     TransferID?: StringFieldUpdateOperationsInput | string
-    ToAccountID?: StringFieldUpdateOperationsInput | string
-    Amount?: FloatFieldUpdateOperationsInput | number
-    Description?: StringFieldUpdateOperationsInput | string
-    CreatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ToAccountID?: NullableStringFieldUpdateOperationsInput | string | null
+    Amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    Description?: NullableStringFieldUpdateOperationsInput | string | null
+    CreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     UpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    Status?: StringFieldUpdateOperationsInput | string
-    TransferType?: StringFieldUpdateOperationsInput | string
+    Status?: NullableStringFieldUpdateOperationsInput | string | null
+    TransferType?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type TransferUpdateWithoutToAccountInput = {
     TransferID?: StringFieldUpdateOperationsInput | string
-    Amount?: FloatFieldUpdateOperationsInput | number
-    Description?: StringFieldUpdateOperationsInput | string
-    CreatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    Amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    Description?: NullableStringFieldUpdateOperationsInput | string | null
+    CreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     UpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    Status?: StringFieldUpdateOperationsInput | string
-    TransferType?: StringFieldUpdateOperationsInput | string
-    fromAccount?: AccountUpdateOneRequiredWithoutTransfersFromNestedInput
+    Status?: NullableStringFieldUpdateOperationsInput | string | null
+    TransferType?: NullableStringFieldUpdateOperationsInput | string | null
+    fromAccount?: AccountUpdateOneWithoutTransfersFromNestedInput
   }
 
   export type TransferUncheckedUpdateWithoutToAccountInput = {
     TransferID?: StringFieldUpdateOperationsInput | string
-    FromAccountID?: StringFieldUpdateOperationsInput | string
-    Amount?: FloatFieldUpdateOperationsInput | number
-    Description?: StringFieldUpdateOperationsInput | string
-    CreatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    FromAccountID?: NullableStringFieldUpdateOperationsInput | string | null
+    Amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    Description?: NullableStringFieldUpdateOperationsInput | string | null
+    CreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     UpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    Status?: StringFieldUpdateOperationsInput | string
-    TransferType?: StringFieldUpdateOperationsInput | string
+    Status?: NullableStringFieldUpdateOperationsInput | string | null
+    TransferType?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type TransferUncheckedUpdateManyWithoutToAccountInput = {
     TransferID?: StringFieldUpdateOperationsInput | string
-    FromAccountID?: StringFieldUpdateOperationsInput | string
-    Amount?: FloatFieldUpdateOperationsInput | number
-    Description?: StringFieldUpdateOperationsInput | string
-    CreatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    FromAccountID?: NullableStringFieldUpdateOperationsInput | string | null
+    Amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    Description?: NullableStringFieldUpdateOperationsInput | string | null
+    CreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     UpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    Status?: StringFieldUpdateOperationsInput | string
-    TransferType?: StringFieldUpdateOperationsInput | string
+    Status?: NullableStringFieldUpdateOperationsInput | string | null
+    TransferType?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PaymentCreateManyUtilityInput = {
     PaymentID?: string
-    AccountID: string
-    Amount: number
-    Timestamp?: Date | string
-    Description: string
+    AccountID?: string | null
+    Amount?: Decimal | DecimalJsLike | number | string | null
+    Timestamp?: Date | string | null
+    Description?: string | null
   }
 
   export type PaymentUpdateWithoutUtilityInput = {
     PaymentID?: StringFieldUpdateOperationsInput | string
-    Amount?: FloatFieldUpdateOperationsInput | number
-    Timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
-    Description?: StringFieldUpdateOperationsInput | string
-    account?: AccountUpdateOneRequiredWithoutPaymentsNestedInput
+    Amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    Timestamp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    Description?: NullableStringFieldUpdateOperationsInput | string | null
+    account?: AccountUpdateOneWithoutPaymentsNestedInput
   }
 
   export type PaymentUncheckedUpdateWithoutUtilityInput = {
     PaymentID?: StringFieldUpdateOperationsInput | string
-    AccountID?: StringFieldUpdateOperationsInput | string
-    Amount?: FloatFieldUpdateOperationsInput | number
-    Timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
-    Description?: StringFieldUpdateOperationsInput | string
+    AccountID?: NullableStringFieldUpdateOperationsInput | string | null
+    Amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    Timestamp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    Description?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PaymentUncheckedUpdateManyWithoutUtilityInput = {
     PaymentID?: StringFieldUpdateOperationsInput | string
-    AccountID?: StringFieldUpdateOperationsInput | string
-    Amount?: FloatFieldUpdateOperationsInput | number
-    Timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
-    Description?: StringFieldUpdateOperationsInput | string
+    AccountID?: NullableStringFieldUpdateOperationsInput | string | null
+    Amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    Timestamp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    Description?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
 

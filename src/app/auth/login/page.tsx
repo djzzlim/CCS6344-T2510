@@ -13,7 +13,7 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleSubmit = async (e: { preventDefault: () => void; }) => {
+  /*const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     
     // Basic validation
@@ -38,7 +38,48 @@ export default function Login() {
     } finally {
       setIsLoading(false);
     }
+  };*/
+
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    
+    if (!email || !password) {
+      setError('Please enter both email and password');
+      return;
+    }
+    
+    setError('');
+    setIsLoading(true);
+    
+    try {
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+  
+      const data = await res.json();
+  
+      if (!res.ok) {
+        // Stay on login page
+        setError(data.message || 'Invalid email or password');
+        return;
+      }
+  
+      // If login is successful
+      console.log('✅ Login success:', data);
+      window.location.href = '/dashboard'; // Redirect to dashboard
+  
+    } catch (error) {
+      console.error('❌ Login error:', error);
+      setError('Something went wrong. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
+  
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
