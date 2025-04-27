@@ -40,10 +40,12 @@ export async function POST(req: NextRequest) {
     console.log(successMessage);
     console.log('='.repeat(50) + '\n');
 
-    const { PasswordHash, ...userWithoutPassword } = user;
+    const userWithoutPassword = { ...user };
+    delete userWithoutPassword.PasswordHash;
+
     return NextResponse.json(userWithoutPassword, { status: 200 });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('❌ Login error:', error);
     return NextResponse.json({ message: 'An error occurred during login.' }, { status: 500 });
   }

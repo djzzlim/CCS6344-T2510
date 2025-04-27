@@ -105,7 +105,7 @@ export default function Register() {
     
     if (!formData.phone.trim()) {
       newErrors.phone = 'Phone number is required';
-    } else if (!/^\d{9,10,11}$/.test(formData.phone.replace(/\D/g, ''))) {
+    } else if (!/^\d{10,11}$/.test(formData.phone.replace(/\D/g, ''))) {
       newErrors.phone = 'Please enter a valid 9-, 10- or 11-digit phone number';
     }
     
@@ -187,7 +187,7 @@ export default function Register() {
         // Show error message
         setGeneralError(data.message);
       }
-    } catch (error) {
+    } catch {
       setGeneralError('An error occurred during registration. Please try again.');
     } finally {
       setIsLoading(false);
