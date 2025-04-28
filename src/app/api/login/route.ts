@@ -25,8 +25,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: 'Login Failed.' }, { status: 404 });
     }
 
+    if (!user.PasswordHash) {
+      throw new Error('User has no password hash.');
+    }
+    
     // Check password
-    const isPasswordValid = await bcrypt.compare(password, user.PasswordHash);
+    const isPasswordValid = bcrypt.compare(password, user.PasswordHash);
+
 
     if (!isPasswordValid) {
       console.error(`❌ Invalid password attempt for email: ${email}`);
@@ -40,8 +45,7 @@ export async function POST(req: NextRequest) {
     console.log(successMessage);
     console.log('='.repeat(50) + '\n');
 
-    const userWithoutPassword = { ...user };
-    delete userWithoutPassword.PasswordHash;
+    const userWithoutPassword = { ...user, PasswordHash: undefined };
 
     return NextResponse.json(userWithoutPassword, { status: 200 });
 

@@ -61,9 +61,11 @@ export async function POST(req: NextRequest) {
     });
 
     // Return the new user without the password hash
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { PasswordHash, ...userWithoutPassword } = newUser;
     return NextResponse.json(userWithoutPassword, { status: 201 });
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error('Registration error:', error);
     
