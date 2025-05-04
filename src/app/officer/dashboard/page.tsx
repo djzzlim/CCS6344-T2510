@@ -196,11 +196,11 @@ export default function OfficerDashboard() {
         </div>
         <nav className="flex-1 pt-4">
           <div className="px-4 mb-2 text-xs font-semibold text-blue-400 uppercase">Main</div>
-          <Link href="/dashboard" className="flex items-center px-4 py-2 text-blue-200 hover:bg-blue-700">
+          <Link href="/officer/dashboard" className="flex items-center px-4 py-2 text-blue-200 hover:bg-blue-700">
             <Shield className="w-5 h-5 mr-3" />
             <span>Transaction Queue</span>
           </Link>
-          <Link href="/customers" className="flex items-center px-4 py-2 text-blue-200 hover:bg-blue-700">
+          <Link href="/officer/customers" className="flex items-center px-4 py-2 text-blue-200 hover:bg-blue-700">
             <User className="w-5 h-5 mr-3" />
             <span>Customer Database</span>
           </Link>
