@@ -24,8 +24,6 @@ export default function OfficerDashboard() {
       type: 'Wire Transfer', 
       initiatedDate: 'Today 10:23 AM',
       status: 'pending',
-      riskScore: 'medium',
-      notes: 'Customer stated funds are for property down payment.',
       destination: 'First National Bank - #45781236'
     },
     { 
@@ -37,8 +35,6 @@ export default function OfficerDashboard() {
       type: 'ACH Transfer', 
       initiatedDate: 'Today 09:17 AM',
       status: 'pending',
-      riskScore: 'high',
-      notes: 'First transaction of this size for this account.',
       destination: 'United Investment Group - #78459621'
     },
     { 
@@ -50,8 +46,6 @@ export default function OfficerDashboard() {
       type: 'External Transfer', 
       initiatedDate: 'Yesterday 04:45 PM',
       status: 'pending',
-      riskScore: 'low',
-      notes: 'Regular monthly transfer to investment account.',
       destination: 'Vanguard Brokerage - #12457896'
     },
   ];
@@ -68,7 +62,6 @@ export default function OfficerDashboard() {
       date: 'Today 08:45 AM',
       status: 'approved',
       approvedBy: 'Jane Smith',
-      notes: 'Customer provided invoice documentation.'
     },
     { 
       id: 'TRX-78913', 
@@ -80,7 +73,6 @@ export default function OfficerDashboard() {
       date: 'Yesterday 03:30 PM',
       status: 'rejected',
       approvedBy: 'John Davis',
-      notes: 'Suspicious activity pattern detected. Customer contacted for verification.'
     },
     { 
       id: 'TRX-78905', 
@@ -92,7 +84,6 @@ export default function OfficerDashboard() {
       date: 'Yesterday 02:15 PM',
       status: 'approved',
       approvedBy: 'Jane Smith',
-      notes: 'Regular business expense pattern.'
     },
   ];
 
@@ -105,8 +96,6 @@ export default function OfficerDashboard() {
       phone: '(555) 123-4567',
       address: '123 Oak Street, Springfield, IL 62704',
       accountOpenDate: 'March 15, 2018',
-      kycStatus: 'Verified',
-      riskRating: 'Low',
       transactionHistory: [
         { id: 'TRX-75482', date: 'Apr 20, 2025', amount: 5000.00, type: 'Wire Transfer', status: 'Completed' },
         { id: 'TRX-72145', date: 'Mar 15, 2025', amount: 7500.00, type: 'Wire Transfer', status: 'Completed' },
@@ -116,7 +105,6 @@ export default function OfficerDashboard() {
         { number: '****7845', type: 'Checking', balance: 24500.00 },
         { number: '****9654', type: 'Savings', balance: 45600.00 }
       ],
-      notes: 'Premium customer. Works as senior engineer at TechCorp.'
     },
     'CUS-32145': {
       id: 'CUS-32145',
@@ -125,8 +113,6 @@ export default function OfficerDashboard() {
       phone: '(555) 987-6543',
       address: '456 Maple Avenue, Riverside, CA 92501',
       accountOpenDate: 'January 7, 2020',
-      kycStatus: 'Pending Additional Verification',
-      riskRating: 'Medium',
       transactionHistory: [
         { id: 'TRX-76985', date: 'Apr 18, 2025', amount: 2000.00, type: 'ACH Transfer', status: 'Completed' },
         { id: 'TRX-73654', date: 'Apr 10, 2025', amount: 1500.00, type: 'External Transfer', status: 'Completed' },
@@ -136,7 +122,6 @@ export default function OfficerDashboard() {
         { number: '****3298', type: 'Checking', balance: 18750.00 },
         { number: '****4521', type: 'Investment', balance: 32400.00 }
       ],
-      notes: 'New business account. Customer owns Wilson Consulting LLC.'
     },
     'CUS-78942': {
       id: 'CUS-78942',
@@ -145,8 +130,6 @@ export default function OfficerDashboard() {
       phone: '(555) 456-7890',
       address: '789 Pine Street, Portland, OR 97205',
       accountOpenDate: 'October 12, 2015',
-      kycStatus: 'Verified',
-      riskRating: 'Low',
       transactionHistory: [
         { id: 'TRX-77456', date: 'Apr 15, 2025', amount: 8200.00, type: 'External Transfer', status: 'Completed' },
         { id: 'TRX-74123', date: 'Mar 15, 2025', amount: 8200.00, type: 'External Transfer', status: 'Completed' },
@@ -156,7 +139,6 @@ export default function OfficerDashboard() {
         { number: '****4571', type: 'Checking', balance: 15800.00 },
         { number: '****6542', type: 'Savings', balance: 67500.00 }
       ],
-      notes: 'Long-term customer. Monthly investment transfers to retirement account.'
     }
   };
 
@@ -346,17 +328,7 @@ export default function OfficerDashboard() {
                         {selectedTransaction.status.charAt(0).toUpperCase() + selectedTransaction.status.slice(1)}
                       </span>
                     </div>
-                    {selectedTransaction.riskScore && (
-                      <div className="mb-4">
-                        <p className="text-sm text-gray-500">Risk Score</p>
-                        <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
-                          ${selectedTransaction.riskScore === 'low' ? 'bg-green-100 text-green-800' : 
-                            selectedTransaction.riskScore === 'medium' ? 'bg-yellow-100 text-yellow-800' : 
-                            'bg-red-100 text-red-800'}`}>
-                          {selectedTransaction.riskScore.charAt(0).toUpperCase() + selectedTransaction.riskScore.slice(1)}
-                        </span>
-                      </div>
-                    )}
+                    
                     {selectedTransaction.destination && (
                       <div className="mb-4">
                         <p className="text-sm text-gray-500">Destination</p>
@@ -389,13 +361,6 @@ export default function OfficerDashboard() {
                       View Full Profile
                     </button>
                   </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-medium text-gray-800 mb-2">Notes</h3>
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <p className="text-sm">{selectedTransaction.notes}</p>
                 </div>
               </div>
             </div>
@@ -446,19 +411,6 @@ export default function OfficerDashboard() {
                         <p className="text-sm text-gray-500">Account Open Date</p>
                         <p className="font-medium">{customerData[selectedTransaction.customerId].accountOpenDate}</p>
                       </div>
-                      <div className="mb-3">
-                        <p className="text-sm text-gray-500">KYC Status</p>
-                        <p className="font-medium">{customerData[selectedTransaction.customerId].kycStatus}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-500">Risk Rating</p>
-                        <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
-                          ${customerData[selectedTransaction.customerId].riskRating === 'Low' ? 'bg-green-100 text-green-800' : 
-                            customerData[selectedTransaction.customerId].riskRating === 'Medium' ? 'bg-yellow-100 text-yellow-800' : 
-                            'bg-red-100 text-red-800'}`}>
-                          {customerData[selectedTransaction.customerId].riskRating}
-                        </span>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -503,24 +455,6 @@ export default function OfficerDashboard() {
                         ))}
                       </tbody>
                     </table>
-                  </div>
-                </div>
-
-                <div>
-                  <h3 className="text-lg font-medium text-gray-800 mb-3">Officer Notes</h3>
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <p className="text-sm mb-4">{customerData[selectedTransaction.customerId].notes}</p>
-                    <div>
-                      <textarea 
-                        className="w-full h-24 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                        placeholder="Add additional notes about this customer..."
-                      ></textarea>
-                      <div className="mt-2 flex justify-end">
-                        <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                          Save Notes
-                        </button>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
