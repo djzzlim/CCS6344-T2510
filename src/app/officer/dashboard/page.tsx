@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { Shield, User, CheckCircle, Clock, Search, ArrowLeft, XCircle } from 'lucide-react';
 import Link from 'next/link';
+import Header from '@/components/officer-header';
+import Sidebar from '@/components/officer-sidebar';
 
 export default function OfficerDashboard() {
   const [activeTab, setActiveTab] = useState('pending');
@@ -10,6 +12,7 @@ export default function OfficerDashboard() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [showCustomerDetails, setShowCustomerDetails] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Mock data for pending approval transactions
   const pendingTransactions = [
@@ -189,67 +192,12 @@ export default function OfficerDashboard() {
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
-      <div className="hidden md:flex flex-col w-64 bg-blue-800 text-white">
-        <div className="p-4 border-b border-blue-700">
-          <h1 className="text-xl font-bold">Officer Dashboard</h1>
-          <p className="text-sm text-blue-300">Transaction Approval System</p>
-        </div>
-        <nav className="flex-1 pt-4">
-          <div className="px-4 mb-2 text-xs font-semibold text-blue-400 uppercase">Main</div>
-          <Link href="/officer/dashboard" className="flex items-center px-4 py-2 text-blue-200 hover:bg-blue-700">
-            <Shield className="w-5 h-5 mr-3" />
-            <span>Transaction Queue</span>
-          </Link>
-          <Link href="/officer/customers" className="flex items-center px-4 py-2 text-blue-200 hover:bg-blue-700">
-            <User className="w-5 h-5 mr-3" />
-            <span>Customer Database</span>
-          </Link>
-        </nav>
-        <div className="p-4 border-t border-blue-700">
-          <div className="flex items-center">
-            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-              <span className="font-semibold">TS</span>
-            </div>
-            <div className="ml-3">
-              <p className="text-sm font-medium">Tom Smith</p>
-              <p className="text-xs text-blue-300">Senior Officer</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Sidebar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden md:ml-64">
         {/* Header */}
-        <header className="bg-white shadow">
-          <div className="px-4 py-3 flex justify-between items-center">
-            <h2 className="text-lg font-semibold text-gray-800">Transaction Approval Queue</h2>
-            <div className="flex items-center space-x-4">
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Search className="h-4 w-4 text-gray-400" />
-                </div>
-                <input
-                  type="text"
-                  placeholder="Search transactions..."
-                  className="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-              <select 
-                className="border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={filterStatus}
-                onChange={(e) => setFilterStatus(e.target.value)}
-              >
-                <option value="all">All Status</option>
-                <option value="pending">Pending</option>
-                <option value="approved">Approved</option>
-                <option value="rejected">Rejected</option>
-              </select>
-            </div>
-          </div>
-        </header>
+        <Header title="Transaction Queue" setIsMenuOpen={setIsMenuOpen} />
 
         {/* Tab navigation */}
         <div className="bg-white shadow-sm">

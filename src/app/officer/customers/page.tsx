@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from 'react';
-import { Shield, User, Search, Filter, PlusCircle, FileText, Eye, ArrowLeft, Download, UploadCloud, Edit, MessageSquare } from 'lucide-react';
+import { Search, Filter, PlusCircle, FileText, Eye, ArrowLeft, Download, UploadCloud, MessageSquare } from 'lucide-react';
 import Link from 'next/link';
+import Sidebar from '@/components/officer-sidebar';
 
 export default function CustomerDatabase() {
     const [searchTerm, setSearchTerm] = useState('');
@@ -12,6 +13,7 @@ export default function CustomerDatabase() {
     const [activeTab, setActiveTab] = useState('details');
     const [showFilters, setShowFilters] = useState(false);
     const [newNote, setNewNote] = useState('');
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     // Mock customer data
     const customers = [
@@ -184,37 +186,11 @@ export default function CustomerDatabase() {
     return (
         <div className="flex h-screen bg-gray-100">
             {/* Sidebar */}
-            <div className="hidden md:flex flex-col w-64 bg-blue-800 text-white">
-                <div className="p-4 border-b border-blue-700">
-                    <h1 className="text-xl font-bold">Officer Dashboard</h1>
-                    <p className="text-sm text-blue-300">Customer Database</p>
-                </div>
-                <nav className="flex-1 pt-4">
-                    <div className="px-4 mb-2 text-xs font-semibold text-blue-400 uppercase">Main</div>
-                    <Link href="/officer/dashboard" className="flex items-center px-4 py-2 text-blue-200 hover:bg-blue-700">
-                        <Shield className="w-5 h-5 mr-3" />
-                        <span>Transaction Queue</span>
-                    </Link>
-                    <Link href="/officer/customers" className="flex items-center px-4 py-2 bg-blue-700 text-white">
-                        <User className="w-5 h-5 mr-3" />
-                        <span>Customer Database</span>
-                    </Link>
-                </nav>
-                <div className="p-4 border-t border-blue-700">
-                    <div className="flex items-center">
-                        <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                            <span className="font-semibold">TS</span>
-                        </div>
-                        <div className="ml-3">
-                            <p className="text-sm font-medium">Tom Smith</p>
-                            <p className="text-xs text-blue-300">Senior Officer</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+            <Sidebar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+            
             {/* Main content */}
-            <div className="flex-1 flex flex-col overflow-hidden">
+            {/* <main className="flex-1 md:ml-64"></main> */}
+            <div className="flex-1 flex flex-col overflow-hidden md:ml-64">
                 {/* Header */}
                 <header className="bg-white shadow">
                     <div className="px-4 py-3 flex justify-between items-center">
