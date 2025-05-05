@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { Shield, User, CheckCircle, Clock, Search, ArrowLeft, XCircle } from 'lucide-react';
-import Link from 'next/link';
+import { CheckCircle, Clock, ArrowLeft, XCircle } from 'lucide-react';
 import Header from '@/components/officer-header';
 import Sidebar from '@/components/officer-sidebar';
 
