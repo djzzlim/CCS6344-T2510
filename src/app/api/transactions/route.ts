@@ -1,37 +1,27 @@
-// app/api/transactions/route.js
-
+// app/api/transactions/route.ts
+import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
-export async function GET(req) {
-  const { searchTerm, filterStatus, activeTab } = req.nextUrl.searchParams;
-
+export async function GET() {
   try {
-    const transactions = await prisma.transaction.findMany({
-      where: {
-        status: filterStatus !== 'all' ? filterStatus : undefined,
-        customerName: {
-          contains: searchTerm,
-          mode: 'insensitive', // case-insensitive search
+    const transfers = await prisma.transfer.findMany({
+      include: {
+        fromAccount: {
+          include: {
+            customer: true,
+          },
         },
-        // Add more filters based on activeTab, etc.
-      },
-      orderBy: {
-        initiatedDate: 'desc', // sort by date
-      },
-    });
-
-    return new Response(JSON.stringify({ transactions }), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
+        toAccount: {
+          include: {
+            customer: true,
+          },
+        },
       },
     });
+    
+    return NextResponse.json(transfers);
   } catch (error) {
-    return new Response(JSON.stringify({ error: 'Error fetching transactions' }), {
-      status: 500,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    console.error('Error fetching transfers:', error);
+    return NextResponse.json({ error: 'Failed to fetch transfers' }, { status: 500 });
   }
 }
