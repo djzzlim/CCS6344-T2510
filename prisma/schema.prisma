@@ -20,6 +20,7 @@ model Customer {
   State         String?   @db.NVarChar(100)
   ZipCode       String?   @db.NVarChar(10)
   PasswordHash  String?   @db.NVarChar(255)
+  AccountOpenDate DateTime? @db.Date
   accounts      Account[]
 }
 
