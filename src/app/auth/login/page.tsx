@@ -1,10 +1,11 @@
 "use client"
 
-import { Input } from "@/components/ui/input"
+import { Input } from "@/components/ui/input";
 import { useState } from 'react';
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
+import { useRouter } from 'next/navigation';  // Use next/navigation for better client-side routing
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -12,45 +13,19 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-
-  /*const handleSubmit = async (e: { preventDefault: () => void; }) => {
-    e.preventDefault();
-    
-    // Basic validation
-    if (!email || !password) {
-      setError('Please enter both email and password');
-      return;
-    }
-    
-    setError('');
-    setIsLoading(true);
-    
-    try {
-      // Here you would normally make an API call to your auth endpoint
-      // For demo purposes, we'll just simulate a login delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Redirect to dashboard on success
-      window.location.href = '/dashboard';
-      
-    } catch {
-      setError('Invalid email or password. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };*/
+  const router = useRouter(); // Make sure to use this hook for redirection in client components
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    
+
     if (!email || !password) {
       setError('Please enter both email and password');
       return;
     }
-    
+
     setError('');
     setIsLoading(true);
-    
+
     try {
       const res = await fetch('/api/login', {
         method: 'POST',
@@ -59,19 +34,24 @@ export default function Login() {
         },
         body: JSON.stringify({ email, password }),
       });
-  
+
       const data = await res.json();
-  
+
       if (!res.ok) {
         // Stay on login page
         setError(data.message || 'Invalid email or password');
         return;
       }
-  
+
       // If login is successful
       console.log('✅ Login success:', data);
-      window.location.href = '/dashboard'; // Redirect to dashboard
-  
+
+      // Save login state
+      sessionStorage.setItem('isLoggedIn', 'true');
+
+      // Redirect to dashboard using next/navigation (client-side)
+      router.push('/dashboard'); // Redirect to dashboard
+
     } catch (error) {
       console.error('❌ Login error:', error);
       setError('Something went wrong. Please try again.');
@@ -79,7 +59,6 @@ export default function Login() {
       setIsLoading(false);
     }
   };
-  
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -105,7 +84,7 @@ export default function Login() {
               {error}
             </div>
           )}
-          
+
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
@@ -186,7 +165,7 @@ export default function Login() {
           </form>
         </div>
       </div>
-      
+
       <div className="mt-8 text-center">
         <p className="text-sm text-gray-500">
           Need help? <a href="#" className="text-blue-600 hover:text-blue-500">Contact support</a>

@@ -1,56 +1,43 @@
-// src/app/api/login/route.ts
-
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
 import prisma from '@/lib/prisma';
+import { cookies } from 'next/headers'; // for cookie management
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
+  const { email, password } = await req.json();
+
+  if (!email || !password) {
+    return NextResponse.json({ message: 'Missing email or password' }, { status: 400 });
+  }
+
   try {
-    const body = await req.json();
-    const { email, password } = body;
-
-    // Validate required fields
-    if (!email || !password) {
-      console.error('❌ Missing email or password');
-      return NextResponse.json({ message: 'Please provide both email and password.' }, { status: 400 });
-    }
-
-    // Check if user exists
     const user = await prisma.customer.findUnique({
       where: { Email: email },
     });
 
-    if (!user) {
-      console.error(`❌ User not found for email: ${email}`);
-      return NextResponse.json({ message: 'Login Failed.' }, { status: 404 });
+    if (!user || !user.PasswordHash) {
+      return NextResponse.json({ message: 'Invalid email or password' }, { status: 401 });
     }
 
-    if (!user.PasswordHash) {
-      throw new Error('User has no password hash.');
-    }
-    
-    // Check password
-    const isPasswordValid = bcrypt.compare(password, user.PasswordHash);
-
-
-    if (!isPasswordValid) {
-      console.error(`❌ Invalid password attempt for email: ${email}`);
-      return NextResponse.json({ message: 'Login Failed.' }, { status: 401 });
+    const isValid = await bcrypt.compare(password, user.PasswordHash);
+    if (!isValid) {
+      return NextResponse.json({ message: 'Invalid email or password' }, { status: 401 });
     }
 
-    // Successful login
-    const loginTime = new Date().toLocaleString('en-MY', { timeZone: 'Asia/Kuala_Lumpur' });
-    const successMessage = `✅ LOGIN SUCCESSFUL: ${email} at ${loginTime}`;
-    console.log('\n' + '='.repeat(50));
-    console.log(successMessage);
-    console.log('='.repeat(50) + '\n');
+    // Set session_id cookie
+    cookies().set('session_id', user.CustomerID, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 60 * 60 * 24,
+      path: '/',
+    });
 
-    const userWithoutPassword = { ...user, PasswordHash: undefined };
-
-    return NextResponse.json(userWithoutPassword, { status: 200 });
-
-  } catch (error: unknown) {
-    console.error('❌ Login error:', error);
-    return NextResponse.json({ message: 'An error occurred during login.' }, { status: 500 });
+    return NextResponse.json({
+      message: 'Login successful',
+      user: { id: user.CustomerID, email: user.Email },
+    });
+  } catch (error) {
+    console.error('[LOGIN ERROR]', error);
+    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
   }
 }

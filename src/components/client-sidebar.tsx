@@ -43,10 +43,22 @@ export default function Sidebar({ isMenuOpen, setIsMenuOpen }: SidebarProps) {
 
     const isActive = (path: string) => pathname === path;
 
-    const handleLogout = () => {
-        // Handle logout logic here
-        console.log("Logging out...");
-        router.push('/');
+    const handleLogout = async () => {
+        try {
+            const response = await fetch('/api/logout', {
+                method: 'POST',
+                credentials: 'same-origin',
+            });
+    
+            if (response.ok) {
+                console.log('Logged out successfully');
+                router.push('/'); // Redirect to homepage
+            } else {
+                console.error('Logout failed');
+            }
+        } catch (error) {
+            console.error('Error logging out: ', error);
+        }
     };
 
     const NavList = () => (
@@ -85,22 +97,22 @@ export default function Sidebar({ isMenuOpen, setIsMenuOpen }: SidebarProps) {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuItem asChild>
-                <Link
-                    href="/profile"
-                    className="flex items-center space-x-2 w-full h-full"
-                >
-                    <span className="text-sm">Profile</span>
-                </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-                <Link
-                    href="/settings"
-                    className="flex items-center space-x-2 w-full h-full"
-                >
-                    <span className="text-sm">Settings</span>
-                </Link>
-            </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                    <Link
+                        href="/profile"
+                        className="flex items-center space-x-2 w-full h-full"
+                    >
+                        <span className="text-sm">Profile</span>
+                    </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                    <Link
+                        href="/settings"
+                        className="flex items-center space-x-2 w-full h-full"
+                    >
+                        <span className="text-sm">Settings</span>
+                    </Link>
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600" onClick={handleLogout}>
                     <LogOut className="mr-2 h-4 w-4" />
