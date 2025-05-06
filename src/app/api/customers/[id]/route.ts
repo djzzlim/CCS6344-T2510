@@ -5,7 +5,7 @@ import { getServerSession } from 'next-auth/next';
 
 const prisma = new PrismaClient();
 
-export async function GET(request, { params }) {
+export async function GET(request: Request, context: { params: Promise<{ id: string }> })  {
   try {
     // Check authentication
     // const session = await getServerSession(authOptions);
@@ -13,7 +13,7 @@ export async function GET(request, { params }) {
     //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     // }
 
-    const { id } = params;
+    const { id } = (await context.params);
     
     // Get customer details with accounts
     const customer = await prisma.customer.findUnique({
