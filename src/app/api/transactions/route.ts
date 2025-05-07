@@ -8,12 +8,12 @@ export async function GET() {
       include: {
         fromAccount: {
           include: {
-            customer: true,
+            user: true, // assuming 'user' is the field linking to 'User' (customer)
           },
         },
         toAccount: {
           include: {
-            customer: true,
+            user: true, // same for 'toAccount'
           },
         },
       },

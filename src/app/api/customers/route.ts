@@ -20,33 +20,44 @@ export async function GET(request: Request) {
     if (searchTerm.length > 0) {
       const loweredSearch = searchTerm.toLowerCase();
 
+      // Add search conditions based on Username, Email, FirstName, LastName
       orConditions.push(
         {
-          FirstName: {
+          Username: {
             contains: loweredSearch,
-          },
-        },
-        {
-          LastName: {
-            contains: loweredSearch,
+            mode: 'insensitive', // Case-insensitive search
           },
         },
         {
           Email: {
             contains: loweredSearch,
+            mode: 'insensitive',
+          },
+        },
+        {
+          FirstName: {
+            contains: loweredSearch,
+            mode: 'insensitive',
+          },
+        },
+        {
+          LastName: {
+            contains: loweredSearch,
+            mode: 'insensitive',
           },
         }
       );
 
-      // If numeric, search CustomerID
+      // If numeric, search UserID (e.g., account number, if that is the key identifier)
       if (!isNaN(Number(searchTerm))) {
-        orConditions.push({ CustomerID: String(Number(searchTerm)) });
+        orConditions.push({ UserID: String(Number(searchTerm)) });
       }
     }
 
-    const whereClause = orConditions.length > 0 ? { OR: orConditions } : {};
+    const whereClause = orConditions.length > 0 ? { OR: orConditions, Role: 'Customer' } : { Role: 'Customer' };
 
-    const customers = await prisma.customer.findMany({
+    // Fetch only users with the "Customer" role and associated accounts
+    const users = await prisma.user.findMany({
       where: whereClause,
       include: {
         accounts: true,
@@ -56,37 +67,40 @@ export async function GET(request: Request) {
       },
     });
 
-    console.log(`Found ${customers.length} customers`);
+    console.log(`Found ${users.length} customers`);
 
-    const formattedCustomers = customers.map(customer => {
-      const totalBalance = customer.accounts.reduce((sum, account) => {
-        return sum + (account.Balance?.toNumber() || 0);
+    // Format the response
+    const formattedUsers = users.map(user => {
+      const totalBalance = user.accounts.reduce((sum, account) => {
+        return sum + (account.Balance?.toNumber() || 0); // Handle case where Balance might be null/undefined
       }, 0);
 
       return {
-        id: customer.CustomerID,
-        name: `${customer.FirstName || ''} ${customer.LastName || ''}`.trim(),
-        email: customer.Email,
-        phone: customer.ContactNumber || 'N/A',
-        address: customer.AddressLine1
-          ? `${customer.AddressLine1}, ${customer.City || ''}, ${customer.State || ''} ${customer.ZipCode || ''}`.trim()
+        id: user.UserID,
+        name: `${user.FirstName || ''} ${user.LastName || ''}`.trim(),
+        username: user.Username,
+        email: user.Email,
+        phone: user.ContactNumber || 'N/A',
+        address: user.AddressLine1
+          ? `${user.AddressLine1}, ${user.City || ''}, ${user.State || ''} ${user.ZipCode || ''}`.trim()
           : 'No address on file',
-        accountOpenDate: customer.AccountOpenDate
-          ? formatDate(customer.AccountOpenDate)
+        accountOpenDate: user.AccountOpenDate
+          ? formatDate(user.AccountOpenDate)
           : 'No account open date',
         totalBalance: totalBalance,
-        accountCount: customer.accounts.length,
+        accountCount: user.accounts.length,
       };
     });
 
-    return NextResponse.json(formattedCustomers);
+    return NextResponse.json(formattedUsers);
 
   } catch (error) {
-    console.error('Error fetching customers:', error);
-    return NextResponse.json({ error: 'Failed to fetch customers' }, { status: 500 });
+    console.error('Error fetching users:', error);
+    return NextResponse.json({ error: 'Failed to fetch users' }, { status: 500 });
   }
 }
 
+// Helper function to format date
 function formatDate(dateString: string | Date | null) {
   if (!dateString) return 'Unknown';
   const date = new Date(dateString);

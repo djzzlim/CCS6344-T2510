@@ -6,8 +6,8 @@ import Header from '@/components/officer-header';
 import Sidebar from '@/components/officer-sidebar';
 
 // Type definitions based on your Prisma schema
-type Customer = {
-  CustomerID: string;
+type user = {
+  userID: string;
   FirstName: string | null;
   LastName: string | null;
   Email: string;
@@ -23,7 +23,7 @@ type Customer = {
 
 type Account = {
   AccountID: string;
-  CustomerID: string | null;
+  userID: string | null;
   Status: string | null;
   Balance: number | null;
   AccountType: string | null;
@@ -31,7 +31,7 @@ type Account = {
   DailyATMLimit: number | null;
   DailyPurchaseLimit: number | null;
   OverdraftProtection: boolean | null;
-  customer: Customer | null;
+  user: user | null;
 };
 
 type Transfer = {
@@ -55,7 +55,7 @@ type Transaction = {
   amount: number;
   createdAt: Date;
   description?: string;
-  customer: {
+  user: {
     id: string;
     name: string;
     email: string;
@@ -84,7 +84,7 @@ export default function OfficerDashboard() {
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
-  const [showCustomerDetails, setShowCustomerDetails] = useState(false);
+  const [showuserDetails, setShowuserDetails] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
@@ -104,7 +104,7 @@ export default function OfficerDashboard() {
 
         // Transform the data to match the Transaction type
         const transformedTransactions = data.map((transfer: Transfer) => {
-          const customer = transfer.fromAccount?.customer || transfer.toAccount?.customer;
+          const user = transfer.fromAccount?.user || transfer.toAccount?.user;
           
           return {
             id: transfer.TransferID,
@@ -113,19 +113,19 @@ export default function OfficerDashboard() {
             amount: transfer.Amount || 0,
             createdAt: transfer.CreatedAt || new Date(),
             description: transfer.Description,
-            customer: {
-              id: customer?.CustomerID || '',
-              name: `${customer?.FirstName || ''} ${customer?.LastName || ''}`.trim(),
-              email: customer?.Email || '',
-              phone: customer?.ContactNumber || undefined,
+            user: {
+              id: user?.userID || '',
+              name: `${user?.FirstName || ''} ${user?.LastName || ''}`.trim(),
+              email: user?.Email || '',
+              phone: user?.ContactNumber || undefined,
               address: [
-                customer?.AddressLine1,
-                customer?.AddressLine2,
-                customer?.City,
-                customer?.State,
-                customer?.ZipCode
+                user?.AddressLine1,
+                user?.AddressLine2,
+                user?.City,
+                user?.State,
+                user?.ZipCode
               ].filter(Boolean).join(', '),
-              accountOpenDate: customer?.AccountOpenDate || undefined,
+              accountOpenDate: user?.AccountOpenDate || undefined,
               accounts: [
                 {
                   id: transfer.fromAccount?.AccountID || '',
@@ -239,14 +239,14 @@ export default function OfficerDashboard() {
     }
   };
 
-  const handleViewCustomer = (customerId: string) => {
-    setShowCustomerDetails(true);
+  const handleViewuser = (userId: string) => {
+    setShowuserDetails(true);
   };
 
   const filteredTransactions = (activeTab === 'pending' ? pendingTransactions : recentTransactions)
     .filter(transaction => {
       const searchMatch = (
-        transaction.customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        transaction.user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         transaction.id.toLowerCase().includes(searchTerm.toLowerCase())
       );
 
@@ -311,7 +311,7 @@ export default function OfficerDashboard() {
         </div>
 
         <div className="flex-1 overflow-auto p-4">
-          {!selectedTransaction && !showCustomerDetails ? (
+          {!selectedTransaction && !showuserDetails ? (
             <div className="bg-white rounded-lg shadow">
               <div className="p-4 border-b border-gray-200">
                 <div className="flex justify-between items-center">
@@ -355,7 +355,7 @@ export default function OfficerDashboard() {
                 <thead>
                   <tr>
                     <th className="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Transaction ID</th>
-                    <th className="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                    <th className="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">user</th>
                     <th className="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
                     <th className="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
                     <th className="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
@@ -371,10 +371,10 @@ export default function OfficerDashboard() {
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           <div className="flex items-center">
                             <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-800 font-semibold">
-                              {transaction.customer.name.split(' ').map(n => n[0]).join('')}
+                              {transaction.user.name.split(' ').map(n => n[0]).join('')}
                             </div>
                             <div className="ml-2">
-                              <div className="text-sm font-medium text-gray-900">{transaction.customer.name}</div>
+                              <div className="text-sm font-medium text-gray-900">{transaction.user.name}</div>
                               <div className="text-sm text-gray-500">
                                 {transaction.fromAccount?.number.substring(transaction.fromAccount.number.length - 4).padStart(transaction.fromAccount.number.length, '*')}
                               </div>
@@ -501,8 +501,8 @@ export default function OfficerDashboard() {
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <div className="flex justify-between items-start">
                     <div>
-                      <p className="font-medium">{selectedTransaction.customer.name}</p>
-                      <p className="text-sm text-gray-500">ID: {selectedTransaction.customer.id}</p>
+                      <p className="font-medium">{selectedTransaction.user.name}</p>
+                      <p className="text-sm text-gray-500">ID: {selectedTransaction.fromAccount?.id}</p>
                       <p className="text-sm text-gray-500">
                         Account: {selectedTransaction.fromAccount?.number.substring(
                           selectedTransaction.fromAccount.number.length - 4
@@ -511,7 +511,7 @@ export default function OfficerDashboard() {
                     </div>
                     <button
                       className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                      onClick={() => handleViewCustomer(selectedTransaction.customer.id)}
+                      onClick={() => handleViewuser(selectedTransaction.fromAccount?.id)}
                     >
                       View Full Profile
                     </button>
@@ -519,12 +519,12 @@ export default function OfficerDashboard() {
                 </div>
               </div>
             </div>
-          ) : showCustomerDetails && selectedTransaction && (
+          ) : showuserDetails && selectedTransaction && (
             <div className="bg-white rounded-lg shadow p-6">
               <div className="flex justify-between items-center mb-6">
                 <button
                   className="flex items-center text-blue-600 hover:text-blue-800"
-                  onClick={() => setShowCustomerDetails(false)}
+                  onClick={() => setShowuserDetails(false)}
                 >
                   <ArrowLeft className="w-4 h-4 mr-1" />
                   Back to Transaction
@@ -533,7 +533,7 @@ export default function OfficerDashboard() {
 
               <div className="mb-6">
                 <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                  Customer Profile: {selectedTransaction.customer.name}
+                  user Profile: {selectedTransaction.user.name}
                 </h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -541,23 +541,23 @@ export default function OfficerDashboard() {
                     <h3 className="text-lg font-medium text-gray-800 mb-3">Personal Information</h3>
                     <div className="bg-gray-50 p-4 rounded-lg">
                       <div className="mb-3">
-                        <p className="text-sm text-gray-500">Customer ID</p>
-                        <p className="font-medium">{selectedTransaction.customer.id}</p>
+                        <p className="text-sm text-gray-500">user ID</p>
+                        <p className="font-medium">{selectedTransaction.user.id}</p>
                       </div>
                       <div className="mb-3">
                         <p className="text-sm text-gray-500">Email</p>
-                        <p className="font-medium">{selectedTransaction.customer.email}</p>
+                        <p className="font-medium">{selectedTransaction.user.email}</p>
                       </div>
-                      {selectedTransaction.customer.phone && (
+                      {selectedTransaction.user.phone && (
                         <div className="mb-3">
                           <p className="text-sm text-gray-500">Phone</p>
-                          <p className="font-medium">{selectedTransaction.customer.phone}</p>
+                          <p className="font-medium">{selectedTransaction.user.phone}</p>
                         </div>
                       )}
-                      {selectedTransaction.customer.address && (
+                      {selectedTransaction.user.address && (
                         <div>
                           <p className="text-sm text-gray-500">Address</p>
-                          <p className="font-medium">{selectedTransaction.customer.address}</p>
+                          <p className="font-medium">{selectedTransaction.user.address}</p>
                         </div>
                       )}
                     </div>
@@ -566,10 +566,10 @@ export default function OfficerDashboard() {
                   <div>
                     <h3 className="text-lg font-medium text-gray-800 mb-3">Risk & Compliance</h3>
                     <div className="bg-gray-50 p-4 rounded-lg">
-                      {selectedTransaction.customer.accountOpenDate && (
+                      {selectedTransaction.user.accountOpenDate && (
                         <div className="mb-3">
                           <p className="text-sm text-gray-500">Account Open Date</p>
-                          <p className="font-medium">{formatDate(selectedTransaction.customer.accountOpenDate)}</p>
+                          <p className="font-medium">{formatDate(selectedTransaction.user.accountOpenDate)}</p>
                         </div>
                       )}
                     </div>
@@ -580,7 +580,7 @@ export default function OfficerDashboard() {
                   <h3 className="text-lg font-medium text-gray-800 mb-3">Account Information</h3>
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {selectedTransaction.customer.accounts.map((account, index) => (
+                      {selectedTransaction.user.accounts.map((account, index) => (
                         <div key={index} className="border border-gray-200 rounded p-3">
                           <p className="font-medium capitalize">{account.type}</p>
                           <p className="text-sm text-gray-500">
