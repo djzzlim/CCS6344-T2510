@@ -14,9 +14,22 @@ export async function GET(req: Request) {
     where: { SessionID: sessionId },
   });
 
-  if (!session || session.ExpiresAt < new Date()) {
+  // Session does not exist
+  if (!session) {
     return NextResponse.json({ valid: false });
   }
 
+  const now = new Date();
+
+  // Session is expired → delete it
+  if (session.ExpiresAt < now) {
+    await prisma.session.delete({
+      where: { SessionID: sessionId },
+    });
+
+    return NextResponse.json({ valid: false });
+  }
+
+  // Session is valid
   return NextResponse.json({ valid: true });
 }
