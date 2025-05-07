@@ -25,7 +25,7 @@ export async function POST(req: Request) {
     }
 
     // Set session_id cookie
-    cookies().set('session_id', user.CustomerID, {
+    (await cookies()).set('session_id', user.CustomerID, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       maxAge: 60 * 60 * 24,
