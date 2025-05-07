@@ -1,18 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export function middleware(req: NextRequest) {
-  const sessionId = req.cookies.get('session_id');
+export async function middleware(req: NextRequest) {
+  const sessionId = req.cookies.get('session_id')?.value;
 
   if (!sessionId) {
-    // User not authenticated, redirect to login
     return NextResponse.redirect(new URL('/auth/login', req.url));
   }
 
-  // Session exists, allow access
+  // Validate session via API route
+  const validateUrl = new URL('/api/auth/validate-session', req.url);
+  validateUrl.searchParams.set('session_id', sessionId);
+
+  const res = await fetch(validateUrl.toString());
+  const { valid } = await res.json();
+
+  if (!valid) {
+    return NextResponse.redirect(new URL('/auth/login', req.url));
+  }
+
   return NextResponse.next();
 }
 
-// Match all protected routes here
 export const config = {
   matcher: ['/dashboard/:path*', '/profile/:path*'],
 };
