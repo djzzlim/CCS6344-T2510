@@ -27,8 +27,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: 'Please provide all required fields.' }, { status: 400 });
     }
 
-    // Check if email already exists
-    const existingUser = await prisma.customer.findUnique({
+    // Check if email already exists in the database
+    const existingUser = await prisma.user.findUnique({
       where: { Email: email }
     });
 
@@ -39,13 +39,13 @@ export async function POST(req: NextRequest) {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Generate unique CustomerID
-    const customerId = `CUST-${uuidv4()}`;
+    // Generate unique UserID using UUID
+    const userId = `USER-${uuidv4()}`;
 
-    // Create new user
-    const newUser = await prisma.customer.create({
+    // Create new user with a default "Customer" role
+    const newUser = await prisma.user.create({
       data: {
-        CustomerID: customerId,
+        UserID: userId,
         FirstName: firstName,
         LastName: lastName,
         Email: email,
@@ -57,22 +57,23 @@ export async function POST(req: NextRequest) {
         State: state,
         ZipCode: zipCode,
         PasswordHash: hashedPassword,
+        Role: 'Customer',  // Ensure the role is set to 'Customer' explicitly
       },
     });
 
-    // Return the new user without the password hash
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // Return the new user object without the password hash for security
     const { PasswordHash, ...userWithoutPassword } = newUser;
     return NextResponse.json(userWithoutPassword, { status: 201 });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
+  } catch (error) {
     console.error('Registration error:', error);
     
+    // Check if the error is related to a duplicate email (unique constraint violation)
     if (error.code === 'P2002') {
       return NextResponse.json({ message: 'This email is already registered.' }, { status: 400 });
     }
     
+    // Return a generic error message for other errors
     return NextResponse.json({ message: 'An error occurred during registration.' }, { status: 500 });
   }
 }

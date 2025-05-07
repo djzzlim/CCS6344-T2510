@@ -10,7 +10,6 @@ datasource db {
 model User {
   UserID       String   @id @default(cuid()) @db.NVarChar(50)
   Role         String   @db.NVarChar(20)  
-  Username     String   @unique @db.NVarChar(50)
   Email        String?  @unique @db.NVarChar(255)
   FirstName    String?  @db.NVarChar(100)
   LastName     String?  @db.NVarChar(100)
