@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';  // Use next/navigation for better 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const role = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -32,7 +33,7 @@ export default function Login() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, role }),
       });
 
       const data = await res.json();
@@ -45,12 +46,19 @@ export default function Login() {
 
       // If login is successful
       console.log('✅ Login success:', data);
+      console.log(data.user);
 
       // Save login state
       sessionStorage.setItem('isLoggedIn', 'true');
 
       // Redirect to dashboard using next/navigation (client-side)
-      router.push('/dashboard'); // Redirect to dashboard
+      if (data.user.role === 'Admin') {
+        router.push('/admin/dashboard');
+      } else if (data.user.role === 'Officer') {
+        router.push('/officer/dashboard');
+      } else {
+        router.push('/dashboard'); // fallback for unknown roles (normal user)
+      }
 
     } catch (error) {
       console.error('❌ Login error:', error);
