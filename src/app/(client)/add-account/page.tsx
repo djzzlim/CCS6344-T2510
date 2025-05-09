@@ -37,7 +37,7 @@ export default function AddAccount() {
   
     try {
       // Call our API endpoint
-      const response = await fetch('/api/accounts', {
+      const response = await fetch('/api/add-account', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
