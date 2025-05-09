@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { CheckCircle, Clock, ArrowLeft, XCircle } from 'lucide-react';
 import Header from '@/components/officer-header';
 import Sidebar from '@/components/officer-sidebar';
+import CustomerDetails from '@/components/customer-details'; // Import the CustomerDetails component
 
 // Type definitions based on your Prisma schema
 type user = {
@@ -81,15 +82,45 @@ type Transaction = {
   };
 };
 
+// Define the customer type based on the CustomerDetails props
+type Customer = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  accountOpenDate: string;
+  accountManager?: string;
+  lastContact?: string;
+  accounts?: {
+    accountId: string;
+    number: string;
+    type: string;
+    status: string;
+    balance: number;
+    openDate: string;
+  }[];
+  transactionHistory?: {
+    id: string;
+    date: string;
+    amount: number;
+    type: string;
+    status: string;
+  }[];
+};
+
 export default function OfficerDashboard() {
   const [activeTab, setActiveTab] = useState<'pending' | 'recent'>('pending');
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
-  const [showuserDetails, setShowuserDetails] = useState(false);
+  const [showCustomerDetails, setShowCustomerDetails] = useState(false);
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
+  const [customerLoading, setCustomerLoading] = useState(false);
+  const [customerError, setCustomerError] = useState<string | null>(null);
 
   // Moved fetchTransactions outside useEffect to make it accessible to handlers
   const fetchTransactions = async () => {
@@ -232,8 +263,51 @@ export default function OfficerDashboard() {
     }
   };
 
-  const handleViewuser = (UserId: string) => {
-    setShowuserDetails(true);
+  const handleViewCustomer = (userId: string) => {
+    // Set loading state while fetching customer details
+    setCustomerLoading(true);
+    setCustomerError(null);
+    
+    // If we already have the transaction data, convert it to the Customer format
+    if (selectedTransaction) {
+      const transaction = selectedTransaction;
+      const customer: Customer = {
+        id: transaction.user.id,
+        name: transaction.user.name,
+        email: transaction.user.email,
+        phone: transaction.user.phone || 'N/A',
+        address: transaction.user.address || 'N/A',
+        accountOpenDate: transaction.user.accountOpenDate ? 
+          formatDate(transaction.user.accountOpenDate, true) : 'N/A',
+        accounts: transaction.user.accounts.map(account => ({
+          accountId: account.id,
+          number: account.number,
+          type: account.type,
+          status: 'Active', // Assuming active status for accounts
+          balance: account.balance,
+          openDate: formatDate(transaction.user.accountOpenDate, true)
+        })),
+        // Adding a sample transaction history based on current transaction
+        transactionHistory: [
+          {
+            id: transaction.id,
+            date: formatDate(transaction.createdAt),
+            amount: transaction.amount,
+            type: transaction.type,
+            status: transaction.status
+          }
+        ]
+      };
+      
+      setSelectedCustomer(customer);
+      setShowCustomerDetails(true);
+      setCustomerLoading(false);
+    } else {
+      // If we don't have all the data, we would normally fetch it from the API
+      // For now, just set an error since we don't have an actual API endpoint to call
+      setCustomerError("Could not load complete customer details");
+      setCustomerLoading(false);
+    }
   };
 
   const filteredTransactions = (activeTab === 'pending' ? pendingTransactions : recentTransactions)
@@ -248,21 +322,29 @@ export default function OfficerDashboard() {
       return searchMatch && statusMatch;
     });
 
-  const formatDate = (dateString: string | Date | undefined | null) => {
+  const formatDate = (dateString: string | Date | undefined | null, longFormat: boolean = false) => {
     if (!dateString) return 'N/A';
 
     const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
     if (isNaN(date.getTime())) return 'Invalid date';
 
-    const options: Intl.DateTimeFormatOptions = {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    };
-
-    return date.toLocaleDateString('en-US', options);
+    if (longFormat) {
+      const options: Intl.DateTimeFormatOptions = {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      };
+      return date.toLocaleDateString('en-US', options);
+    } else {
+      const options: Intl.DateTimeFormatOptions = {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      };
+      return date.toLocaleDateString('en-US', options);
+    }
   };
 
   if (loading) {
@@ -284,27 +366,39 @@ export default function OfficerDashboard() {
       <Sidebar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
 
       <div className="flex-1 flex flex-col overflow-hidden md:ml-64">
-        <Header title="Transaction Queue" setIsMenuOpen={setIsMenuOpen} />
+        <Header title={showCustomerDetails ? "Customer Profile" : "Transaction Queue"} setIsMenuOpen={setIsMenuOpen} />
 
-        <div className="bg-white shadow-sm">
-          <div className="px-4 flex">
-            <button
-              className={`px-4 py-2 font-medium text-sm border-b-2 ${activeTab === 'pending' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'}`}
-              onClick={() => setActiveTab('pending')}
-            >
-              Pending Approval
-            </button>
-            <button
-              className={`px-4 py-2 font-medium text-sm border-b-2 ${activeTab === 'recent' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'}`}
-              onClick={() => setActiveTab('recent')}
-            >
-              Recent Activity
-            </button>
+        {!showCustomerDetails && (
+          <div className="bg-white shadow-sm">
+            <div className="px-4 flex">
+              <button
+                className={`px-4 py-2 font-medium text-sm border-b-2 ${activeTab === 'pending' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'}`}
+                onClick={() => setActiveTab('pending')}
+              >
+                Pending Approval
+              </button>
+              <button
+                className={`px-4 py-2 font-medium text-sm border-b-2 ${activeTab === 'recent' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'}`}
+                onClick={() => setActiveTab('recent')}
+              >
+                Recent Activity
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="flex-1 overflow-auto p-4">
-          {!selectedTransaction && !showuserDetails ? (
+          {showCustomerDetails && selectedCustomer ? (
+            <CustomerDetails 
+              selectedCustomer={selectedCustomer}
+              setSelectedCustomer={() => {
+                setShowCustomerDetails(false);
+                setSelectedCustomer(null);
+              }}
+              isLoading={customerLoading}
+              error={customerError}
+            />
+          ) : !selectedTransaction ? (
             <div className="bg-white rounded-lg shadow">
               <div className="p-4 border-b border-gray-200">
                 <div className="flex justify-between items-center">
@@ -413,7 +507,7 @@ export default function OfficerDashboard() {
                 </tbody>
               </table>
             </div>
-          ) : selectedTransaction ? (
+          ) : selectedTransaction && (
             <div className="bg-white rounded-lg shadow p-6">
               <div className="flex justify-between items-center mb-6">
                 <button
@@ -511,85 +605,10 @@ export default function OfficerDashboard() {
                     </div>
                     <button
                       className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                      onClick={() => handleViewuser(selectedTransaction.fromAccount?.id || '')}
+                      onClick={() => handleViewCustomer(selectedTransaction.user.id)}
                     >
                       View Full Profile
                     </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : showuserDetails && selectedTransaction && (
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex justify-between items-center mb-6">
-                <button
-                  className="flex items-center text-blue-600 hover:text-blue-800"
-                  onClick={() => setShowuserDetails(false)}
-                >
-                  <ArrowLeft className="w-4 h-4 mr-1" />
-                  Back to Transaction
-                </button>
-              </div>
-
-              <div className="mb-6">
-                <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                  user Profile: {selectedTransaction.user.name}
-                </h2>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                  <div>
-                    <h3 className="text-lg font-medium text-gray-800 mb-3">Personal Information</h3>
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <div className="mb-3">
-                        <p className="text-sm text-gray-500">user ID</p>
-                        <p className="font-medium">{selectedTransaction.user.id}</p>
-                      </div>
-                      <div className="mb-3">
-                        <p className="text-sm text-gray-500">Email</p>
-                        <p className="font-medium">{selectedTransaction.user.email}</p>
-                      </div>
-                      {selectedTransaction.user.phone && (
-                        <div className="mb-3">
-                          <p className="text-sm text-gray-500">Phone</p>
-                          <p className="font-medium">{selectedTransaction.user.phone}</p>
-                        </div>
-                      )}
-                      {selectedTransaction.user.address && (
-                        <div>
-                          <p className="text-sm text-gray-500">Address</p>
-                          <p className="font-medium">{selectedTransaction.user.address}</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 className="text-lg font-medium text-gray-800 mb-3">Risk & Compliance</h3>
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      {selectedTransaction.user.accountOpenDate && (
-                        <div className="mb-3">
-                          <p className="text-sm text-gray-500">Account Open Date</p>
-                          <p className="font-medium">{formatDate(selectedTransaction.user.accountOpenDate)}</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mb-6">
-                  <h3 className="text-lg font-medium text-gray-800 mb-3">Account Information</h3>
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {selectedTransaction.user.accounts.map((account, index) => (
-                        <div key={index} className="border border-gray-200 rounded p-3">
-                          <p className="font-medium capitalize">{account.type}</p>
-                          <p className="text-sm text-gray-500">
-                            {account.number.substring(account.number.length - 4).padStart(account.number.length, '*')}
-                          </p>
-                          <p className="font-medium text-lg mt-2">${account.balance.toLocaleString()}</p>
-                        </div>
-                      ))}
-                    </div>
                   </div>
                 </div>
               </div>
