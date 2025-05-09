@@ -12,7 +12,8 @@ export default function Accounts() {
   const [activeTab, setActiveTab] = useState('all');
 
   const accounts = [
-    { id: 1, name: "Fixed Deposit", number: "****5678", balance: 4256.78, type: "checking",
+    {
+      id: 1, name: "Fixed Deposit", number: "****5678", balance: 4256.78, type: "checking",
       details: { interestRate: "3.5", lastInterestPaid: "Apr 01, 2025", nextInterestDate: "May 01, 2025" }
     },
     {
@@ -40,10 +41,13 @@ export default function Accounts() {
               <h1 className="text-2xl font-bold text-gray-800">Your Accounts</h1>
               <p className="text-gray-600">Manage all your accounts in one place</p>
             </div>
-            <button className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg">
+            <Link
+              href="/add-account"
+              className="inline-flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            >
               <Plus className="w-4 h-4 mr-2" />
               Add Account
-            </button>
+            </Link>
           </div>
 
           {/* Account filter tabs */}

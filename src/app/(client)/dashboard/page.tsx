@@ -106,13 +106,20 @@ export default function Home() {
             <p className="text-gray-600">Here&apos;s your financial overview for April 22, 2025</p>
           </div>
 
-          {/* Account summary cards */}
-          <h2 className="text-lg font-semibold text-gray-800 mb-3">Your Accounts</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            {accounts.map(account => (
-              <AccountItem key={account.id} account={account} />
-            ))}
-          </div>
+{/* Account summary cards */}
+<div className="flex justify-between items-center mb-3">
+  <h2 className="text-lg font-semibold text-gray-800">Your Accounts</h2>
+  <Link href="/accounts" className="text-sm text-blue-600 font-medium hover:underline">
+    View All
+  </Link>
+</div>
+<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+  {accounts.map(account => (
+    <AccountItem key={account.id} account={account} />
+  ))}
+</div>
+
+
 
           {/* Quick Actions */}
           <h2 className="text-lg font-semibold text-gray-800 mb-3">Quick Actions</h2>
