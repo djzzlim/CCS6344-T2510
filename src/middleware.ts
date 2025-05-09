@@ -21,6 +21,11 @@ export async function middleware(req: NextRequest) {
 
   const path = req.nextUrl.pathname;
 
+  // Redirect from /dashboard to /accounts for customers
+  if (path === '/dashboard' && role === 'customer') {
+    return NextResponse.redirect(new URL('/accounts', req.url));
+  }
+
   // Protect /admin/* for admin only
   if (path.startsWith('/admin') && role !== 'Admin') {
     return NextResponse.redirect(new URL('/unauthorized', req.url));
@@ -42,7 +47,7 @@ export async function middleware(req: NextRequest) {
     '/settings',
     '/transfers',
   ];
-  if (customerPaths.some(p => path.startsWith(p)) && role !== 'customer') {
+  if (customerPaths.some(p => path.startsWith(p)) && role !== 'Customer') {
     return NextResponse.redirect(new URL('/unauthorized', req.url));
   }
 
@@ -55,13 +60,13 @@ export const config = {
     '/admin/:path*',
     '/officer/:path*',
     '/account/:path*',
-    '/accounts/:path*',
+    '/accounts/:path*',  // Ensure this is matched
     '/details/:path*',
     '/history/:path*',
     '/payments/:path*',
     '/profile/:path*',
     '/settings/:path*',
     '/transfers/:path*',
-    '/dashboard/:path*',  // optional — tell me who should access this
+    '/dashboard/:path*',  // Optional — includes dashboard
   ],
 };

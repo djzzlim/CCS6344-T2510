@@ -1,3 +1,4 @@
+//validate-session route.ts
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
@@ -39,3 +40,4 @@ export async function GET(req: Request) {
   // Session is valid
   return NextResponse.json({ valid: true, role: session.user?.Role || null });
 }
+
