@@ -50,7 +50,7 @@ export async function POST(req: Request) {
     });
 
     // Set secure cookie
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     (await cookieStore).set('session_id', session.SessionID, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',

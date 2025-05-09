@@ -3,10 +3,8 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
-export async function PATCH(
-  request: Request,
-  { params }: { params: { transactionId: string } }
-) {
+export async function PATCH(request: Request, props: { params: Promise<{ transactionId: string }> }) {
+  const params = await props.params;
   const { transactionId } = params;
 
   try {

@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     }
     
     // Get session cookie
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const sessionId = (await cookieStore).get('session_id')?.value;
     
     if (!sessionId) {
