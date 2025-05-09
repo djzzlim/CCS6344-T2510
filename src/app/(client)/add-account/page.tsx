@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { CreditCard, Wallet, Building, Banknote, ArrowLeft, PlusCircle, Check, Loader2 } from 'lucide-react';
+import { CreditCard, Wallet, ArrowLeft, PlusCircle, Check, Loader2 } from 'lucide-react';
 import Sidebar from '@/components/client-sidebar';
 import Header from '@/components/client-header';
 import Link from 'next/link';
@@ -25,7 +25,7 @@ export default function AddAccount() {
 
   // Generate random account ID for the UI preview
   const generateAccountId = () => {
-    const prefix = accountType === 'checking' ? 'CHK' : 'SAV';
+    const prefix = accountType === 'Checking' ? 'CHK' : 'SAV';
     const randomDigits = Math.floor(10000000 + Math.random() * 90000000).toString();
     return `${prefix}-${randomDigits}`;
   };
@@ -36,13 +36,6 @@ export default function AddAccount() {
     setError(null);
   
     try {
-      // Check if email and password are available in formData
-      if (!formData.email || !formData.password) {
-        setError('Email and password are required');
-        setIsSubmitting(false);
-        return;
-      }
-  
       // Call our API endpoint
       const response = await fetch('/api/accounts', {
         method: 'POST',
@@ -50,9 +43,7 @@ export default function AddAccount() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          accountType: formData.accountType,
-          email: formData.email,       // Ensure email is sent
-          password: formData.password  // Ensure password is sent
+          accountType: formData.accountType
         }),
         credentials: 'include', // Important for including cookies in the request
       });
@@ -60,7 +51,7 @@ export default function AddAccount() {
       const data = await response.json();
   
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to create account');
+        throw new Error(data.message || 'Failed to create account');
       }
   
       // Success - show message and redirect after short delay
@@ -77,11 +68,9 @@ export default function AddAccount() {
     }
   };
   
-  
-
   const accountTypes = [
-    { id: 'checking', name: 'Checking Account', icon: <Banknote className="w-6 h-6" /> },
-    { id: 'savings', name: 'Savings Account', icon: <Wallet className="w-6 h-6" /> },
+    { id: 'Checking', name: 'Checking Account', icon: <CreditCard className="w-6 h-6" /> },
+    { id: 'Savings', name: 'Savings Account', icon: <Wallet className="w-6 h-6" /> },
   ];
 
   return (
@@ -190,10 +179,10 @@ export default function AddAccount() {
                   <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
                     <div className="mb-4 h-64 overflow-y-auto bg-gray-50 p-4 rounded border border-gray-200 text-sm">
                       <h3 className="font-semibold mb-2">Account Terms of Service</h3>
-                      <p className="mb-2">Last updated: May 8, 2025</p>
+                      <p className="mb-2">Last updated: May 9, 2025</p>
                       
                       <h4 className="font-medium mt-4 mb-1">1. Overview</h4>
-                      <p className="mb-2">These Terms of Service govern your use of our banking services and the account you're creating. By accepting these terms, you agree to be bound by these conditions.</p>
+                      <p className="mb-2">These Terms of Service govern your use of our banking services and the account you&apos;re creating. By accepting these terms, you agree to be bound by these conditions.</p>
                       
                       <h4 className="font-medium mt-4 mb-1">2. Account Use</h4>
                       <p className="mb-2">Your account is intended for personal use only. You are responsible for maintaining the security of your account credentials and for all activities that occur under your account.</p>
@@ -256,23 +245,23 @@ export default function AddAccount() {
                   <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
                     <div className="flex items-center mb-6">
                       <div className={`w-10 h-10 rounded-full flex items-center justify-center bg-blue-100 text-blue-600 mr-3`}>
-                        {accountType === 'checking' && <Banknote className="w-5 h-5" />}
-                        {accountType === 'savings' && <Wallet className="w-5 h-5" />}
+                        {accountType === 'Checking' && <CreditCard className="w-5 h-5" />}
+                        {accountType === 'Savings' && <Wallet className="w-5 h-5" />}
                       </div>
                       <div>
                         <h3 className="font-medium">
-                          {accountType === 'checking' ? 'Checking Account' : 'Savings Account'}
+                          {accountType === 'Checking' ? 'Checking Account' : 'Savings Account'}
                         </h3>
                         <p className="text-sm text-gray-500">Linked to your user profile</p>
                       </div>
                     </div>
                     
                     <p className="text-sm text-gray-600 mb-6">
-                      You're creating a new {accountType === 'checking' ? 'checking' : 'savings'} account. 
+                      You&apos;re creating a new {accountType === 'Checking' ? 'Checking' : 'Savings'} account. 
                       A unique account ID will be generated when you proceed.
                     </p>
 
-                    {accountType === 'checking' && (
+                    {accountType === 'Checking' && (
                       <div className="p-3 bg-blue-50 border border-blue-100 rounded-md mb-6">
                         <h4 className="text-sm font-medium text-blue-800 mb-1">Checking Account Details</h4>
                         <ul className="text-xs text-blue-700 space-y-1">
@@ -284,7 +273,7 @@ export default function AddAccount() {
                       </div>
                     )}
 
-                    {accountType === 'savings' && (
+                    {accountType === 'Savings' && (
                       <div className="p-3 bg-blue-50 border border-blue-100 rounded-md mb-6">
                         <h4 className="text-sm font-medium text-blue-800 mb-1">Savings Account Details</h4>
                         <ul className="text-xs text-blue-700 space-y-1">
@@ -328,12 +317,12 @@ export default function AddAccount() {
                   <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm mb-6">
                     <div className="mb-4 flex items-center">
                       <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-3">
-                        {accountType === 'checking' && <Banknote className="w-5 h-5" />}
-                        {accountType === 'savings' && <Wallet className="w-5 h-5" />}
+                        {accountType === 'Checking' && <CreditCard className="w-5 h-5" />}
+                        {accountType === 'Savings' && <Wallet className="w-5 h-5" />}
                       </div>
                       <div>
                         <h3 className="font-medium">
-                          {accountType === 'checking' ? 'Checking Account' : 'Savings Account'}
+                          {accountType === 'Checking' ? 'Checking Account' : 'Savings Account'}
                         </h3>
                         <p className="text-sm text-gray-500">Linked to your user profile</p>
                       </div>
@@ -342,8 +331,8 @@ export default function AddAccount() {
                       <div className="flex justify-between">
                         <span className="text-sm text-gray-500">Account Type:</span>
                         <span className="text-sm font-medium">
-                          {accountType === 'checking' && 'Checking Account'} 
-                          {accountType === 'savings' && 'Savings Account'}
+                          {accountType === 'Checking' && 'Checking Account'} 
+                          {accountType === 'Savings' && 'Savings Account'}
                         </span>
                       </div>
                       <div className="flex justify-between">
@@ -358,7 +347,7 @@ export default function AddAccount() {
                       <div className="flex justify-between">
                         <span className="text-sm text-gray-500">Monthly Fee:</span>
                         <span className="text-sm font-medium">
-                          {accountType === 'checking' ? '$5.00' : '$0.00'}
+                          {accountType === 'Checking' ? '$5.00' : '$0.00'}
                         </span>
                       </div>
                     </div>
