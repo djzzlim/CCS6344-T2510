@@ -46,6 +46,7 @@ export async function middleware(req: NextRequest) {
     '/profile',
     '/settings',
     '/transfers',
+    '/dashboard',
   ];
   if (customerPaths.some(p => path.startsWith(p)) && role !== 'Customer') {
     return NextResponse.redirect(new URL('/unauthorized', req.url));
