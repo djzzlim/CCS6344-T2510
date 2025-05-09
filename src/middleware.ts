@@ -41,9 +41,13 @@ export async function middleware(req: NextRequest) {
     '/profile',
     '/settings',
     '/transfers',
+    '/dashboard',
   ];
-  if (customerPaths.some(p => path.startsWith(p)) && role !== 'customer') {
-    return NextResponse.redirect(new URL('/unauthorized', req.url));
+  if (customerPaths.some(p => path.startsWith(p)) && role === 'Officer') {
+    return NextResponse.redirect(new URL('/officer/dashboard', req.url));
+  }
+  else if (customerPaths.some(p => path.startsWith(p)) && role === 'Admin') {
+    return NextResponse.redirect(new URL('/admin/dashboard', req.url));
   }
 
   return NextResponse.next();
