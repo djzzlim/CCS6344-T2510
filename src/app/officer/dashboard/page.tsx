@@ -88,78 +88,79 @@ export default function OfficerDashboard() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  // Moved fetchTransactions outside useEffect to make it accessible to handlers
+  const fetchTransactions = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/transactions');
+
+      if (!response.ok) {
+        throw new Error(`API responded with status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("Raw API data:", data);
+
+      // Transform the data to match the Transaction type
+      const transformedTransactions = data.map((transfer: Transfer) => {
+        const user = transfer.fromAccount?.user || transfer.toAccount?.user;
+
+        return {
+          id: transfer.TransferID,
+          type: 'transfer',
+          status: transfer.Status?.toLowerCase() || 'pending',
+          amount: transfer.Amount || 0,
+          createdAt: transfer.CreatedAt || new Date(),
+          description: transfer.Description,
+          user: {
+            id: user?.userID || '',
+            name: `${user?.FirstName || ''} ${user?.LastName || ''}`.trim(),
+            email: user?.Email || '',
+            phone: user?.ContactNumber || undefined,
+            address: [
+              user?.AddressLine1,
+              user?.AddressLine2,
+              user?.City,
+              user?.State,
+              user?.ZipCode
+            ].filter(Boolean).join(', '),
+            accountOpenDate: user?.AccountOpenDate || undefined,
+            accounts: [
+              {
+                id: transfer.fromAccount?.AccountID || '',
+                number: transfer.fromAccount?.AccountID || '',
+                type: transfer.fromAccount?.AccountType || '',
+                balance: transfer.fromAccount?.Balance || 0
+              },
+              ...(transfer.toAccount ? [{
+                id: transfer.toAccount.AccountID,
+                number: transfer.toAccount.AccountID,
+                type: transfer.toAccount.AccountType || '',
+                balance: transfer.toAccount.Balance || 0
+              }] : [])
+            ]
+          },
+          fromAccount: transfer.fromAccount ? {
+            id: transfer.fromAccount.AccountID,
+            number: transfer.fromAccount.AccountID
+          } : undefined,
+          toAccount: transfer.toAccount ? {
+            id: transfer.toAccount.AccountID,
+            number: transfer.toAccount.AccountID
+          } : undefined
+        };
+      });
+
+      setTransactions(transformedTransactions);
+    } catch (error) {
+      console.error('Error fetching transactions:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchTransactions = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch('/api/transactions');
-        
-        if (!response.ok) {
-          throw new Error(`API responded with status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log("Raw API data:", data);
-
-        // Transform the data to match the Transaction type
-        const transformedTransactions = data.map((transfer: Transfer) => {
-          const user = transfer.fromAccount?.user || transfer.toAccount?.user;
-          
-          return {
-            id: transfer.TransferID,
-            type: 'transfer',
-            status: transfer.Status?.toLowerCase() || 'pending',
-            amount: transfer.Amount || 0,
-            createdAt: transfer.CreatedAt || new Date(),
-            description: transfer.Description,
-            user: {
-              id: user?.userID || '',
-              name: `${user?.FirstName || ''} ${user?.LastName || ''}`.trim(),
-              email: user?.Email || '',
-              phone: user?.ContactNumber || undefined,
-              address: [
-                user?.AddressLine1,
-                user?.AddressLine2,
-                user?.City,
-                user?.State,
-                user?.ZipCode
-              ].filter(Boolean).join(', '),
-              accountOpenDate: user?.AccountOpenDate || undefined,
-              accounts: [
-                {
-                  id: transfer.fromAccount?.AccountID || '',
-                  number: transfer.fromAccount?.AccountID || '',
-                  type: transfer.fromAccount?.AccountType || '',
-                  balance: transfer.fromAccount?.Balance || 0
-                },
-                ...(transfer.toAccount ? [{
-                  id: transfer.toAccount.AccountID,
-                  number: transfer.toAccount.AccountID,
-                  type: transfer.toAccount.AccountType || '',
-                  balance: transfer.toAccount.Balance || 0
-                }] : [])
-              ]
-            },
-            fromAccount: transfer.fromAccount ? {
-              id: transfer.fromAccount.AccountID,
-              number: transfer.fromAccount.AccountID
-            } : undefined,
-            toAccount: transfer.toAccount ? {
-              id: transfer.toAccount.AccountID,
-              number: transfer.toAccount.AccountID
-            } : undefined
-          };
-        });
-
-        setTransactions(transformedTransactions);
-      } catch (error) {
-        console.error('Error fetching transactions:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchTransactions();
   }, []);
 
@@ -179,21 +180,9 @@ export default function OfficerDashboard() {
       });
 
       if (response.ok) {
-        const updatedTransaction = await response.json();
-        setTransactions(transactions.map(t =>
-          t.id === updatedTransaction.TransferID ? {
-            ...t,
-            status: 'approved',
-            toAccount: updatedTransaction.toAccount ? {
-              id: updatedTransaction.toAccount.AccountID,
-              number: updatedTransaction.toAccount.AccountID
-            } : undefined,
-            fromAccount: updatedTransaction.fromAccount ? {
-              id: updatedTransaction.fromAccount.AccountID,
-              number: updatedTransaction.fromAccount.AccountID
-            } : undefined
-          } : t
-        ));
+        // Simply fetch all transactions again to refresh the data
+        await fetchTransactions();
+        // Clear the selected transaction
         setSelectedTransaction(null);
       } else {
         throw new Error('Failed to approve transaction');
@@ -214,21 +203,9 @@ export default function OfficerDashboard() {
       });
 
       if (response.ok) {
-        const updatedTransaction = await response.json();
-        setTransactions(transactions.map(t =>
-          t.id === updatedTransaction.TransferID ? {
-            ...t,
-            status: 'rejected',
-            toAccount: updatedTransaction.toAccount ? {
-              id: updatedTransaction.toAccount.AccountID,
-              number: updatedTransaction.toAccount.AccountID
-            } : undefined,
-            fromAccount: updatedTransaction.fromAccount ? {
-              id: updatedTransaction.fromAccount.AccountID,
-              number: updatedTransaction.fromAccount.AccountID
-            } : undefined
-          } : t
-        ));
+        // Simply fetch all transactions again to refresh the data
+        await fetchTransactions();
+        // Clear the selected transaction
         setSelectedTransaction(null);
       } else {
         throw new Error('Failed to reject transaction');
@@ -255,22 +232,22 @@ export default function OfficerDashboard() {
       return searchMatch && statusMatch;
     });
 
-    const formatDate = (dateString: string | Date | undefined | null) => {
-      if (!dateString) return 'N/A';
-    
-      const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
-      if (isNaN(date.getTime())) return 'Invalid date';
-    
-      const options: Intl.DateTimeFormatOptions = {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      };
-    
-      return date.toLocaleDateString('en-US', options);
+  const formatDate = (dateString: string | Date | undefined | null) => {
+    if (!dateString) return 'N/A';
+
+    const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
+    if (isNaN(date.getTime())) return 'Invalid date';
+
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
     };
+
+    return date.toLocaleDateString('en-US', options);
+  };
 
   if (loading) {
     return (
@@ -511,7 +488,7 @@ export default function OfficerDashboard() {
                     </div>
                     <button
                       className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                      onClick={() => handleViewuser(selectedTransaction.fromAccount?.id)}
+                      onClick={() => handleViewuser(selectedTransaction.fromAccount?.id || '')}
                     >
                       View Full Profile
                     </button>
