@@ -53,6 +53,7 @@ type Transaction = {
   type: 'transfer' | 'payment';
   status: 'pending' | 'approved' | 'rejected';
   amount: number;
+  updatedAt: Date;
   createdAt: Date;
   description?: string;
   user: {
@@ -72,6 +73,7 @@ type Transaction = {
   fromAccount?: {
     id: string;
     number: string;
+    balance?: number;
   };
   toAccount?: {
     id: string;
@@ -88,7 +90,7 @@ export default function OfficerDashboard() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
-  
+
   // Moved fetchTransactions outside useEffect to make it accessible to handlers
   const fetchTransactions = async () => {
     try {
@@ -103,15 +105,24 @@ export default function OfficerDashboard() {
       console.log("Raw API data:", data);
 
       // Transform the data to match the Transaction type
+      // Fixed transformation function with correct property access
       const transformedTransactions = data.map((transfer: Transfer) => {
         const user = transfer.fromAccount?.user || transfer.toAccount?.user;
+
+        // Fix: Properly access and convert Balance to number
+        const fromAccountBalance = transfer.fromAccount?.Balance ?
+          Number(transfer.fromAccount.Balance) : 0;
+
+        const toAccountBalance = transfer.toAccount?.Balance ?
+          Number(transfer.toAccount.Balance) : 0;
 
         return {
           id: transfer.TransferID,
           type: 'transfer',
           status: transfer.Status?.toLowerCase() || 'pending',
-          amount: transfer.Amount || 0,
+          amount: transfer.Amount ? Number(transfer.Amount) : 0,
           createdAt: transfer.CreatedAt || new Date(),
+          updatedAt: transfer.UpdatedAt || '',
           description: transfer.Description,
           user: {
             id: user?.userID || '',
@@ -131,27 +142,32 @@ export default function OfficerDashboard() {
                 id: transfer.fromAccount?.AccountID || '',
                 number: transfer.fromAccount?.AccountID || '',
                 type: transfer.fromAccount?.AccountType || '',
-                balance: transfer.fromAccount?.Balance || 0
+                // Fix: Properly set the balance using the converted value
+                balance: fromAccountBalance
               },
               ...(transfer.toAccount ? [{
-                id: transfer.toAccount.AccountID,
-                number: transfer.toAccount.AccountID,
+                id: transfer.toAccount.AccountID || '',
+                number: transfer.toAccount.AccountID || '',
                 type: transfer.toAccount.AccountType || '',
-                balance: transfer.toAccount.Balance || 0
+                // Fix: Properly set the balance using the converted value
+                balance: toAccountBalance
               }] : [])
-            ]
+            ].filter(account => account.id !== '') // Filter out empty accounts
           },
           fromAccount: transfer.fromAccount ? {
-            id: transfer.fromAccount.AccountID,
-            number: transfer.fromAccount.AccountID
+            id: transfer.fromAccount.userID || '',
+            number: transfer.fromAccount.AccountID || '',
+            balance: fromAccountBalance
           } : undefined,
           toAccount: transfer.toAccount ? {
-            id: transfer.toAccount.AccountID,
-            number: transfer.toAccount.AccountID
+            id: transfer.toAccount.userID || '',
+            number: transfer.toAccount.AccountID || '',
+            balance: toAccountBalance
           } : undefined
         };
       });
 
+      console.log("Transformed transactions:", transformedTransactions);
       setTransactions(transformedTransactions);
     } catch (error) {
       console.error('Error fetching transactions:', error);
@@ -216,7 +232,7 @@ export default function OfficerDashboard() {
     }
   };
 
-  const handleViewuser = (userId: string) => {
+  const handleViewuser = (UserId: string) => {
     setShowuserDetails(true);
   };
 
@@ -362,7 +378,7 @@ export default function OfficerDashboard() {
                           ${transaction.amount.toLocaleString()}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 capitalize">{transaction.type}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(transaction.createdAt)}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(transaction.updatedAt)}</td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
                             ${transaction.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
@@ -445,9 +461,14 @@ export default function OfficerDashboard() {
                       <p className="font-medium text-lg">${selectedTransaction.amount.toLocaleString()}</p>
                     </div>
                     <div className="mb-4">
-                      <p className="text-sm text-gray-500">Date</p>
+                      <p className="text-sm text-gray-500">Created On</p>
                       <p className="font-medium">{formatDate(selectedTransaction.createdAt)}</p>
                     </div>
+                    <div className="mb-4">
+                      <p className="text-sm text-gray-500">Last Updated</p>
+                      <p className="font-medium">{formatDate(selectedTransaction.updatedAt)}</p>
+                    </div>
+
                   </div>
 
                   <div>
@@ -479,7 +500,9 @@ export default function OfficerDashboard() {
                   <div className="flex justify-between items-start">
                     <div>
                       <p className="font-medium">{selectedTransaction.user.name}</p>
-                      <p className="text-sm text-gray-500">ID: {selectedTransaction.fromAccount?.id}</p>
+                      <p className="text-sm text-gray-500">
+                        Account Balance: ${selectedTransaction.fromAccount?.balance?.toLocaleString() || '0'}
+                      </p>
                       <p className="text-sm text-gray-500">
                         Account: {selectedTransaction.fromAccount?.number.substring(
                           selectedTransaction.fromAccount.number.length - 4
