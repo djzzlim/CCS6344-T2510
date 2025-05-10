@@ -32,7 +32,7 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
       // Combine and sort payments and transfers
       const transactions = [
         ...account.payments.map(payment => ({
-          id: `PAY-${payment.PaymentID}`,
+          id: payment.PaymentID,
           date: payment.Timestamp,
           amount: payment.Amount?.toNumber(),
           type: 'Payment',
@@ -40,7 +40,7 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
           description: payment.Description || 'Payment'
         })),
         ...account.transfersFrom.map(transfer => ({
-          id: `TRX-${transfer.TransferID}`,
+          id: transfer.TransferID,
           date: transfer.CreatedAt,
           amount: -transfer.Amount?.toNumber(), // Negative for outgoing transfers
           type: transfer.TransferType || 'Transfer Out',
@@ -48,7 +48,7 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
           description: transfer.Description || 'Transfer Out'
         })),
         ...account.transfersTo.map(transfer => ({
-          id: `TRX-${transfer.TransferID}`,
+          id: transfer.TransferID,
           date: transfer.CreatedAt,
           amount: transfer.Amount?.toNumber(),
           type: transfer.TransferType || 'Transfer In',

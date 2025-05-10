@@ -23,30 +23,22 @@ export async function GET(request: Request) {
       // Add search conditions based on Username, Email, FirstName, LastName
       orConditions.push(
         {
-          Username: {
-            contains: loweredSearch,
-            mode: 'insensitive', // Case-insensitive search
-          },
-        },
-        {
           Email: {
-            contains: loweredSearch,
-            mode: 'insensitive',
+            contains: loweredSearch
           },
         },
         {
           FirstName: {
-            contains: loweredSearch,
-            mode: 'insensitive',
+            contains: loweredSearch
           },
         },
         {
           LastName: {
-            contains: loweredSearch,
-            mode: 'insensitive',
+            contains: loweredSearch
           },
         }
       );
+
 
       // If numeric, search UserID (e.g., account number, if that is the key identifier)
       if (!isNaN(Number(searchTerm))) {
