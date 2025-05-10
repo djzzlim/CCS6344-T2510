@@ -145,6 +145,7 @@ export default function CustomerDatabase() {
                         </div>
                     ) : (
                         <CustomerDetails 
+                            title='Customer List'
                             selectedCustomer={selectedCustomer} 
                             setSelectedCustomer={setSelectedCustomer}
                             isLoading={isLoading}

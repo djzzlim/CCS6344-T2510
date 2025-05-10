@@ -52,7 +52,7 @@ type Transfer = {
 type Transaction = {
   id: string;
   type: 'transfer' | 'payment';
-  status: 'pending' | 'approved' | 'rejected';
+  status: 'Pending' | 'Approved' | 'Rejected';
   amount: number;
   updatedAt: Date;
   createdAt: Date;
@@ -263,7 +263,7 @@ export default function OfficerDashboard() {
     }
   };
 
-  const handleViewCustomer = (userId: string) => {
+  const handleViewCustomer = () => {
     // Set loading state while fetching customer details
     setCustomerLoading(true);
     setCustomerError(null);
@@ -390,6 +390,7 @@ export default function OfficerDashboard() {
         <div className="flex-1 overflow-auto p-4">
           {showCustomerDetails && selectedCustomer ? (
             <CustomerDetails 
+              title='Transaction Queue'
               selectedCustomer={selectedCustomer}
               setSelectedCustomer={() => {
                 setShowCustomerDetails(false);

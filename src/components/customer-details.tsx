@@ -5,12 +5,21 @@ import { ArrowLeft, Download } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-export default function CustomerDetails({ 
-    selectedCustomer, 
-    setSelectedCustomer, 
+interface CustomerDetailsProps {
+    title: string;
+    selectedCustomer: any; // You can replace 'any' with a proper Customer type later
+    setSelectedCustomer: (customer: any | null) => void;
+    isLoading: boolean;
+    error: string | null;
+}
+
+export default function CustomerDetails({
+    title,
+    selectedCustomer,
+    setSelectedCustomer,
     isLoading,
-    error 
-}) {
+    error,
+}: CustomerDetailsProps) {
     const [activeTab, setActiveTab] = useState('details');
     const router = useRouter();
 
@@ -54,7 +63,7 @@ export default function CustomerDetails({
                     onClick={() => setSelectedCustomer(null)}
                 >
                     <ArrowLeft className="w-4 h-4 mr-1" />
-                    Back to Customer List
+                    Back to {title}
                 </button>
                 <div className="flex space-x-3">
                     <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 flex items-center">
@@ -246,15 +255,17 @@ export default function CustomerDetails({
                                                     ${Math.abs(transaction.amount).toLocaleString()}
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{transaction.type}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 capitalize">{transaction.type}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                                ${transaction.status === 'Completed' ? 'bg-green-100 text-green-800' :
-                                                        transaction.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
-                                                            transaction.status === 'Failed' ? 'bg-red-100 text-red-800' :
-                                                                'bg-gray-100 text-gray-800'}`}>
+                                                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full capitalize
+                                                        ${transaction.status === 'approved' ? 'bg-green-100 text-green-800' :
+                                                        transaction.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                                        transaction.status === 'rejected' ? 'bg-red-100 text-red-800' :
+                                                                'bg-gray-100 text-gray-800'
+                                                    }`}>
                                                     {transaction.status}
                                                 </span>
+
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 <button
