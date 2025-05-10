@@ -200,10 +200,6 @@ export default function CustomerDetails({
                                             <p className="text-sm text-gray-500">Balance</p>
                                             <p className="text-xl font-semibold">${account.balance.toLocaleString()}</p>
                                         </div>
-                                        <div className="mt-2">
-                                            <p className="text-sm text-gray-500">Open Date</p>
-                                            <p className="font-medium">{account.openDate}</p>
-                                        </div>
                                         <div className="mt-3">
                                             <button
                                                 className="text-blue-600 hover:text-blue-800 text-sm"
