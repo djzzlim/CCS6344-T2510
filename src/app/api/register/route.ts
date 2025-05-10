@@ -58,6 +58,7 @@ export async function POST(req: NextRequest) {
         ZipCode: zipCode,
         PasswordHash: hashedPassword,
         Role: 'Customer',  // Ensure the role is set to 'Customer' explicitly
+        AccountOpenDate: new Date(),
       },
     });
 
