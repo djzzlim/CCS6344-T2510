@@ -11,6 +11,7 @@ interface CustomerDetailsProps {
     setSelectedCustomer: (customer: any | null) => void;
     isLoading: boolean;
     error: string | null;
+    onViewTransaction?: (transactionId: string) => void; // New prop for viewing transaction details
 }
 
 export default function CustomerDetails({
@@ -19,6 +20,7 @@ export default function CustomerDetails({
     setSelectedCustomer,
     isLoading,
     error,
+    onViewTransaction,
 }: CustomerDetailsProps) {
     const [activeTab, setActiveTab] = useState('details');
     const router = useRouter();
@@ -36,6 +38,16 @@ export default function CustomerDetails({
             }).format(date);
         } catch (err) {
             return dateString; // Return the original string if parsing fails
+        }
+    };
+
+    // Handler for viewing transaction details
+    const handleViewTransaction = (transactionId) => {
+        if (onViewTransaction) {
+            onViewTransaction(transactionId);
+        } else {
+            // Fallback to router navigation if no handler provided
+            router.push(`/transactions/${transactionId}`);
         }
     };
 
@@ -260,7 +272,7 @@ export default function CustomerDetails({
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 <button
                                                     className="text-blue-600 hover:text-blue-800"
-                                                    onClick={() => router.push(`/transactions/${transaction.id}`)}
+                                                    onClick={() => handleViewTransaction(transaction.id)}
                                                 >
                                                     View Details
                                                 </button>

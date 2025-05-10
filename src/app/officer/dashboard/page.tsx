@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { CheckCircle, Clock, ArrowLeft, XCircle } from 'lucide-react';
+import { CheckCircle, Clock, XCircle } from 'lucide-react';
 import Header from '@/components/officer-header';
 import Sidebar from '@/components/officer-sidebar';
-import CustomerDetails from '@/components/customer-details'; // Import the CustomerDetails component
+import CustomerDetails from '@/components/customer-details';
+import TransactionDetails from '@/components/transaction-details'; // Import the new component
 
 // Type definitions based on your Prisma schema
 type user = {
@@ -52,7 +53,7 @@ type Transfer = {
 type Transaction = {
   id: string;
   type: 'transfer' | 'payment';
-  status: 'Pending' | 'Approved' | 'Rejected';
+  status: 'pending' | 'approved' | 'rejected';
   amount: number;
   updatedAt: Date;
   createdAt: Date;
@@ -509,111 +510,13 @@ export default function OfficerDashboard() {
               </table>
             </div>
           ) : selectedTransaction && (
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex justify-between items-center mb-6">
-                <button
-                  className="flex items-center text-blue-600 hover:text-blue-800"
-                  onClick={() => setSelectedTransaction(null)}
-                >
-                  <ArrowLeft className="w-4 h-4 mr-1" />
-                  Back to Transactions
-                </button>
-                <div className="flex space-x-3">
-                  {selectedTransaction.status === 'pending' && (
-                    <>
-                      <button
-                        className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-                        onClick={() => handleReject(selectedTransaction.id)}
-                      >
-                        Reject
-                      </button>
-                      <button
-                        className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
-                        onClick={() => handleApprove(selectedTransaction.id)}
-                      >
-                        Approve
-                      </button>
-                    </>
-                  )}
-                </div>
-              </div>
-
-              <div className="mb-6">
-                <h2 className="text-xl font-semibold text-gray-800 mb-2">Transaction Details</h2>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <div className="mb-4">
-                      <p className="text-sm text-gray-500">Transaction ID</p>
-                      <p className="font-medium">{selectedTransaction.id}</p>
-                    </div>
-                    <div className="mb-4">
-                      <p className="text-sm text-gray-500">Transaction Type</p>
-                      <p className="font-medium capitalize">{selectedTransaction.type}</p>
-                    </div>
-                    <div className="mb-4">
-                      <p className="text-sm text-gray-500">Amount</p>
-                      <p className="font-medium text-lg">${selectedTransaction.amount.toLocaleString()}</p>
-                    </div>
-                    <div className="mb-4">
-                      <p className="text-sm text-gray-500">Created On</p>
-                      <p className="font-medium">{formatDate(selectedTransaction.createdAt)}</p>
-                    </div>
-                    <div className="mb-4">
-                      <p className="text-sm text-gray-500">Last Updated</p>
-                      <p className="font-medium">{formatDate(selectedTransaction.updatedAt)}</p>
-                    </div>
-
-                  </div>
-
-                  <div>
-                    <div className="mb-4">
-                      <p className="text-sm text-gray-500">Status</p>
-                      <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
-                        ${selectedTransaction.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                          selectedTransaction.status === 'approved' ? 'bg-green-100 text-green-800' :
-                            'bg-red-100 text-red-800'}`}>
-                        {selectedTransaction.status.charAt(0).toUpperCase() + selectedTransaction.status.slice(1)}
-                      </span>
-                    </div>
-
-                    {selectedTransaction.toAccount && (
-                      <div className="mb-4">
-                        <p className="text-sm text-gray-500">Destination Account</p>
-                        <p className="font-medium">
-                          {selectedTransaction.toAccount.number.substring(selectedTransaction.toAccount.number.length - 4).padStart(selectedTransaction.toAccount.number.length, '*')}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              <div className="mb-6">
-                <h3 className="text-lg font-medium text-gray-800 mb-2">Customer Information</h3>
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <p className="font-medium">{selectedTransaction.user.name}</p>
-                      <p className="text-sm text-gray-500">
-                        Account Balance: ${selectedTransaction.fromAccount?.balance?.toLocaleString() || '0'}
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        Account: {selectedTransaction.fromAccount?.number.substring(
-                          selectedTransaction.fromAccount.number.length - 4
-                        ).padStart(selectedTransaction.fromAccount.number.length, '*')}
-                      </p>
-                    </div>
-                    <button
-                      className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                      onClick={() => handleViewCustomer(selectedTransaction.user.id)}
-                    >
-                      View Full Profile
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <TransactionDetails
+              transaction={selectedTransaction}
+              onBack={() => setSelectedTransaction(null)}
+              onApprove={handleApprove}
+              onReject={handleReject}
+              onViewCustomer={handleViewCustomer}
+            />
           )}
         </div>
       </div>
