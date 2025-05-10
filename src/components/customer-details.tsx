@@ -90,16 +90,6 @@ export default function CustomerDetails({
                             </h2>
                         </div>
                     </div>
-                    <div className="text-right">
-                        <p className="text-sm text-gray-500">Account Manager</p>
-                        <p className="font-medium">
-                            {selectedCustomer?.accountManager ?? 'N/A'}
-                        </p>
-                        <p className="text-sm text-gray-500 mt-1">Last Contact</p>
-                        <p className="font-medium">
-                            {selectedCustomer?.lastContact ?? 'N/A'}
-                        </p>
-                    </div>
                 </div>
             </div>
 
