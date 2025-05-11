@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 export async function GET(request) {
   try {
     // Get session ID directly from cookies - Next.js server component way
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const sessionId = cookieStore.get('session_id')?.value;
     
     // Fallback: Check Authorization header

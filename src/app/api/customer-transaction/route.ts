@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 export async function GET(req: NextRequest) {
   try {
     // Get session ID from cookies
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const sessionId = cookieStore.get('session_id')?.value;
 
     if (!sessionId) {
