@@ -1,47 +1,6 @@
 // /api/accounts/route.js
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-import { cookies } from 'next/headers';
->>>>>>> 2b26401825755bc875d2e8b6f46f1dbb5163020f
-
-const prisma = new PrismaClient();
-
-export async function GET(request) {
-  try {
-    // Get session ID directly from cookies - Next.js server component way
-    const cookieStore = await cookies();
-    const sessionId = cookieStore.get('session_id')?.value;
-    
-    // Fallback: Check Authorization header
-    let authSessionId = null;
-    const authHeader = request.headers.get('authorization');
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-      authSessionId = authHeader.substring(7);
-    }
-    
-    // Use either cookie or auth header
-    const finalSessionId = sessionId || authSessionId;
-    
-    // Debug info - will show in server logs
-    console.log('Cookies available:', cookieStore.getAll().map(c => c.name));
-    console.log('Session from cookie:', sessionId);
-    console.log('Session from auth header:', authSessionId);
-    
-    // Validate session ID
-    if (!finalSessionId) {
-      return NextResponse.json(
-        { message: 'Authentication required' },
-        { status: 401 }
-      );
-    }
-
-<<<<<<< HEAD
-  if (!sessionId) {
-    return NextResponse.json({ error: 'Session ID missing' }, { status: 400 });
-=======
 import { cookies } from 'next/headers';
 
 const prisma = new PrismaClient();
@@ -75,8 +34,6 @@ export async function GET(request) {
       );
     }
 
-=======
->>>>>>> 2b26401825755bc875d2e8b6f46f1dbb5163020f
     // Find active session and related user
     const session = await prisma.session.findUnique({
       where: {
@@ -154,9 +111,5 @@ export async function GET(request) {
     );
   } finally {
     await prisma.$disconnect();
-<<<<<<< HEAD
->>>>>>> main
-=======
->>>>>>> 2b26401825755bc875d2e8b6f46f1dbb5163020f
   }
 }
