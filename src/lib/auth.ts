@@ -1,5 +1,6 @@
 // src/lib/auth.ts
-import { NextRequest, cookies } from 'next/server';
+import { NextRequest } from 'next/server';
+import { cookies } from 'next/headers';
 
 interface Session {
   userId: string;
