@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, Filter, Download, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 import Sidebar from '@/components/client-sidebar';
 import Header from '@/components/client-header';
 
 export default function History() {
+  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState('all');
@@ -15,36 +17,207 @@ export default function History() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
 
-  const accounts = [
-    { id: '1', name: "Checking Account", number: "****5678", balance: 4256.78 },
-    { id: '2', name: "Savings Account", number: "****9012", balance: 12785.45 },
-  ];
+  // State variables for API data
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [accounts, setAccounts] = useState([]);
+  const [transactions, setTransactions] = useState({ transfers: [], payments: [], incomes: [] });
+  const [userName, setUserName] = useState('');
 
-  const transactionHistory = [
-    { id: '1', date: 'Apr 20, 2025', description: 'Grocery Store', amount: -86.47, type: 'purchase', account: '1', status: 'Completed' },
-    { id: '2', date: 'Apr 18, 2025', description: 'Direct Deposit - Payroll', amount: 2450.00, type: 'deposit', account: '1', status: 'Completed' },
-    { id: '3', date: 'Apr 15, 2025', description: 'City Utilities', amount: -124.56, type: 'payment', account: '1', status: 'Completed' },
-    { id: '4', date: 'Apr 12, 2025', description: 'ATM Withdrawal', amount: -100.00, type: 'withdrawal', account: '1', status: 'Completed' },
-    { id: '5', date: 'Apr 10, 2025', description: 'Transfer to Savings', amount: -500.00, type: 'transfer', account: '1', status: 'Completed' },
-    { id: '6', date: 'Apr 10, 2025', description: 'Transfer from Checking', amount: 500.00, type: 'transfer', account: '2', status: 'Completed' },
-    { id: '7', date: 'Apr 8, 2025', description: 'Online Purchase', amount: -59.99, type: 'purchase', account: '1', status: 'Completed' },
-    { id: '8', date: 'Apr 5, 2025', description: 'Interest Payment', amount: 12.45, type: 'interest', account: '2', status: 'Completed' },
-    { id: '9', date: 'Apr 1, 2025', description: 'Mortgage Payment', amount: -1450.00, type: 'payment', account: '1', status: 'Completed' },
-    { id: '10', date: 'Mar 28, 2025', description: 'Restaurant', amount: -35.82, type: 'purchase', account: '1', status: 'Completed' },
-    { id: '11', date: 'Mar 25, 2025', description: 'Gas Station', amount: -42.50, type: 'purchase', account: '1', status: 'Completed' },
-    { id: '12', date: 'Mar 20, 2025', description: 'Cell Phone Provider', amount: -85.99, type: 'payment', account: '1', status: 'Completed' },
-  ];
+  useEffect(() => {
+    // Fetch account data
+    const fetchAccounts = async () => {
+      setIsLoading(true);
+      setError(null);
 
+      try {
+        const response = await fetch('/api/accounts', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include' // Include cookies for authentication
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('Error fetching accounts:', errorData);
+
+          if (response.status === 401 || response.status === 403) {
+            router.push('/auth/login'); // Redirect to login on auth errors
+            return;
+          }
+
+          throw new Error(errorData.message || 'Failed to fetch accounts');
+        }
+
+        const data = await response.json();
+        console.log('Fetched Accounts:', data);
+
+        if (Array.isArray(data.accounts)) {
+          setAccounts(data.accounts);
+
+          // Set user name if available
+          if (data.user) {
+            const fullName = [data.user.FirstName, data.user.LastName]
+              .filter(Boolean)
+              .join(' ');
+            setUserName(fullName || data.user.Email || '');
+          }
+        } else {
+          throw new Error('Invalid accounts format received from server');
+        }
+      } catch (error) {
+        console.error('Failed to fetch accounts:', error);
+        setError(error.message || 'An error occurred while fetching your accounts');
+      }
+    };
+
+    // Fetch transaction data
+    const fetchTransactions = async () => {
+      try {
+        const response = await fetch('/api/customer-transaction', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include' // Include cookies for authentication
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('Error fetching transactions:', errorData);
+
+          if (response.status === 401 || response.status === 403) {
+            router.push('/auth/login');
+            return;
+          }
+
+          throw new Error(errorData.message || 'Failed to fetch transactions');
+        }
+
+        const data = await response.json();
+        console.log('Fetched Transactions:', data);
+        setTransactions(data);
+      } catch (error) {
+        console.error('Failed to fetch transactions:', error);
+        setError(error.message || 'An error occurred while fetching your transactions');
+      } finally {
+        setIsLoading(false); // Set loading to false after API calls complete
+      }
+    };
+
+    // Execute both API calls
+    const fetchData = async () => {
+      await fetchAccounts();
+      await fetchTransactions();
+    };
+
+    fetchData();
+  }, [router]);
+
+  // Combine transfers, payments, and incomes into a single array for display
+  const combineTransactions = () => {
+    const combined = [];
+
+    // Process transfers
+    if (transactions.transfers && transactions.transfers.length > 0) {
+      transactions.transfers.forEach(transfer => {
+        // Determine if this transfer is outgoing based on the FromAccountID
+        const isOutgoing = accounts.some(acc => acc.AccountID === transfer.FromAccountID);
+
+        combined.push({
+          id: `transfer-${transfer.TransferID}`,
+          date: new Date(transfer.CreatedAt || Date.now()).toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric'
+          }),
+          timestamp: new Date(transfer.CreatedAt || Date.now()),
+          description: transfer.Description || 'Transfer',
+          // For outgoing transfers, make amount negative, otherwise positive
+          amount: isOutgoing ? -Number(transfer.Amount || 0) : Number(transfer.Amount || 0),
+          type: 'transfer',
+          accountId: isOutgoing ? transfer.FromAccountID : transfer.ToAccountID,
+          status: transfer.Status || 'Completed',
+          raw: transfer // Keep the raw data for reference
+        });
+      });
+    }
+
+    // Process payments
+    if (transactions.payments && transactions.payments.length > 0) {
+      transactions.payments.forEach(payment => {
+        combined.push({
+          id: `payment-${payment.PaymentID}`,
+          date: new Date(payment.Timestamp || Date.now()).toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric'
+          }),
+          timestamp: new Date(payment.Timestamp || Date.now()),
+          description: payment.Description || (payment.utility ? payment.utility.AccountName : 'Utility Payment'),
+          category: payment.utility ? payment.utility.AccountName : 'Payment',
+          // Payments are always negative (money going out)
+          amount: -Math.abs(Number(payment.Amount || 0)),
+          type: 'payment',
+          accountId: payment.AccountID,
+          status: 'Completed',
+          utilityId: payment.UtilityID,
+          raw: payment // Keep the raw data for reference
+        });
+      });
+    }
+
+    // Process incomes
+    if (transactions.incomes && transactions.incomes.length > 0) {
+      transactions.incomes.forEach(income => {
+        combined.push({
+          id: `income-${income.IncomeID}`,
+          date: new Date(income.Timestamp || Date.now()).toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric'
+          }),
+          timestamp: new Date(income.Timestamp || Date.now()),
+          description: income.Description || 'Income',
+          category: 'Income',
+          // Incomes are always positive (money coming in)
+          amount: Math.abs(Number(income.Amount || 0)),
+          type: 'income',
+          accountId: income.AccountID,
+          status: 'Completed',
+          raw: income // Keep the raw data for reference
+        });
+      });
+    }
+
+    // Sort by date (newest first)
+    return combined.sort((a, b) => b.timestamp - a.timestamp);
+  };
+
+  const allTransactions = combineTransactions();
+
+  // Filter transactions based on user filters
   const filterTransactions = () => {
-    return transactionHistory.filter(transaction => {
+    return allTransactions.filter(transaction => {
       // Filter by account
-      if (selectedAccount !== 'all' && transaction.account !== selectedAccount) {
+      if (selectedAccount !== 'all' && transaction.accountId !== selectedAccount) {
         return false;
       }
 
       // Filter by transaction type
-      if (transactionType !== 'all' && transaction.type !== transactionType) {
-        return false;
+      if (transactionType !== 'all') {
+        // Handle the different transaction types
+        if (transactionType === 'payment' && transaction.type !== 'payment') {
+          return false;
+        }
+        if (transactionType === 'transfer' && transaction.type !== 'transfer') {
+          return false;
+        }
+        if (transactionType === 'income' && transaction.type !== 'income') {
+          return false;
+        }
       }
 
       // Filter by search query
@@ -52,8 +225,18 @@ export default function History() {
         return false;
       }
 
-      // Date range filtering could be added here
-      
+      // Filter by date range
+      if (dateRange !== 'all') {
+        const today = new Date();
+        const daysAgo = parseInt(dateRange);
+        const startDate = new Date();
+        startDate.setDate(today.getDate() - daysAgo);
+
+        if (transaction.timestamp < startDate) {
+          return false;
+        }
+      }
+
       return true;
     });
   };
@@ -71,7 +254,64 @@ export default function History() {
     setDateRange('30');
     setTransactionType('all');
     setSearchQuery('');
+    setCurrentPage(1);
   };
+
+  // Helper function to get account information
+  const getAccountName = (accountId) => {
+    const account = accounts.find(acc => acc.AccountID === accountId);
+
+    if (!account) return 'Unknown Account';
+
+    // Based on your Prisma schema, accounts might not have AccountName and AccountNumber fields
+    // Instead, we'll display account type and last 4 of the ID
+    const accountType = account.AccountType || 'Account';
+    const lastFour = account.AccountID.slice(-4).padStart(4, '*');
+
+    return `${accountType} (${lastFour})`;
+  };
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen bg-gray-50">
+        <Sidebar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+        <main className="flex-1 md:ml-64 w-full">
+          <Header title="History" setIsMenuOpen={setIsMenuOpen} />
+          <div className="p-4 md:p-6 flex justify-center items-center h-64">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
+              <p className="text-gray-600">Loading your transaction history...</p>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="flex min-h-screen bg-gray-50">
+        <Sidebar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+        <main className="flex-1 md:ml-64 w-full">
+          <Header title="History" setIsMenuOpen={setIsMenuOpen} />
+          <div className="p-4 md:p-6">
+            <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-lg">
+              <h2 className="text-lg font-medium mb-2">Error</h2>
+              <p>{error}</p>
+              <button
+                onClick={() => window.location.reload()}
+                className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg"
+              >
+                Try Again
+              </button>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen bg-gray-50">
@@ -105,7 +345,7 @@ export default function History() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
-              
+
               <div className="flex flex-wrap w-full sm:w-auto gap-2 items-center justify-center sm:justify-end">
                 <button
                   onClick={() => setFilterOpen(!filterOpen)}
@@ -121,7 +361,7 @@ export default function History() {
                 <div className="flex items-center">
                   <button className="hidden md:flex items-center px-3 py-2 bg-blue-50 text-blue-600 rounded-lg text-sm font-medium">
                     <Calendar className="w-4 h-4 mr-1" />
-                    <span>Last 30 Days</span>
+                    <span>Last {dateRange} Days</span>
                   </button>
                 </div>
               </div>
@@ -140,8 +380,8 @@ export default function History() {
                     >
                       <option value="all">All Accounts</option>
                       {accounts.map(account => (
-                        <option key={account.id} value={account.id}>
-                          {account.name} ({account.number})
+                        <option key={account.AccountID} value={account.AccountID}>
+                          {account.AccountType || 'Account'} ({account.AccountID.slice(-4).padStart(4, '*')})
                         </option>
                       ))}
                     </select>
@@ -156,7 +396,7 @@ export default function History() {
                       <option value="7">Last 7 Days</option>
                       <option value="30">Last 30 Days</option>
                       <option value="90">Last 90 Days</option>
-                      <option value="custom">Custom Range</option>
+                      <option value="all">All Time</option>
                     </select>
                   </div>
                   <div>
@@ -167,23 +407,20 @@ export default function History() {
                       onChange={(e) => setTransactionType(e.target.value)}
                     >
                       <option value="all">All Types</option>
-                      <option value="deposit">Deposits</option>
-                      <option value="purchase">Purchases</option>
                       <option value="payment">Bill Payments</option>
                       <option value="transfer">Transfers</option>
-                      <option value="withdrawal">Withdrawals</option>
-                      <option value="interest">Interest</option>
+                      <option value="income">Income</option>
                     </select>
                   </div>
                 </div>
                 <div className="flex justify-end mt-4">
-                  <button 
+                  <button
                     onClick={resetFilters}
                     className="px-4 py-2 text-gray-700 mr-2"
                   >
                     Reset
                   </button>
-                  <button 
+                  <button
                     onClick={() => setFilterOpen(false)}
                     className="px-4 py-2 bg-blue-600 text-white rounded-lg"
                   >
@@ -201,6 +438,7 @@ export default function History() {
               <div className="col-span-1">Date</div>
               <div className="col-span-2">Description</div>
               <div className="col-span-1">Status</div>
+              <div className="col-span-1">Account</div>
               <div className="col-span-1 text-right">Amount</div>
             </div>
 
@@ -213,7 +451,7 @@ export default function History() {
                     <div className="md:hidden">
                       <div className="flex justify-between items-start mb-2">
                         <div className="text-sm text-gray-600">{transaction.date}</div>
-                        <div className={`font-medium ${transaction.amount > 0 ? 'text-green-600' : 'text-gray-800'}`}>
+                        <div className={`font-medium ${transaction.amount > 0 ? 'text-green-600' : 'text-red-600'}`}>
                           {transaction.amount > 0 ? '+' : ''}{transaction.amount.toLocaleString('en-US', {
                             style: 'currency',
                             currency: 'USD',
@@ -221,10 +459,21 @@ export default function History() {
                         </div>
                       </div>
                       <div className="font-medium mb-1">{transaction.description}</div>
+                      <div className="text-sm text-gray-500 mb-2">
+                        {getAccountName(transaction.accountId)}
+                      </div>
                       <div className="flex justify-between items-center mb-2">
-                        <span className="px-2 py-1 bg-green-50 text-green-700 text-xs rounded-full">
+                        <span className={`px-2 py-1 ${transaction.status === 'Completed' ? 'bg-green-50 text-green-700' :
+                          transaction.status === 'Pending' ? 'bg-yellow-50 text-yellow-700' :
+                            'bg-gray-50 text-gray-700'
+                          } text-xs rounded-full`}>
                           {transaction.status}
                         </span>
+                        {transaction.category && (
+                          <span className="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full">
+                            {transaction.category}
+                          </span>
+                        )}
                       </div>
                       <div className="border-t border-gray-100 pt-2 flex justify-between">
                         <button className="text-blue-600 text-sm font-medium">View Details</button>
@@ -241,16 +490,27 @@ export default function History() {
                       </div>
                       <div className="col-span-2 font-medium">
                         <span>{transaction.description}</span>
+                        {transaction.category && (
+                          <span className="ml-2 px-2 py-0.5 bg-blue-50 text-blue-700 text-xs rounded-full">
+                            {transaction.category}
+                          </span>
+                        )}
                       </div>
                       <div className="col-span-1">
-                        <span className="px-2 py-1 bg-green-50 text-green-700 text-xs rounded-full">
+                        <span className={`px-2 py-1 ${transaction.status === 'Completed' || 'Approved' ? 'bg-green-50 text-green-700' :
+                          transaction.status === 'Pending' ? 'bg-yellow-50 text-yellow-700' :
+                            'bg-gray-50 text-gray-700'
+                          } text-xs rounded-full`}>
                           {transaction.status}
                         </span>
                       </div>
-                      <div className={`col-span-1 font-medium text-right ${transaction.amount > 0 ? 'text-green-600' : 'text-gray-800'}`}>
-                        {transaction.amount > 0 ? '+' : ''}{transaction.amount.toLocaleString('en-US', {
-                          style: 'currency',
-                          currency: 'USD',
+                      <div className="col-span-1 text-sm text-gray-600">
+                        {getAccountName(transaction.accountId).split(' ')[0]}
+                      </div>
+                      <div className={`col-span-1 font-medium text-right ${transaction.amount > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        {transaction.amount > 0 ? '+' : '-'}${Math.abs(transaction.amount).toLocaleString('en-US', {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
                         })}
                       </div>
                     </div>
@@ -271,44 +531,43 @@ export default function History() {
                   Showing {Math.min((currentPage - 1) * itemsPerPage + 1, filteredTransactions.length)} to {Math.min(currentPage * itemsPerPage, filteredTransactions.length)} of {filteredTransactions.length} transactions
                 </div>
                 <div className="flex items-center space-x-2">
-                  <button 
+                  <button
                     onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                     disabled={currentPage === 1}
                     className={`p-2 rounded-lg border ${currentPage === 1 ? 'text-gray-300 border-gray-200' : 'text-gray-600 border-gray-300'}`}
                   >
                     <ChevronLeft className="w-4 h-4" />
                   </button>
-                  
-                  {/* Simplified pagination for mobile */}
+
+                  {/* Simplified pagination for desktop */}
                   <div className="hidden sm:flex items-center">
                     {Array.from({ length: totalPages }, (_, i) => i + 1)
                       .filter(page => {
                         // Show current page, first, last, and adjacent pages
-                        return page === 1 || page === totalPages || 
-                              Math.abs(page - currentPage) <= 1;
+                        return page === 1 || page === totalPages ||
+                          Math.abs(page - currentPage) <= 1;
                       })
                       .map((page, i, arr) => {
                         // Add ellipsis
-                        const showEllipsisBefore = i > 0 && arr[i-1] !== page - 1;
-                        const showEllipsisAfter = i < arr.length - 1 && arr[i+1] !== page + 1;
-                        
+                        const showEllipsisBefore = i > 0 && arr[i - 1] !== page - 1;
+                        const showEllipsisAfter = i < arr.length - 1 && arr[i + 1] !== page + 1;
+
                         return (
                           <div key={page} className="flex items-center">
                             {showEllipsisBefore && (
                               <span className="px-2 text-gray-400">...</span>
                             )}
-                            
+
                             <button
                               onClick={() => setCurrentPage(page)}
-                              className={`w-8 h-8 flex items-center justify-center rounded-lg ${
-                                currentPage === page 
-                                  ? 'bg-blue-600 text-white' 
-                                  : 'text-gray-600 hover:bg-gray-100'
-                              }`}
+                              className={`w-8 h-8 flex items-center justify-center rounded-lg ${currentPage === page
+                                ? 'bg-blue-600 text-white'
+                                : 'text-gray-600 hover:bg-gray-100'
+                                }`}
                             >
                               {page}
                             </button>
-                            
+
                             {showEllipsisAfter && (
                               <span className="px-2 text-gray-400">...</span>
                             )}
@@ -316,13 +575,13 @@ export default function History() {
                         );
                       })}
                   </div>
-                  
+
                   {/* Mobile pagination indicator */}
                   <div className="sm:hidden text-sm font-medium">
                     Page {currentPage} of {totalPages}
                   </div>
-                  
-                  <button 
+
+                  <button
                     onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                     disabled={currentPage === totalPages}
                     className={`p-2 rounded-lg border ${currentPage === totalPages ? 'text-gray-300 border-gray-200' : 'text-gray-600 border-gray-300'}`}
