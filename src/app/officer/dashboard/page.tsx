@@ -6,6 +6,7 @@ import Header from '@/components/officer-header';
 import Sidebar from '@/components/officer-sidebar';
 import CustomerDetails from '@/components/customer-details';
 import TransactionDetails from '@/components/transaction-details'; // Import the new component
+import { useRouter } from 'next/navigation';
 
 // Type definitions based on your Prisma schema
 type user = {
@@ -49,7 +50,7 @@ type Transfer = {
 type Transaction = {
   id: string;
   type: 'transfer' | 'payment';
-  status: 'pending' | 'approved' | 'rejected';
+  status: 'pending' | 'approved' | 'rejected' | 'completed';
   amount: number;
   updatedAt: Date;
   createdAt: Date;
@@ -214,6 +215,9 @@ export default function OfficerDashboard() {
   const recentTransactions = transactions
     .filter(transaction => transaction.status !== 'pending');
 
+  const router = useRouter();
+
+
   const handleApprove = async (transactionId: string) => {
     try {
       const response = await fetch(`/api/transactions/${transactionId}/approve`, {
@@ -224,10 +228,7 @@ export default function OfficerDashboard() {
       });
 
       if (response.ok) {
-        // Simply fetch all transactions again to refresh the data
-        await fetchTransactions();
-        // Clear the selected transaction
-        setSelectedTransaction(null);
+        router.refresh(); // Refresh the current route
       } else {
         throw new Error('Failed to approve transaction');
       }
@@ -247,10 +248,7 @@ export default function OfficerDashboard() {
       });
 
       if (response.ok) {
-        // Simply fetch all transactions again to refresh the data
-        await fetchTransactions();
-        // Clear the selected transaction
-        setSelectedTransaction(null);
+        router.refresh(); // Refresh the current route
       } else {
         throw new Error('Failed to reject transaction');
       }
@@ -259,6 +257,7 @@ export default function OfficerDashboard() {
       alert('Failed to reject transaction');
     }
   };
+
 
   const handleViewCustomer = () => {
     // Set loading state while fetching customer details
@@ -429,8 +428,8 @@ export default function OfficerDashboard() {
                     onChange={(e) => setFilterStatus(e.target.value)}
                   >
                     <option value="all">All Statuses</option>
-                    <option value="pending">Pending</option>
                     <option value="approved">Approved</option>
+                    <option value="completed">Completed</option>
                     <option value="rejected">Rejected</option>
                   </select>
                 </div>
@@ -474,11 +473,11 @@ export default function OfficerDashboard() {
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
                             ${transaction.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                              transaction.status === 'approved' ? 'bg-green-100 text-green-800' :
+                              transaction.status === 'approved' || 'completed' ? 'bg-green-100 text-green-800' :
                                 'bg-red-100 text-red-800'}`}>
                             {transaction.status === 'pending' ?
                               <Clock className="w-3 h-3 mr-1 mt-0.5" /> :
-                              transaction.status === 'approved' ?
+                              transaction.status === 'approved' || 'completed'?
                                 <CheckCircle className="w-3 h-3 mr-1 mt-0.5" /> :
                                 <XCircle className="w-3 h-3 mr-1 mt-0.5" />
                             }
