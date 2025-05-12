@@ -29,10 +29,6 @@ type Account = {
   Status: string | null;
   Balance: number | null;
   AccountType: string | null;
-  MonthlyFee: number | null;
-  DailyATMLimit: number | null;
-  DailyPurchaseLimit: number | null;
-  OverdraftProtection: boolean | null;
   user: user | null;
 };
 
