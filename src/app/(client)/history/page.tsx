@@ -117,84 +117,90 @@ export default function History() {
   }, [router]);
 
   // Combine transfers, payments, and incomes into a single array for display
-  const combineTransactions = () => {
-    const combined = [];
+  // Fix in the combineTransactions function to properly handle transfer amounts
 
-    // Process transfers
-    if (transactions.transfers && transactions.transfers.length > 0) {
-      transactions.transfers.forEach(transfer => {
-        // Determine if this transfer is outgoing based on the FromAccountID
-        const isOutgoing = accounts.some(acc => acc.AccountID === transfer.FromAccountID);
+const combineTransactions = () => {
+  const combined = [];
 
-        combined.push({
-          id: `transfer-${transfer.TransferID}`,
-          date: new Date(transfer.CreatedAt || Date.now()).toLocaleDateString('en-US', {
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric'
-          }),
-          timestamp: new Date(transfer.CreatedAt || Date.now()),
-          description: transfer.Description || 'Transfer',
-          // For outgoing transfers, make amount negative, otherwise positive
-          amount: isOutgoing ? -Number(transfer.Amount || 0) : Number(transfer.Amount || 0),
-          type: 'transfer',
-          accountId: isOutgoing ? transfer.FromAccountID : transfer.ToAccountID,
-          status: transfer.Status || 'Completed',
-          raw: transfer // Keep the raw data for reference
-        });
+  // Process transfers
+  if (transactions.transfers && transactions.transfers.length > 0) {
+    transactions.transfers.forEach(transfer => {
+      // Determine if this transfer is outgoing based on the FromAccountID
+      const isOutgoing = accounts.some(acc => acc.AccountID === transfer.FromAccountID);
+      
+      // Always use the raw Amount value directly from the transfer object
+      // This ensures we preserve the correct sign as stored in the database
+      let transferAmount = Number(transfer.Amount || 0);
+      
+      combined.push({
+        id: `transfer-${transfer.TransferID}`,
+        date: new Date(transfer.CreatedAt || Date.now()).toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric'
+        }),
+        timestamp: new Date(transfer.CreatedAt || Date.now()),
+        description: transfer.Description || 'Transfer',
+        // Use the transfer amount directly, don't manipulate the sign based on direction
+        amount: transferAmount,
+        type: 'transfer',
+        accountId: isOutgoing ? transfer.FromAccountID : transfer.ToAccountID,
+        status: transfer.Status || 'Completed',
+        raw: transfer // Keep the raw data for reference
       });
-    }
+    });
+  }
 
-    // Process payments
-    if (transactions.payments && transactions.payments.length > 0) {
-      transactions.payments.forEach(payment => {
-        combined.push({
-          id: `payment-${payment.PaymentID}`,
-          date: new Date(payment.Timestamp || Date.now()).toLocaleDateString('en-US', {
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric'
-          }),
-          timestamp: new Date(payment.Timestamp || Date.now()),
-          description: payment.Description || (payment.utility ? payment.utility.AccountName : 'Utility Payment'),
-          category: payment.utility ? payment.utility.AccountName : 'Payment',
-          // Payments are always negative (money going out)
-          amount: -Math.abs(Number(payment.Amount || 0)),
-          type: 'payment',
-          accountId: payment.AccountID,
-          status: 'Completed',
-          utilityId: payment.UtilityID,
-          raw: payment // Keep the raw data for reference
-        });
+  // Process payments
+  if (transactions.payments && transactions.payments.length > 0) {
+    transactions.payments.forEach(payment => {
+      combined.push({
+        id: `payment-${payment.PaymentID}`,
+        date: new Date(payment.Timestamp || Date.now()).toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric'
+        }),
+        timestamp: new Date(payment.Timestamp || Date.now()),
+        description: payment.Description || (payment.utility ? payment.utility.AccountName : 'Utility Payment'),
+        category: payment.utility ? payment.utility.AccountName : 'Payment',
+        // Payments should use the amount directly from the database, which is already negative
+        amount: Number(payment.Amount || 0),
+        type: 'payment',
+        accountId: payment.AccountID,
+        status: 'Completed',
+        utilityId: payment.UtilityID,
+        raw: payment // Keep the raw data for reference
       });
-    }
+    });
+  }
 
-    // Process incomes
-    if (transactions.incomes && transactions.incomes.length > 0) {
-      transactions.incomes.forEach(income => {
-        combined.push({
-          id: `income-${income.IncomeID}`,
-          date: new Date(income.Timestamp || Date.now()).toLocaleDateString('en-US', {
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric'
-          }),
-          timestamp: new Date(income.Timestamp || Date.now()),
-          description: income.Description || 'Income',
-          category: 'Income',
-          // Incomes are always positive (money coming in)
-          amount: Math.abs(Number(income.Amount || 0)),
-          type: 'income',
-          accountId: income.AccountID,
-          status: 'Completed',
-          raw: income // Keep the raw data for reference
-        });
+  // Process incomes
+  if (transactions.incomes && transactions.incomes.length > 0) {
+    transactions.incomes.forEach(income => {
+      combined.push({
+        id: `income-${income.IncomeID}`,
+        date: new Date(income.Timestamp || Date.now()).toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric'
+        }),
+        timestamp: new Date(income.Timestamp || Date.now()),
+        description: income.Description || 'Income',
+        category: 'Income',
+        // Income amounts are already positive in the database
+        amount: Number(income.Amount || 0),
+        type: 'income',
+        accountId: income.AccountID,
+        status: 'Completed',
+        raw: income // Keep the raw data for reference
       });
-    }
+    });
+  }
 
-    // Sort by date (newest first)
-    return combined.sort((a, b) => b.timestamp - a.timestamp);
-  };
+  // Sort by date (newest first)
+  return combined.sort((a, b) => b.timestamp - a.timestamp);
+};
 
   const allTransactions = combineTransactions();
 
@@ -354,10 +360,6 @@ export default function History() {
                   <Filter className="w-4 h-4 mr-2 text-gray-600" />
                   Filter
                 </button>
-                <button className="flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium">
-                  <Download className="w-4 h-4 mr-2 text-gray-600" />
-                  Export
-                </button>
                 <div className="flex items-center">
                   <button className="hidden md:flex items-center px-3 py-2 bg-blue-50 text-blue-600 rounded-lg text-sm font-medium">
                     <Calendar className="w-4 h-4 mr-1" />
@@ -409,7 +411,6 @@ export default function History() {
                       <option value="all">All Types</option>
                       <option value="payment">Bill Payments</option>
                       <option value="transfer">Transfers</option>
-                      <option value="income">Income</option>
                     </select>
                   </div>
                 </div>

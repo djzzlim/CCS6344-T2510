@@ -1,4 +1,3 @@
-//transfers route.ts
 // /app/api/transfers/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
@@ -55,9 +54,7 @@ export async function POST(req: NextRequest) {
       amount: Amount, 
       memo: Description, 
       transferType: TransferType,
-      externalBank,
-      routingNumber,
-      accountNumber
+      accountNumber  // For external transfers, we'll just use accountNumber
     } = body;
 
     // Validate required fields
@@ -66,24 +63,6 @@ export async function POST(req: NextRequest) {
         { error: 'Invalid request parameters' },
         { status: 400 }
       );
-    }
-
-    // Check if we need ToAccountID (for internal transfers)
-    if (TransferType === 'internal' && !ToAccountID) {
-      return NextResponse.json(
-        { error: 'Destination account is required for internal transfers' },
-        { status: 400 }
-      );
-    }
-
-    // For external transfers, validate external account details
-    if (TransferType === 'external') {
-      if (!externalBank || !routingNumber || !accountNumber) {
-        return NextResponse.json(
-          { error: 'External account details are required' },
-          { status: 400 }
-        );
-      }
     }
 
     // Check if source account belongs to user
@@ -109,29 +88,67 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Check destination account if it's an internal transfer
+    // Prepare destination account ID
+    let destinationAccountId = null;
     let destinationAccount = null;
+
     if (TransferType === 'internal') {
-      destinationAccount = await prisma.account.findUnique({
+      // For internal transfers, use the provided ToAccountID
+      if (!ToAccountID) {
+        return NextResponse.json(
+          { error: 'Destination account is required for internal transfers' },
+          { status: 400 }
+        );
+      }
+      destinationAccountId = ToAccountID;
+      
+      // For internal transfers, check if the account belongs to the user
+      destinationAccount = await prisma.account.findFirst({
         where: {
-          AccountID: ToAccountID
+          AccountID: destinationAccountId,
+          UserID: user.UserID
         }
       });
-
-      if (!destinationAccount) {
+    } else {
+      // For external transfers, use the accountNumber to find the account
+      if (!accountNumber) {
+        return NextResponse.json(
+          { error: 'Account number is required for external transfers' },
+          { status: 400 }
+        );
+      }
+      
+      // Try to find the account by ID
+      destinationAccount = await prisma.account.findUnique({
+        where: {
+          AccountID: accountNumber
+        }
+      });
+      
+      if (destinationAccount) {
+        destinationAccountId = destinationAccount.AccountID;
+      } else {
         return NextResponse.json(
           { error: 'Destination account not found' },
           { status: 400 }
         );
       }
+    }
 
-      // Check that accounts are different
-      if (FromAccountID === ToAccountID) {
-        return NextResponse.json(
-          { error: 'Source and destination accounts must be different' },
-          { status: 400 }
-        );
-      }
+    // Check that the destination account is valid
+    if (!destinationAccount) {
+      return NextResponse.json(
+        { error: 'Destination account not found' },
+        { status: 400 }
+      );
+    }
+
+    // Check that accounts are different
+    if (FromAccountID === destinationAccountId) {
+      return NextResponse.json(
+        { error: 'Source and destination accounts must be different' },
+        { status: 400 }
+      );
     }
 
     // Determine if transaction should be auto-approved (all transactions below $100)
@@ -146,7 +163,7 @@ export async function POST(req: NextRequest) {
       const transfer = await prisma.transfer.create({
         data: {
           FromAccountID: FromAccountID,
-          ToAccountID: TransferType === 'internal' ? ToAccountID : null,
+          ToAccountID: destinationAccountId,
           Amount: Amount,
           Description: Description || 'Transfer',
           Status: transferStatus,
@@ -168,17 +185,15 @@ export async function POST(req: NextRequest) {
           }
         });
 
-        // Add to destination account if it's an internal transfer
-        if (TransferType === 'internal' && ToAccountID) {
-          await prisma.account.update({
-            where: { AccountID: ToAccountID },
-            data: {
-              Balance: {
-                increment: Amount
-              }
+        // Add to destination account
+        await prisma.account.update({
+          where: { AccountID: destinationAccountId },
+          data: {
+            Balance: {
+              increment: Amount
             }
-          });
-        }
+          }
+        });
       }
 
       // Log audit record
