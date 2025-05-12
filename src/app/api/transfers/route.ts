@@ -1,98 +1,239 @@
-import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
-import { z } from "zod";
+// /app/api/transfers/route.ts
+import { NextRequest, NextResponse } from 'next/server';
+import { PrismaClient } from '@prisma/client';
+import { cookies } from 'next/headers';
 
 const prisma = new PrismaClient();
 
-// Define validation schema for the request body
-const transferToUtilitySchema = z.object({
-  accountId: z.string().min(1, "Account ID is required"),
-  utilityId: z.string().min(1, "Utility ID is required"),
-  amount: z.number().positive("Amount must be positive"),
-  description: z.string().optional()
-});
-
 export async function POST(req: NextRequest) {
   try {
-    // Parse and validate the request body
+    // Get session ID from cookies
+    const cookieStore = cookies();
+    const sessionId = cookieStore.get('session_id')?.value;
+
+    if (!sessionId) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
+    // Find the session in the database
+    const session = await prisma.session.findUnique({
+      where: { SessionID: sessionId },
+      include: { user: true }
+    });
+
+    // Verify session is valid and not expired
+    if (!session) {
+      return NextResponse.json(
+        { error: 'Session not found' },
+        { status: 401 }
+      );
+    }
+
+    if (new Date() > session.ExpiresAt) {
+      // Delete expired session
+      await prisma.session.delete({
+        where: { SessionID: sessionId }
+      });
+      
+      return NextResponse.json(
+        { error: 'Session expired' },
+        { status: 401 }
+      );
+    }
+
+    const user = session.user;
+
+    // Parse the request body
     const body = await req.json();
-    const result = transferToUtilitySchema.safeParse(body);
-    
-    if (!result.success) {
-      return NextResponse.json({ error: result.error.issues }, { status: 400 });
+    const { 
+      fromAccountId: FromAccountID, 
+      toAccountId: ToAccountID, 
+      amount: Amount, 
+      memo: Description, 
+      transferType: TransferType,
+      accountNumber  // For external transfers, we'll just use accountNumber
+    } = body;
+
+    // Validate required fields
+    if (!FromAccountID || !Amount || Amount <= 0) {
+      return NextResponse.json(
+        { error: 'Invalid request parameters' },
+        { status: 400 }
+      );
     }
-    
-    const { accountId, utilityId, amount, description } = result.data;
-    
-    // Retrieve the account to check balance
-    const account = await prisma.account.findUnique({
-      where: { AccountID: accountId }
+
+    // Check if source account belongs to user
+    const sourceAccount = await prisma.account.findFirst({
+      where: {
+        AccountID: FromAccountID,
+        UserID: user.UserID
+      }
     });
-    
-    if (!account) {
-      return NextResponse.json({ error: "Account not found" }, { status: 404 });
+
+    if (!sourceAccount) {
+      return NextResponse.json(
+        { error: 'Source account not found or unauthorized' },
+        { status: 403 }
+      );
     }
-    
-    // Check if the account has sufficient balance
-    if (!account.Balance || account.Balance < amount) {
-      return NextResponse.json({ error: "Insufficient funds" }, { status: 400 });
+
+    // Check if source account has enough funds
+    if (sourceAccount.Balance < Amount) {
+      return NextResponse.json(
+        { error: 'Insufficient funds' },
+        { status: 400 }
+      );
     }
-    
-    // Verify the utility exists
-    const utility = await prisma.utilities.findUnique({
-      where: { UtilityID: utilityId }
-    });
-    
-    if (!utility) {
-      return NextResponse.json({ error: "Utility not found" }, { status: 404 });
-    }
-    
-    // Use a transaction to ensure both operations complete or none do
-    const transaction = await prisma.$transaction([
-      // Create payment record
-      prisma.payment.create({
-        data: {
-          AccountID: accountId,
-          UtilityID: utilityId,
-          Amount: amount,
-          Description: description || `Payment to ${utility.AccountName}`,
-          Timestamp: new Date()
-        }
-      }),
+
+    // Prepare destination account ID
+    let destinationAccountId = null;
+    let destinationAccount = null;
+
+    if (TransferType === 'Internal') {
+      // For internal transfers, use the provided ToAccountID
+      if (!ToAccountID) {
+        return NextResponse.json(
+          { error: 'Destination account is required for internal transfers' },
+          { status: 400 }
+        );
+      }
+      destinationAccountId = ToAccountID;
       
-      // Update account balance
-      prisma.account.update({
-        where: { AccountID: accountId },
+      // For internal transfers, check if the account belongs to the user
+      destinationAccount = await prisma.account.findFirst({
+        where: {
+          AccountID: destinationAccountId,
+          UserID: user.UserID
+        }
+      });
+    } else {
+      // For external transfers, use the accountNumber to find the account
+      if (!accountNumber) {
+        return NextResponse.json(
+          { error: 'Account number is required for external transfers' },
+          { status: 400 }
+        );
+      }
+      
+      // Try to find the account by ID
+      destinationAccount = await prisma.account.findUnique({
+        where: {
+          AccountID: accountNumber
+        }
+      });
+      
+      if (destinationAccount) {
+        destinationAccountId = destinationAccount.AccountID;
+      } else {
+        return NextResponse.json(
+          { error: 'Destination account not found' },
+          { status: 400 }
+        );
+      }
+    }
+
+    // Check that the destination account is valid
+    if (!destinationAccount) {
+      return NextResponse.json(
+        { error: 'Destination account not found' },
+        { status: 400 }
+      );
+    }
+
+    // Check that accounts are different
+    if (FromAccountID === destinationAccountId) {
+      return NextResponse.json(
+        { error: 'Source and destination accounts must be different' },
+        { status: 400 }
+      );
+    }
+
+    // Determine if transaction should be auto-approved (all transactions below $100)
+    const isAutoApproved = Amount < 100;
+    
+    // Now all transfers are immediate, with status depending on amount
+    const transferStatus = isAutoApproved ? 'Completed' : 'Pending Approval';
+
+    // Use database transaction to ensure atomicity
+    const result = await prisma.$transaction(async (prisma) => {
+      // Create transfer record
+      const transfer = await prisma.transfer.create({
         data: {
-          Balance: {
-            decrement: amount
+          FromAccountID: FromAccountID,
+          ToAccountID: destinationAccountId,
+          Amount: Amount,
+          Description: Description || 'Transfer',
+          Status: transferStatus,
+          TransferType: TransferType,
+          CreatedAt: new Date(),
+          UpdatedAt: new Date()
+        }
+      });
+
+      // For completed transfers, update account balances immediately
+      if (transferStatus === 'Completed') {
+        // Deduct from source account
+        await prisma.account.update({
+          where: { AccountID: FromAccountID },
+          data: {
+            Balance: {
+              decrement: Amount
+            }
           }
-        }
-      }),
-      
-      // Log the transaction in audit logs
-      prisma.aUDIT_LOGS.create({
+        });
+
+        // Add to destination account
+        await prisma.account.update({
+          where: { AccountID: destinationAccountId },
+          data: {
+            Balance: {
+              increment: Amount
+            }
+          }
+        });
+      }
+
+      // Log audit record
+      await prisma.aUDIT_LOGS.create({
         data: {
-          actor_type: "USER",
-          actor_id: account.UserID || "SYSTEM",
-          action: "UTILITY_PAYMENT",
-          target_id: utilityId,
-          status: "SUCCESS"
+          actor_type: "user",
+          actor_id: user.UserID,
+          action: `transfer_${isAutoApproved ? 'auto_approved' : 'pending_approval'}`,
+          target_id: transfer.TransferID,
+          status: "success"
         }
-      })
-    ]);
-    
+      });
+
+      return transfer;
+    });
+
+    // Update session activity timestamp
+    await prisma.session.update({
+      where: { SessionID: sessionId },
+      data: { UpdatedAt: new Date() }
+    });
+
+    // Return appropriate message based on auto-approval status
+    const message = isAutoApproved 
+      ? 'Transfer completed successfully' 
+      : 'Transfer submitted successfully and pending approval';
+
     return NextResponse.json({
       success: true,
-      message: `Successfully transferred $${amount} to ${utility.AccountName}`,
-      payment: transaction[0]
-    }, { status: 200 });
-    
+      message: message,
+      transferId: result.TransferID,
+      status: result.Status
+    });
   } catch (error) {
-    console.error("Transfer API error:", error);
-    return NextResponse.json({ 
-      error: "Failed to process transfer", 
-      details: error instanceof Error ? error.message : "Unknown error" 
-    }, { status: 500 });
+    console.error('Error processing transfer:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  } finally {
+    await prisma.$disconnect();
   }
 }

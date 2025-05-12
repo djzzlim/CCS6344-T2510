@@ -19,18 +19,6 @@ export default function Header({ title = "Dashboard", setIsMenuOpen }: HeaderPro
           <h1 className="text-xl font-semibold md:hidden">BankApp</h1>
           <h2 className="text-xl font-semibold hidden md:block">{title}</h2>
         </div>
-        <div className="flex items-center space-x-4">
-          <button className="text-gray-500">
-            <Search className="w-5 h-5" />
-          </button>
-          <button className="text-gray-500 relative">
-            <Bell className="w-5 h-5" />
-            <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
-          </button>
-          <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 md:hidden">
-            <User className="w-4 h-4" />
-          </div>
-        </div>
       </div>
     </header>
   );

@@ -1,94 +1,154 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { ChevronDown, Wallet, DollarSign, ShieldCheck, AlertCircle } from 'lucide-react';
 import Sidebar from '@/components/client-sidebar';
 import Header from '@/components/client-header';
 import Link from 'next/link';
 
+// TypeScript interfaces for type safety
+interface Account {
+  AccountID: string;
+  AccountType: string;
+  Balance: number;
+  Status: string;
+}
+
+interface Utility {
+  UtilityID: string;
+  AccountName: string;
+  AccountNumber: string;
+}
+
+interface RecentPayment {
+  id: string;
+  to: string;
+  amount: number;
+  date: string;
+  status: string;
+  accountName: string;
+}
+
 export default function Payments() {
+    const router = useRouter();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [fromAccount, setFromAccount] = useState('');
     const [amount, setAmount] = useState('');
-    const [paymentDate, setPaymentDate] = useState('now');
     const [memo, setMemo] = useState('');
     const [selectedBiller, setSelectedBiller] = useState('');
     
-    // State for accounts data
-    const [accounts, setAccounts] = useState([]);
-    const [user, setUser] = useState(null);
+    // State for accounts, utilities, and payments data
+    const [accounts, setAccounts] = useState<Account[]>([]);
+    const [utilities, setUtilities] = useState<Utility[]>([]);
+    const [recentPayments, setRecentPayments] = useState<RecentPayment[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string | null>(null);
+    const [userName, setUserName] = useState('');
 
-    // Fetch accounts data on component mount
-    useEffect(() => {
-        const fetchAccounts = async () => {
-            try {
-                setLoading(true);
-                const response = await fetch('/api/accounts');
-                
-                if (!response.ok) {
-                    throw new Error(`Error: ${response.status}`);
+    // Fetch payment details on component mount
+    const fetchPaymentDetails = async () => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            const response = await fetch('/api/payments', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Error fetching payment details:', errorData);
+
+                if (response.status === 401 || response.status === 403) {
+                    router.push('/auth/login');
+                    return;
                 }
-                
-                const data = await response.json();
-                
-                // Format accounts data for display
-                const formattedAccounts = data.accounts.map(account => ({
-                    id: account.AccountID,
-                    name: `${account.AccountType}`,
-                    number: `****${account.AccountID.toString().slice(-4)}`,
-                    balance: account.Balance,
-                    status: account.Status
-                }));
-                
-                setAccounts(formattedAccounts);
-                setUser(data.user);
-                
-                // Set default selected account if accounts exist
-                if (formattedAccounts.length > 0) {
-                    setFromAccount(formattedAccounts[0].id.toString());
-                }
-                
-            } catch (err) {
-                console.error("Failed to fetch accounts:", err);
-                setError("Failed to load account data. Please try again later.");
-            } finally {
-                setLoading(false);
+
+                throw new Error(errorData.message || 'Failed to fetch payment details');
             }
-        };
 
-        fetchAccounts();
-    }, []);
+            const data = await response.json();
+            console.log('Fetched Payment Details:', data);
 
-    const billers = [
-        { id: '1', name: "City Utilities", accountNumber: "8765432", lastAmount: 124.56, dueDate: "Apr 28, 2025" },
-        { id: '2', name: "Mortgage Company", accountNumber: "1122334", lastAmount: 1450.00, dueDate: "May 1, 2025" },
-        { id: '3', name: "Cell Phone Provider", accountNumber: "9988776", lastAmount: 85.99, dueDate: "May 5, 2025" },
-        { id: '4', name: "Internet Service", accountNumber: "5544332", lastAmount: 69.95, dueDate: "Apr 30, 2025" },
-    ];
+            // Set accounts, utilities, and recent payments
+            setAccounts(data.accounts);
+            setUtilities(data.utilities);
+            setRecentPayments(data.recentPayments);
 
-    const recentPayments = [
-        { id: 1, to: "City Utilities", amount: 124.56, date: "Mar 28, 2025", status: "Completed" },
-        { id: 2, to: "Mortgage Company", amount: 1450.00, date: "Mar 15, 2025", status: "Completed" },
-        { id: 3, to: "Cell Phone Provider", amount: 85.99, date: "Mar 10, 2025", status: "Completed" },
-    ];
+            // Set default account if accounts exist
+            if (data.accounts && data.accounts.length > 0) {
+                setFromAccount(data.accounts[0].AccountID);
+            }
 
-    const handleSubmit = (e) => {
+            // Set user name if available
+            if (data.user && data.user.FirstName) {
+                setUserName(data.user.FirstName);
+            }
+        } catch (error) {
+            console.error('Failed to fetch payment details:', error);
+            setError(error instanceof Error ? error.message : 'An unexpected error occurred');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchPaymentDetails();
+    }, [router]);
+
+    // Handle payment submission
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Handle payment submission logic here
-        const biller = billers.find(b => b.id === selectedBiller);
-        const selectedAccount = accounts.find(acc => acc.id.toString() === fromAccount);
-        alert(`Payment submitted: $${amount} from ${selectedAccount ? selectedAccount.name : 'Unknown'} to ${biller ? biller.name : 'New Utility'}`);
+        
+        try {
+            const response = await fetch('/api/payments', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    fromAccountId: fromAccount,
+                    utilityId: selectedBiller,
+                    amount: parseFloat(amount),
+                    paymentDate: new Date(),
+                    memo: memo
+                })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Payment submission failed');
+            }
+
+            const result = await response.json();
+            alert(`Payment successful! Payment ID: ${result.paymentId}`);
+            
+            // Refresh payment details to update recent payments
+            await fetchPaymentDetails();
+            
+            // Reset form after successful submission
+            setAmount('');
+            setSelectedBiller('');
+            setMemo('');
+        } catch (error) {
+            console.error('Payment submission error:', error);
+            alert(error instanceof Error ? error.message : 'An unexpected error occurred');
+        }
     };
 
     // Format currency display
-    const formatCurrency = (amount) => {
+    const formatCurrency = (amount: number | string) => {
         return new Intl.NumberFormat('en-US', {
             style: 'currency',
             currency: 'USD',
             minimumFractionDigits: 2
-        }).format(amount);
+        }).format(Number(amount));
     };
 
     return (
@@ -151,8 +211,8 @@ export default function Payments() {
                                                         <option value="">No accounts available</option>
                                                     ) : (
                                                         accounts.map(account => (
-                                                            <option key={account.id} value={account.id}>
-                                                                {account.name} {account.number} ({formatCurrency(account.balance)})
+                                                            <option key={account.AccountID} value={account.AccountID}>
+                                                                {account.AccountType} ({formatCurrency(account.Balance)})
                                                             </option>
                                                         ))
                                                     )}
@@ -167,47 +227,22 @@ export default function Payments() {
                                         <div className="mb-4">
                                             <label className="block text-sm font-medium text-gray-700 mb-1">Select Utility</label>
                                             <div className="relative">
-                                                <div className="relative">
-                                                    <select
-                                                        className="block w-full p-3 bg-gray-50 border border-gray-300 rounded-lg appearance-none pr-10"
-                                                        value={selectedBiller}
-                                                        onChange={(e) => setSelectedBiller(e.target.value)}
-                                                    >
-                                                        <option value="">Select a utility provider</option>
-                                                        {billers.map(biller => (
-                                                            <option key={biller.id} value={biller.id}>
-                                                                {biller.name} - Account #{biller.accountNumber}
-                                                            </option>
-                                                        ))}
-                                                    </select>
+                                                <select
+                                                    className="block w-full p-3 bg-gray-50 border border-gray-300 rounded-lg appearance-none pr-10"
+                                                    value={selectedBiller}
+                                                    onChange={(e) => setSelectedBiller(e.target.value)}
+                                                >
+                                                    <option value="">Select a utility provider</option>
+                                                    {utilities.map(utility => (
+                                                        <option key={utility.UtilityID} value={utility.UtilityID}>
+                                                            {utility.AccountName} - Acct #{utility.AccountNumber}
+                                                        </option>
+                                                    ))}
+                                                </select>
 
-                                                    {/* Chevron Icon fixed position */}
-                                                    <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
-                                                        <ChevronDown className="w-5 h-5 text-gray-500" />
-                                                    </div>
-                                                </div>
-
-                                                {/* Conditional Content Below */}
-                                                <div className="mt-4 space-y-4">
-                                                    {selectedBiller && selectedBiller !== 'new' && (
-                                                        <div className="bg-blue-50 p-3 rounded-lg border border-blue-100">
-                                                            <div className="flex justify-between items-center">
-                                                                <div>
-                                                                    <p className="text-sm font-medium text-blue-800">
-                                                                        {billers.find(b => b.id === selectedBiller)?.name}
-                                                                    </p>
-                                                                    <p className="text-xs text-blue-600">
-                                                                        Due: {billers.find(b => b.id === selectedBiller)?.dueDate}
-                                                                    </p>
-                                                                </div>
-                                                                <div>
-                                                                    <p className="text-sm font-medium text-blue-800">
-                                                                        Last Payment: ${billers.find(b => b.id === selectedBiller)?.lastAmount}
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    )}
+                                                {/* Chevron Icon fixed position */}
+                                                <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                                                    <ChevronDown className="w-5 h-5 text-gray-500" />
                                                 </div>
                                             </div>
                                         </div>
@@ -224,61 +259,25 @@ export default function Payments() {
                                                     className="block w-full p-3 pl-8 bg-gray-50 border border-gray-300 rounded-lg"
                                                     placeholder="0.00"
                                                     value={amount}
-                                                    onChange={(e) => setAmount(e.target.value)}
+                                                    onChange={(e) => {
+                                                        // Allow only numbers and decimal point
+                                                        const value = e.target.value.replace(/[^0-9.]/g, '');
+                                                        setAmount(value);
+                                                    }}
                                                 />
                                             </div>
                                         </div>
 
-                                        {/* Payment date */}
-                                        <div className="mb-4">
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">Pay Date</label>
-                                            <div className="flex space-x-3">
-                                                <div className="flex items-center">
-                                                    <input
-                                                        type="radio"
-                                                        id="now"
-                                                        name="paymentDate"
-                                                        value="now"
-                                                        checked={paymentDate === 'now'}
-                                                        onChange={() => setPaymentDate('now')}
-                                                        className="w-4 h-4 text-blue-600"
-                                                    />
-                                                    <label htmlFor="now" className="ml-2 text-sm text-gray-700">Today</label>
-                                                </div>
-                                                <div className="flex items-center">
-                                                    <input
-                                                        type="radio"
-                                                        id="scheduled"
-                                                        name="paymentDate"
-                                                        value="scheduled"
-                                                        checked={paymentDate === 'scheduled'}
-                                                        onChange={() => setPaymentDate('scheduled')}
-                                                        className="w-4 h-4 text-blue-600"
-                                                    />
-                                                    <label htmlFor="scheduled" className="ml-2 text-sm text-gray-700">Schedule</label>
-                                                </div>
-                                            </div>
-
-                                            {paymentDate === 'scheduled' && (
-                                                <div className="mt-3">
-                                                    <input
-                                                        type="date"
-                                                        className="block w-full p-3 bg-gray-50 border border-gray-300 rounded-lg"
-                                                        min={new Date().toISOString().split('T')[0]}
-                                                    />
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        {/* Memo */}
+                                        {/* Description */}
                                         <div className="mb-6">
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">Memo (Optional)</label>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
                                             <input
                                                 type="text"
                                                 className="block w-full p-3 bg-gray-50 border border-gray-300 rounded-lg"
-                                                placeholder="Add a note"
+                                                placeholder="Add a description"
                                                 value={memo}
                                                 onChange={(e) => setMemo(e.target.value)}
+                                                required
                                             />
                                         </div>
 
@@ -302,26 +301,55 @@ export default function Payments() {
                                     <h2 className="font-semibold text-gray-800">Recent Payments</h2>
                                 </div>
                                 <div className="divide-y divide-gray-200">
-                                    {recentPayments.map(payment => (
-                                        <div key={payment.id} className="p-4">
-                                            <div className="flex items-center justify-between mb-2">
-                                                <div className="flex items-center">
-                                                    <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center text-green-600">
-                                                        <DollarSign className="w-4 h-4" />
+                                    {recentPayments.length === 0 ? (
+                                    <div className="p-4 text-center text-gray-500">
+                                        No recent payments found
+                                    </div>
+                                ) : (
+                                    recentPayments.slice(0, 3).map(payment => {
+                                        // Format date similar to transfers component
+                                        const formatRelativeDate = (dateString) => {
+                                            const date = new Date(dateString);
+                                            const now = new Date();
+                                            const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+
+                                            if (diffDays === 0) {
+                                                return "Today";
+                                            } else if (diffDays === 1) {
+                                                return "Yesterday";
+                                            } else if (diffDays < 7) {
+                                                return `${diffDays} days ago`;
+                                            } else {
+                                                return date.toLocaleDateString('en-US', {
+                                                    month: 'short',
+                                                    day: 'numeric',
+                                                    year: 'numeric'
+                                                });
+                                            }
+                                        };
+
+                                        return (
+                                            <div key={payment.id} className="p-4">
+                                                <div className="flex items-center justify-between mb-2">
+                                                    <div className="flex items-center">
+                                                        <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+                                                            <DollarSign className="w-4 h-4" />
+                                                        </div>
+                                                        <div className="ml-3">
+                                                            <p className="font-medium text-sm">{payment.to}</p>
+                                                            <p className="text-xs text-gray-500">{formatRelativeDate(payment.date)}</p>
+                                                        </div>
                                                     </div>
-                                                    <div className="ml-3">
-                                                        <p className="font-medium text-sm">{payment.to}</p>
-                                                        <p className="text-xs text-gray-500">{payment.date}</p>
-                                                    </div>
+                                                    <p className="font-medium text-sm">{formatCurrency(payment.amount)}</p>
                                                 </div>
-                                                <p className="font-medium text-sm">${payment.amount}</p>
+                                                <div className="flex justify-between text-xs text-gray-500">
+                                                    <span>{payment.accountName}</span>
+                                                    <span className="text-green-600">{payment.status}</span>
+                                                </div>
                                             </div>
-                                            <div className="flex justify-between text-xs">
-                                                <span className="text-gray-500">From Checking</span>
-                                                <span className="text-green-600">{payment.status}</span>
-                                            </div>
-                                        </div>
-                                    ))}
+                                        );
+                                    })
+                                )}
                                 </div>
                                 <div className="p-4 border-t border-gray-200">
                                     <Link href="/history" className="block w-full">
@@ -333,11 +361,11 @@ export default function Payments() {
                             </div>
 
                             {/* User info section when available */}
-                            {user && (
+                            {userName && (
                                 <div className="mt-4 bg-blue-50 rounded-lg p-4 border border-blue-100">
                                     <div className="flex items-start">
                                         <div className="ml-1">
-                                            <h3 className="font-medium text-blue-800">Hello, {user.FirstName}</h3>
+                                            <h3 className="font-medium text-blue-800">Hello, {userName}</h3>
                                             <p className="text-sm text-blue-700 mt-1">
                                                 You have {accounts.length} account{accounts.length !== 1 ? 's' : ''} available for payments.
                                             </p>
