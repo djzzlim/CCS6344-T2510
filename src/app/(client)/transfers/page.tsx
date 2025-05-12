@@ -232,7 +232,7 @@ export default function Transfers() {
 
             if (transferType === 'between') {
                 transferData.toAccountId = toAccount;
-                transferData.transferType = 'internal';
+                transferData.transferType = 'Internal';
             } else {
                 // For external transfers
                 const accountNumberInput = document.querySelector('input[placeholder="Account Number"]');
@@ -242,7 +242,7 @@ export default function Transfers() {
                     return;
                 }
 
-                transferData.transferType = 'external';
+                transferData.transferType = 'External';
                 transferData.accountNumber = accountNumberInput.value;
 
                 // Validate external account details
@@ -415,8 +415,8 @@ export default function Transfers() {
                                         </div>
                                     </button>
                                     <button
-                                        className={`flex-1 py-2 rounded-lg text-sm font-medium ${transferType === 'external' ? 'bg-white shadow-sm' : 'text-gray-600'}`}
-                                        onClick={() => setTransferType('external')}
+                                        className={`flex-1 py-2 rounded-lg text-sm font-medium ${transferType === 'External' ? 'bg-white shadow-sm' : 'text-gray-600'}`}
+                                        onClick={() => setTransferType('External')}
                                     >
                                         <div className="flex items-center justify-center">
                                             <Globe className="w-4 h-4 mr-2" />
@@ -470,7 +470,7 @@ export default function Transfers() {
                                                 </select>
                                             )}
 
-                                            {transferType === 'external' && (
+                                            {transferType === 'External' && (
                                                 <div className="space-y-4">
                                                     <input
                                                         type="text"
@@ -480,7 +480,7 @@ export default function Transfers() {
                                                 </div>
                                             )}
 
-                                            {transferType !== 'external' && (
+                                            {transferType !== 'External' && (
                                                 <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
                                                     <ChevronDown className="w-5 h-5 text-gray-500" />
                                                 </div>
@@ -510,13 +510,14 @@ export default function Transfers() {
 
                                     {/* Memo */}
                                     <div className="mb-6">
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Memo (Optional)</label>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
                                         <input
                                             type="text"
                                             className="block w-full p-3 bg-gray-50 border border-gray-300 rounded-lg"
-                                            placeholder="Add a note"
+                                            placeholder="Add a description"
                                             value={memo}
                                             onChange={(e) => setMemo(e.target.value)}
+                                            required
                                         />
                                     </div>
 
@@ -540,7 +541,7 @@ export default function Transfers() {
                                 </div>
                                 <div className="divide-y divide-gray-200">
                                     {recentTransfers.length > 0 ? (
-                                        recentTransfers.map(transfer => (
+                                        recentTransfers.slice(0, 3).map(transfer => (
                                             <div key={transfer.id} className="p-4">
                                                 <div className="flex items-center justify-between mb-2">
                                                     <div className="flex items-center">

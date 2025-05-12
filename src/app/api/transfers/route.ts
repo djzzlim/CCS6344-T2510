@@ -92,7 +92,7 @@ export async function POST(req: NextRequest) {
     let destinationAccountId = null;
     let destinationAccount = null;
 
-    if (TransferType === 'internal') {
+    if (TransferType === 'Internal') {
       // For internal transfers, use the provided ToAccountID
       if (!ToAccountID) {
         return NextResponse.json(
