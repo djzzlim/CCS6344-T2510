@@ -1,23 +1,65 @@
 "use client";
 
-import { useState } from 'react';
-import { ChevronDown, Wallet, DollarSign, ShieldCheck } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ChevronDown, Wallet, DollarSign, ShieldCheck, AlertCircle } from 'lucide-react';
 import Sidebar from '@/components/client-sidebar';
 import Header from '@/components/client-header';
 import Link from 'next/link';
 
 export default function Payments() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [fromAccount, setFromAccount] = useState('1');
+    const [fromAccount, setFromAccount] = useState('');
     const [amount, setAmount] = useState('');
     const [paymentDate, setPaymentDate] = useState('now');
     const [memo, setMemo] = useState('');
     const [selectedBiller, setSelectedBiller] = useState('');
+    
+    // State for accounts data
+    const [accounts, setAccounts] = useState([]);
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    const accounts = [
-        { id: '1', name: "Checking Account", number: "****5678", balance: 4256.78 },
-        { id: '2', name: "Savings Account", number: "****9012", balance: 12785.45 },
-    ];
+    // Fetch accounts data on component mount
+    useEffect(() => {
+        const fetchAccounts = async () => {
+            try {
+                setLoading(true);
+                const response = await fetch('/api/accounts');
+                
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // Format accounts data for display
+                const formattedAccounts = data.accounts.map(account => ({
+                    id: account.AccountID,
+                    name: `${account.AccountType}`,
+                    number: `****${account.AccountID.toString().slice(-4)}`,
+                    balance: account.Balance,
+                    status: account.Status
+                }));
+                
+                setAccounts(formattedAccounts);
+                setUser(data.user);
+                
+                // Set default selected account if accounts exist
+                if (formattedAccounts.length > 0) {
+                    setFromAccount(formattedAccounts[0].id.toString());
+                }
+                
+            } catch (err) {
+                console.error("Failed to fetch accounts:", err);
+                setError("Failed to load account data. Please try again later.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchAccounts();
+    }, []);
 
     const billers = [
         { id: '1', name: "City Utilities", accountNumber: "8765432", lastAmount: 124.56, dueDate: "Apr 28, 2025" },
@@ -32,11 +74,21 @@ export default function Payments() {
         { id: 3, to: "Cell Phone Provider", amount: 85.99, date: "Mar 10, 2025", status: "Completed" },
     ];
 
-    const handleSubmit = (e: { preventDefault: () => void; }) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         // Handle payment submission logic here
         const biller = billers.find(b => b.id === selectedBiller);
-        alert(`Payment submitted: $${amount} from ${accounts.find(acc => acc.id === fromAccount)?.name} to ${biller ? biller.name : 'New Utility'}`);
+        const selectedAccount = accounts.find(acc => acc.id.toString() === fromAccount);
+        alert(`Payment submitted: $${amount} from ${selectedAccount ? selectedAccount.name : 'Unknown'} to ${biller ? biller.name : 'New Utility'}`);
+    };
+
+    // Format currency display
+    const formatCurrency = (amount) => {
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 2
+        }).format(amount);
     };
 
     return (
@@ -66,157 +118,180 @@ export default function Payments() {
                                     <h2 className="text-lg font-medium">Utility Bill Payment</h2>
                                 </div>
 
-                                {/* Payment form */}
-                                <form onSubmit={handleSubmit}>
-                                    {/* From account */}
-                                    <div className="mb-4">
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Pay From</label>
-                                        <div className="relative">
-                                            <select
-                                                className="block w-full p-3 bg-gray-50 border border-gray-300 rounded-lg appearance-none pr-10"
-                                                value={fromAccount}
-                                                onChange={(e) => setFromAccount(e.target.value)}
-                                            >
-                                                {accounts.map(account => (
-                                                    <option key={account.id} value={account.id}>
-                                                        {account.name} (${account.balance.toLocaleString()})
-                                                    </option>
-                                                ))}
-                                            </select>
-                                            <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                                                <ChevronDown className="w-5 h-5 text-gray-500" />
-                                            </div>
+                                {/* Loading state */}
+                                {loading && (
+                                    <div className="flex justify-center items-center py-8">
+                                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                                    </div>
+                                )}
+
+                                {/* Error state */}
+                                {error && (
+                                    <div className="bg-red-50 p-4 rounded-lg border border-red-100 mb-6">
+                                        <div className="flex items-start">
+                                            <AlertCircle className="w-5 h-5 text-red-500 mr-2 mt-0.5" />
+                                            <p className="text-sm text-red-700">{error}</p>
                                         </div>
                                     </div>
+                                )}
 
-                                    {/* To utility */}
-                                    <div className="mb-4">
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Select Utility</label>
-                                        <div className="relative">
+                                {/* Payment form */}
+                                {!loading && !error && (
+                                    <form onSubmit={handleSubmit}>
+                                        {/* From account */}
+                                        <div className="mb-4">
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Pay From</label>
                                             <div className="relative">
                                                 <select
                                                     className="block w-full p-3 bg-gray-50 border border-gray-300 rounded-lg appearance-none pr-10"
-                                                    value={selectedBiller}
-                                                    onChange={(e) => setSelectedBiller(e.target.value)}
+                                                    value={fromAccount}
+                                                    onChange={(e) => setFromAccount(e.target.value)}
                                                 >
-                                                    <option value="">Select a utility provider</option>
-                                                    {billers.map(biller => (
-                                                        <option key={biller.id} value={biller.id}>
-                                                            {biller.name} - Account #{biller.accountNumber}
-                                                        </option>
-                                                    ))}
+                                                    {accounts.length === 0 ? (
+                                                        <option value="">No accounts available</option>
+                                                    ) : (
+                                                        accounts.map(account => (
+                                                            <option key={account.id} value={account.id}>
+                                                                {account.name} {account.number} ({formatCurrency(account.balance)})
+                                                            </option>
+                                                        ))
+                                                    )}
                                                 </select>
-
-                                                {/* Chevron Icon fixed position */}
-                                                <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                                                <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
                                                     <ChevronDown className="w-5 h-5 text-gray-500" />
                                                 </div>
                                             </div>
+                                        </div>
 
-                                            {/* Conditional Content Below */}
-                                            <div className="mt-4 space-y-4">
-                                                {selectedBiller && selectedBiller !== 'new' && (
-                                                    <div className="bg-blue-50 p-3 rounded-lg border border-blue-100">
-                                                        <div className="flex justify-between items-center">
-                                                            <div>
-                                                                <p className="text-sm font-medium text-blue-800">
-                                                                    {billers.find(b => b.id === selectedBiller)?.name}
-                                                                </p>
-                                                                <p className="text-xs text-blue-600">
-                                                                    Due: {billers.find(b => b.id === selectedBiller)?.dueDate}
-                                                                </p>
-                                                            </div>
-                                                            <div>
-                                                                <p className="text-sm font-medium text-blue-800">
-                                                                    Last Payment: ${billers.find(b => b.id === selectedBiller)?.lastAmount}
-                                                                </p>
+                                        {/* To utility */}
+                                        <div className="mb-4">
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Select Utility</label>
+                                            <div className="relative">
+                                                <div className="relative">
+                                                    <select
+                                                        className="block w-full p-3 bg-gray-50 border border-gray-300 rounded-lg appearance-none pr-10"
+                                                        value={selectedBiller}
+                                                        onChange={(e) => setSelectedBiller(e.target.value)}
+                                                    >
+                                                        <option value="">Select a utility provider</option>
+                                                        {billers.map(biller => (
+                                                            <option key={biller.id} value={biller.id}>
+                                                                {biller.name} - Account #{biller.accountNumber}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+
+                                                    {/* Chevron Icon fixed position */}
+                                                    <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                                                        <ChevronDown className="w-5 h-5 text-gray-500" />
+                                                    </div>
+                                                </div>
+
+                                                {/* Conditional Content Below */}
+                                                <div className="mt-4 space-y-4">
+                                                    {selectedBiller && selectedBiller !== 'new' && (
+                                                        <div className="bg-blue-50 p-3 rounded-lg border border-blue-100">
+                                                            <div className="flex justify-between items-center">
+                                                                <div>
+                                                                    <p className="text-sm font-medium text-blue-800">
+                                                                        {billers.find(b => b.id === selectedBiller)?.name}
+                                                                    </p>
+                                                                    <p className="text-xs text-blue-600">
+                                                                        Due: {billers.find(b => b.id === selectedBiller)?.dueDate}
+                                                                    </p>
+                                                                </div>
+                                                                <div>
+                                                                    <p className="text-sm font-medium text-blue-800">
+                                                                        Last Payment: ${billers.find(b => b.id === selectedBiller)?.lastAmount}
+                                                                    </p>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                )}
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    {/* Amount */}
-                                    <div className="mb-4">
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Amount</label>
-                                        <div className="relative">
-                                            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                                <span className="text-gray-500">$</span>
+                                        {/* Amount */}
+                                        <div className="mb-4">
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Amount</label>
+                                            <div className="relative">
+                                                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                                    <span className="text-gray-500">$</span>
+                                                </div>
+                                                <input
+                                                    type="text"
+                                                    className="block w-full p-3 pl-8 bg-gray-50 border border-gray-300 rounded-lg"
+                                                    placeholder="0.00"
+                                                    value={amount}
+                                                    onChange={(e) => setAmount(e.target.value)}
+                                                />
                                             </div>
+                                        </div>
+
+                                        {/* Payment date */}
+                                        <div className="mb-4">
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Pay Date</label>
+                                            <div className="flex space-x-3">
+                                                <div className="flex items-center">
+                                                    <input
+                                                        type="radio"
+                                                        id="now"
+                                                        name="paymentDate"
+                                                        value="now"
+                                                        checked={paymentDate === 'now'}
+                                                        onChange={() => setPaymentDate('now')}
+                                                        className="w-4 h-4 text-blue-600"
+                                                    />
+                                                    <label htmlFor="now" className="ml-2 text-sm text-gray-700">Today</label>
+                                                </div>
+                                                <div className="flex items-center">
+                                                    <input
+                                                        type="radio"
+                                                        id="scheduled"
+                                                        name="paymentDate"
+                                                        value="scheduled"
+                                                        checked={paymentDate === 'scheduled'}
+                                                        onChange={() => setPaymentDate('scheduled')}
+                                                        className="w-4 h-4 text-blue-600"
+                                                    />
+                                                    <label htmlFor="scheduled" className="ml-2 text-sm text-gray-700">Schedule</label>
+                                                </div>
+                                            </div>
+
+                                            {paymentDate === 'scheduled' && (
+                                                <div className="mt-3">
+                                                    <input
+                                                        type="date"
+                                                        className="block w-full p-3 bg-gray-50 border border-gray-300 rounded-lg"
+                                                        min={new Date().toISOString().split('T')[0]}
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {/* Memo */}
+                                        <div className="mb-6">
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Memo (Optional)</label>
                                             <input
                                                 type="text"
-                                                className="block w-full p-3 pl-8 bg-gray-50 border border-gray-300 rounded-lg"
-                                                placeholder="0.00"
-                                                value={amount}
-                                                onChange={(e) => setAmount(e.target.value)}
+                                                className="block w-full p-3 bg-gray-50 border border-gray-300 rounded-lg"
+                                                placeholder="Add a note"
+                                                value={memo}
+                                                onChange={(e) => setMemo(e.target.value)}
                                             />
                                         </div>
-                                    </div>
 
-                                    {/* Payment date */}
-                                    <div className="mb-4">
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Pay Date</label>
-                                        <div className="flex space-x-3">
-                                            <div className="flex items-center">
-                                                <input
-                                                    type="radio"
-                                                    id="now"
-                                                    name="paymentDate"
-                                                    value="now"
-                                                    checked={paymentDate === 'now'}
-                                                    onChange={() => setPaymentDate('now')}
-                                                    className="w-4 h-4 text-blue-600"
-                                                />
-                                                <label htmlFor="now" className="ml-2 text-sm text-gray-700">Today</label>
-                                            </div>
-                                            <div className="flex items-center">
-                                                <input
-                                                    type="radio"
-                                                    id="scheduled"
-                                                    name="paymentDate"
-                                                    value="scheduled"
-                                                    checked={paymentDate === 'scheduled'}
-                                                    onChange={() => setPaymentDate('scheduled')}
-                                                    className="w-4 h-4 text-blue-600"
-                                                />
-                                                <label htmlFor="scheduled" className="ml-2 text-sm text-gray-700">Schedule</label>
-                                            </div>
-                                        </div>
-
-                                        {paymentDate === 'scheduled' && (
-                                            <div className="mt-3">
-                                                <input
-                                                    type="date"
-                                                    className="block w-full p-3 bg-gray-50 border border-gray-300 rounded-lg"
-                                                    min={new Date().toISOString().split('T')[0]}
-                                                />
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    {/* Memo */}
-                                    <div className="mb-6">
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Memo (Optional)</label>
-                                        <input
-                                            type="text"
-                                            className="block w-full p-3 bg-gray-50 border border-gray-300 rounded-lg"
-                                            placeholder="Add a note"
-                                            value={memo}
-                                            onChange={(e) => setMemo(e.target.value)}
-                                        />
-                                    </div>
-
-                                    {/* Submit button */}
-                                    <button
-                                        type="submit"
-                                        className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
-                                        disabled={!amount || !selectedBiller}
-                                    >
-                                        Continue
-                                    </button>
-                                </form>
+                                        {/* Submit button */}
+                                        <button
+                                            type="submit"
+                                            className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:bg-blue-300 disabled:cursor-not-allowed"
+                                            disabled={!amount || !selectedBiller || !fromAccount || accounts.length === 0}
+                                        >
+                                            Continue
+                                        </button>
+                                    </form>
+                                )}
                             </div>
                         </div>
 
@@ -256,6 +331,20 @@ export default function Payments() {
                                     </Link>
                                 </div>
                             </div>
+
+                            {/* User info section when available */}
+                            {user && (
+                                <div className="mt-4 bg-blue-50 rounded-lg p-4 border border-blue-100">
+                                    <div className="flex items-start">
+                                        <div className="ml-1">
+                                            <h3 className="font-medium text-blue-800">Hello, {user.FirstName}</h3>
+                                            <p className="text-sm text-blue-700 mt-1">
+                                                You have {accounts.length} account{accounts.length !== 1 ? 's' : ''} available for payments.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
 
                             {/* Security tip */}
                             <div className="mt-4 bg-green-50 rounded-lg p-4 border border-green-100">
