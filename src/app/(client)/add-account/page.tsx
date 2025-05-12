@@ -1,3 +1,4 @@
+//add-account page
 "use client";
 
 import { useState } from 'react';
@@ -261,30 +262,6 @@ export default function AddAccount() {
                       A unique account ID will be generated when you proceed.
                     </p>
 
-                    {accountType === 'Checking' && (
-                      <div className="p-3 bg-blue-50 border border-blue-100 rounded-md mb-6">
-                        <h4 className="text-sm font-medium text-blue-800 mb-1">Checking Account Details</h4>
-                        <ul className="text-xs text-blue-700 space-y-1">
-                          <li>• Monthly fee: $5.00</li>
-                          <li>• Daily ATM withdrawal limit: $500.00</li>
-                          <li>• Daily purchase limit: $2,000.00</li>
-                          <li>• Includes overdraft protection</li>
-                        </ul>
-                      </div>
-                    )}
-
-                    {accountType === 'Savings' && (
-                      <div className="p-3 bg-blue-50 border border-blue-100 rounded-md mb-6">
-                        <h4 className="text-sm font-medium text-blue-800 mb-1">Savings Account Details</h4>
-                        <ul className="text-xs text-blue-700 space-y-1">
-                          <li>• No monthly fee</li>
-                          <li>• Daily ATM withdrawal limit: $250.00</li>
-                          <li>• Daily purchase limit: $1,000.00</li>
-                          <li>• No overdraft protection</li>
-                        </ul>
-                      </div>
-                    )}
-                    
                     <div className="flex justify-between">
                       <button
                         type="button"
@@ -343,12 +320,6 @@ export default function AddAccount() {
                       <div className="flex justify-between">
                         <span className="text-sm text-gray-500">Initial Balance:</span>
                         <span className="text-sm font-medium">$0.00</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm text-gray-500">Monthly Fee:</span>
-                        <span className="text-sm font-medium">
-                          {accountType === 'Checking' ? '$5.00' : '$0.00'}
-                        </span>
                       </div>
                     </div>
                     <div className="border-t border-gray-200 pt-4 mt-4">

@@ -1,37 +1,386 @@
+//transfers page 2
+
+//transfers page
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowUpRight, ChevronDown, Repeat, Globe } from 'lucide-react';
 import Sidebar from '@/components/client-sidebar';
 import Header from '@/components/client-header';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function Transfers() {
+    const router = useRouter();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [transferType, setTransferType] = useState('between');
-    const [fromAccount, setFromAccount] = useState('1');
-    const [toAccount, setToAccount] = useState('2');
+    const [fromAccount, setFromAccount] = useState('');
+    const [toAccount, setToAccount] = useState('');
     const [amount, setAmount] = useState('');
-    const [transferDate, setTransferDate] = useState('now');
     const [memo, setMemo] = useState('');
 
-    const accounts = [
-        { id: '1', name: "Checking Account", number: "****5678", balance: 4256.78 },
-        { id: '2', name: "Savings Account", number: "****9012", balance: 12785.45 },
-    ];
+    // New state variables for API data
+    const [accounts, setAccounts] = useState([]);
+    const [recentTransfers, setRecentTransfers] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [userName, setUserName] = useState('');
 
-    const recentTransfers = [
-        { id: 1, from: "Checking Account", to: "Savings Account", amount: 500, date: "Apr 20, 2025", status: "Completed" },
-        { id: 2, from: "Savings Account", to: "Checking Account", amount: 1200, date: "Apr 10, 2025", status: "Completed" },
-        { id: 3, from: "Checking Account", to: "James Smith", amount: 75, date: "Apr 5, 2025", status: "Completed" },
-        { id: 4, from: "Checking Account", to: "Savings Account", amount: 300, date: "Mar 27, 2025", status: "Completed" },
-    ];
+    // Format relative date helper function
+    const formatRelativeDate = (date) => {
+        // Simple implementation - can be expanded with a library like date-fns
+        const now = new Date();
+        const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
 
-    const handleSubmit = (e: { preventDefault: () => void; }) => {
-        e.preventDefault();
-        // Handle transfer submission logic here
-        alert(`Transfer submitted: $${amount} from ${accounts.find(acc => acc.id === fromAccount)?.name} to ${transferType === 'between' ? accounts.find(acc => acc.id === toAccount)?.name : 'External Account'}`);
+        if (diffDays === 0) {
+            return "Today";
+        } else if (diffDays === 1) {
+            return "Yesterday";
+        } else if (diffDays < 7) {
+            return `${diffDays} days ago`;
+        } else {
+            // Format as MMM DD, YYYY
+            return date.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            });
+        }
     };
+
+    useEffect(() => {
+        // Improved function to get the session ID from cookies in Next.js
+        const getSessionId = () => {
+            try {
+                // Next.js specific cookie handling can be tricky
+                // The cookie is set as httpOnly which means JavaScript can't directly access it
+                // But we can still check document.cookie for its existence
+
+                // Method 1: Try to check for cookie existence via document.cookie
+                const cookieString = document.cookie;
+                console.log('Cookie string:', cookieString);
+
+                // You might need to just fetch data and let the browser handle cookies
+                // Since httpOnly cookies are sent with requests but not accessible via JS
+
+                // The session_id in your API route is set up correctly as httpOnly
+                // We should rely on the browser to send it automatically with fetch
+                // But return a placeholder value to prevent redirect
+
+                return "session_exists"; // Placeholder to continue with fetch
+            } catch (error) {
+                console.error('Error accessing cookies:', error);
+                return null;
+            }
+        };
+
+        const fetchAccounts = async () => {
+            setIsLoading(true);
+            setError(null);
+
+            try {
+                // For httpOnly cookies, we don't need to manually extract the session
+                // The browser will automatically send cookies with requests to the same domain
+                const sessionId = getSessionId();
+
+                if (!sessionId) {
+                    console.error('No session detected');
+                    setError('Authentication failed. Please log in again.');
+                    router.push('/auth/login'); // Redirect to login page
+                    return;
+                }
+
+                // Let browser automatically include the httpOnly cookie
+                const response = await fetch('/api/accounts', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    // The browser will automatically include cookies
+                    credentials: 'include' // Important! This tells fetch to include cookies
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('Error fetching accounts:', errorData);
+
+                    if (response.status === 401 || response.status === 403) {
+                        router.push('/auth/login'); // Redirect to login on auth errors
+                        return;
+                    }
+
+                    throw new Error(errorData.message || 'Failed to fetch accounts');
+                }
+
+                const data = await response.json();
+                console.log('Fetched Accounts:', data);
+
+                if (Array.isArray(data.accounts)) {
+                    setAccounts(data.accounts);
+
+                    // Set default from and to accounts after loading
+                    if (data.accounts.length > 0) {
+                        setFromAccount(data.accounts[0].AccountID);
+
+                        if (data.accounts.length > 1) {
+                            setToAccount(data.accounts[1].AccountID);
+                        }
+                    }
+
+                    // Set user name if available
+                    if (data.user) {
+                        const fullName = [data.user.FirstName, data.user.LastName]
+                            .filter(Boolean)
+                            .join(' ');
+                        setUserName(fullName || data.user.Email || '');
+                    }
+                } else {
+                    throw new Error('Invalid accounts format received from server');
+                }
+            } catch (error) {
+                console.error('Failed to fetch accounts:', error);
+                setError(error.message || 'An error occurred while fetching your accounts');
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        const fetchTransactions = async () => {
+            try {
+                const response = await fetch('/api/customer-transaction', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include'
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('Error fetching transactions:', errorData);
+                    return;
+                }
+
+                const data = await response.json();
+                let allTransactions = [];
+
+                // Process transfers
+                if (data.transfers && Array.isArray(data.transfers)) {
+                    const formattedTransfers = data.transfers.map((transfer) => {
+                        // Format date
+                        const date = transfer.CreatedAt
+                            ? new Date(transfer.CreatedAt)
+                            : new Date();
+
+                        // Format relative date
+                        const formattedDate = formatRelativeDate(date);
+
+                        return {
+                            id: transfer.TransferID || Math.random().toString(36).substring(2, 15),
+                            from: transfer.fromAccount?.AccountID || 'Unknown Account',
+                            to: transfer.toAccount?.AccountID || 'Unknown Account',
+                            amount: transfer.Amount || 0,
+                            date: formattedDate,
+                            status: transfer.Status || 'Completed'
+                        };
+                    });
+
+                    allTransactions = [...allTransactions, ...formattedTransfers];
+                }
+
+                // Sort by date (newest first) and take the first 5
+                const sortedTransactions = allTransactions
+                    .sort((a, b) => {
+                        // If using the formatted strings might be tricky for sorting
+                        // This is a simplified approach - in production you might want to 
+                        // sort based on the original date objects
+                        return new Date(b.CreatedAt || 0).getTime() - new Date(a.CreatedAt || 0).getTime();
+                    })
+                    .slice(0, 5);
+
+                setRecentTransfers(sortedTransactions);
+            } catch (error) {
+                console.error('Failed to fetch transactions:', error);
+            }
+        };
+
+        fetchAccounts();
+        fetchTransactions();
+    }, [router]);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        // Validate inputs
+        if (!amount || isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
+            alert('Please enter a valid amount');
+            return;
+        }
+
+        if (transferType === 'between' && fromAccount === toAccount) {
+            alert('Please select different accounts for transfer');
+            return;
+        }
+
+        try {
+            let transferData = {
+                fromAccountId: fromAccount,
+                amount: parseFloat(amount),
+                memo: memo,
+                isImmediate: true // Always immediate now
+            };
+
+            if (transferType === 'between') {
+                transferData.toAccountId = toAccount;
+                transferData.transferType = 'internal';
+            } else {
+                // For external transfers
+                const accountNumberInput = document.querySelector('input[placeholder="Account Number"]');
+
+                if (!accountNumberInput) {
+                    alert('External account form elements not found');
+                    return;
+                }
+
+                transferData.transferType = 'external';
+                transferData.accountNumber = accountNumberInput.value;
+
+                // Validate external account details
+                if (!transferData.accountNumber) {
+                    alert('Please fill in all external account details');
+                    return;
+                }
+            }
+
+            // Submit the transfer
+            const response = await fetch('/api/transfers', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify(transferData)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Transfer failed');
+            }
+
+            const result = await response.json();
+            alert('Transfer successful! Reference: ' + result.transferId);
+
+            // Refresh the recent transfers list
+            fetchTransactions();
+
+            // Reset form
+            setAmount('');
+            setMemo('');
+        } catch (error) {
+            console.error('Transfer failed:', error);
+            alert(`Transfer failed: ${error.message}`);
+        }
+    };
+
+    // Helper function to fetch transactions - extracted for reuse
+    const fetchTransactions = async () => {
+        try {
+            const response = await fetch('/api/customer-transaction', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Error fetching transactions:', errorData);
+                return;
+            }
+
+            const data = await response.json();
+            let allTransactions = [];
+
+            // Process transfers
+            if (data.transfers && Array.isArray(data.transfers)) {
+                const formattedTransfers = data.transfers.map((transfer) => {
+                    // Format date
+                    const date = transfer.CreatedAt
+                        ? new Date(transfer.CreatedAt)
+                        : new Date();
+
+                    // Format relative date
+                    const formattedDate = formatRelativeDate(date);
+
+                    return {
+                        id: transfer.TransferID || Math.random().toString(36).substring(2, 15),
+                        from: transfer.fromAccount?.AccountID || 'Unknown Account',
+                        to: transfer.toAccount?.AccountID || 'Unknown Account',
+                        amount: transfer.Amount || 0,
+                        date: formattedDate,
+                        status: transfer.Status || 'Completed'
+                    };
+                });
+
+                allTransactions = [...allTransactions, ...formattedTransfers];
+            }
+
+            // Sort by date (newest first) and take the first 5
+            const sortedTransactions = allTransactions
+                .sort((a, b) => {
+                    // If using the formatted strings might be tricky for sorting
+                    // This is a simplified approach - in production you might want to 
+                    // sort based on the original date objects
+                    return new Date(b.CreatedAt || 0).getTime() - new Date(a.CreatedAt || 0).getTime();
+                })
+                .slice(0, 5);
+
+            setRecentTransfers(sortedTransactions);
+        } catch (error) {
+            console.error('Failed to fetch transactions:', error);
+        }
+    };
+
+    if (isLoading) {
+        return (
+            <div className="flex min-h-screen bg-gray-50">
+                <Sidebar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+                <main className="flex-1 md:ml-64">
+                    <Header title="Transfers" setIsMenuOpen={setIsMenuOpen} />
+                    <div className="p-4 md:p-6 flex justify-center items-center h-screen">
+                        <div className="text-center">
+                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+                            <p className="mt-4 text-gray-600">Loading your accounts...</p>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="flex min-h-screen bg-gray-50">
+                <Sidebar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+                <main className="flex-1 md:ml-64">
+                    <Header title="Transfers" setIsMenuOpen={setIsMenuOpen} />
+                    <div className="p-4 md:p-6">
+                        <div className="bg-red-50 p-4 rounded-lg border border-red-100 text-red-800">
+                            <h3 className="font-medium">Error</h3>
+                            <p>{error}</p>
+                            <button
+                                onClick={() => window.location.reload()}
+                                className="mt-2 px-4 py-2 bg-red-100 rounded-lg text-sm font-medium"
+                            >
+                                Try Again
+                            </button>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        );
+    }
 
     return (
         <div className="flex min-h-screen bg-gray-50">
@@ -88,8 +437,8 @@ export default function Transfers() {
                                                 onChange={(e) => setFromAccount(e.target.value)}
                                             >
                                                 {accounts.map(account => (
-                                                    <option key={account.id} value={account.id}>
-                                                        {account.name} (${account.balance.toLocaleString()})
+                                                    <option key={account.AccountID} value={account.AccountID}>
+                                                        {account.AccountType} Account (${parseFloat(account.Balance).toLocaleString()})
                                                     </option>
                                                 ))}
                                             </select>
@@ -110,8 +459,12 @@ export default function Transfers() {
                                                     onChange={(e) => setToAccount(e.target.value)}
                                                 >
                                                     {accounts.map(account => (
-                                                        <option key={account.id} value={account.id} disabled={account.id === fromAccount}>
-                                                            {account.name} (${account.balance.toLocaleString()})
+                                                        <option
+                                                            key={account.AccountID}
+                                                            value={account.AccountID}
+                                                            disabled={account.AccountID === fromAccount}
+                                                        >
+                                                            {account.AccountType} Account (${parseFloat(account.Balance).toLocaleString()})
                                                         </option>
                                                     ))}
                                                 </select>
@@ -119,16 +472,6 @@ export default function Transfers() {
 
                                             {transferType === 'external' && (
                                                 <div className="space-y-4">
-                                                    <input
-                                                        type="text"
-                                                        className="block w-full p-3 bg-gray-50 border border-gray-300 rounded-lg"
-                                                        placeholder="Bank Name"
-                                                    />
-                                                    <input
-                                                        type="text"
-                                                        className="block w-full p-3 bg-gray-50 border border-gray-300 rounded-lg"
-                                                        placeholder="Routing Number"
-                                                    />
                                                     <input
                                                         type="text"
                                                         className="block w-full p-3 bg-gray-50 border border-gray-300 rounded-lg"
@@ -160,48 +503,9 @@ export default function Transfers() {
                                                 onChange={(e) => setAmount(e.target.value)}
                                             />
                                         </div>
-                                    </div>
-
-                                    {/* Transfer date */}
-                                    <div className="mb-4">
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">When</label>
-                                        <div className="flex space-x-3">
-                                            <div className="flex items-center">
-                                                <input
-                                                    type="radio"
-                                                    id="now"
-                                                    name="transferDate"
-                                                    value="now"
-                                                    checked={transferDate === 'now'}
-                                                    onChange={() => setTransferDate('now')}
-                                                    className="w-4 h-4 text-blue-600"
-                                                />
-                                                <label htmlFor="now" className="ml-2 text-sm text-gray-700">Now</label>
-                                            </div>
-                                            <div className="flex items-center">
-                                                <input
-                                                    type="radio"
-                                                    id="scheduled"
-                                                    name="transferDate"
-                                                    value="scheduled"
-                                                    checked={transferDate === 'scheduled'}
-                                                    onChange={() => setTransferDate('scheduled')}
-                                                    className="w-4 h-4 text-blue-600"
-                                                />
-                                                <label htmlFor="scheduled" className="ml-2 text-sm text-gray-700">Schedule</label>
-                                            </div>
-
-                                        </div>
-
-                                        {transferDate === 'scheduled' && (
-                                            <div className="mt-3">
-                                                <input
-                                                    type="date"
-                                                    className="block w-full p-3 bg-gray-50 border border-gray-300 rounded-lg"
-                                                    min={new Date().toISOString().split('T')[0]}
-                                                />
-                                            </div>
-                                        )}
+                                        <p className="text-xs text-gray-500 mt-1">
+                                            Transfers under $100 are automatically approved.
+                                        </p>
                                     </div>
 
                                     {/* Memo */}
@@ -222,7 +526,7 @@ export default function Transfers() {
                                         className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
                                         disabled={!amount || (transferType === 'between' && fromAccount === toAccount)}
                                     >
-                                        Continue
+                                        Transfer Now
                                     </button>
                                 </form>
                             </div>
@@ -235,33 +539,39 @@ export default function Transfers() {
                                     <h2 className="font-semibold text-gray-800">Recent Transfers</h2>
                                 </div>
                                 <div className="divide-y divide-gray-200">
-                                    {recentTransfers.map(transfer => (
-                                        <div key={transfer.id} className="p-4">
-                                            <div className="flex items-center justify-between mb-2">
-                                                <div className="flex items-center">
-                                                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
-                                                        <ArrowUpRight className="w-4 h-4" />
+                                    {recentTransfers.length > 0 ? (
+                                        recentTransfers.map(transfer => (
+                                            <div key={transfer.id} className="p-4">
+                                                <div className="flex items-center justify-between mb-2">
+                                                    <div className="flex items-center">
+                                                        <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
+                                                            <ArrowUpRight className="w-4 h-4" />
+                                                        </div>
+                                                        <div className="ml-3">
+                                                            <p className="font-medium text-sm">{transfer.from}</p>
+                                                            <p className="text-xs text-gray-500">to {transfer.to}</p>
+                                                        </div>
                                                     </div>
-                                                    <div className="ml-3">
-                                                        <p className="font-medium text-sm">{transfer.from}</p>
-                                                        <p className="text-xs text-gray-500">to {transfer.to}</p>
-                                                    </div>
+                                                    <p className="font-medium text-sm">${parseFloat(transfer.amount).toFixed(2)}</p>
                                                 </div>
-                                                <p className="font-medium text-sm">${transfer.amount}</p>
+                                                <div className="flex justify-between text-xs text-gray-500">
+                                                    <span>{transfer.date}</span>
+                                                    <span>{transfer.status}</span>
+                                                </div>
                                             </div>
-                                            <div className="flex justify-between text-xs text-gray-500">
-                                                <span>{transfer.date}</span>
-                                                <span>{transfer.status}</span>
-                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="p-4 text-center text-gray-500">
+                                            No recent transfers found
                                         </div>
-                                    ))}
+                                    )}
                                 </div>
                                 <div className="p-4 border-t border-gray-200">
-                                    <button className="w-full py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium">
-                                        <Link href="/history" passHref>
+                                    <Link href="/history" passHref>
+                                        <button className="w-full py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium">
                                             View All Transfers
-                                        </Link>
-                                    </button>
+                                        </button>
+                                    </Link>
                                 </div>
                             </div>
 
@@ -275,11 +585,7 @@ export default function Transfers() {
                                     </li>
                                     <li className="flex items-start">
                                         <span className="mr-2">•</span>
-                                        <span>You can save contacts for frequent transfers</span>
-                                    </li>
-                                    <li className="flex items-start">
-                                        <span className="mr-2">•</span>
-                                        <span>Set up recurring transfers for regular expenses</span>
+                                        <span>Transfers under $100 are processed immediately</span>
                                     </li>
                                 </ul>
                             </div>

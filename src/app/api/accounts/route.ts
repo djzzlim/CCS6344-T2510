@@ -1,18 +1,18 @@
-// /api/accounts/route.js
+// /api/accounts/route.ts
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import { cookies } from 'next/headers';
 
 const prisma = new PrismaClient();
 
-export async function GET(request) {
+export async function GET(request: Request) {
   try {
     // Get session ID directly from cookies - Next.js server component way
     const cookieStore = await cookies();
     const sessionId = cookieStore.get('session_id')?.value;
     
     // Fallback: Check Authorization header
-    let authSessionId = null;
+    let authSessionId: string | null = null;
     const authHeader = request.headers.get('authorization');
     if (authHeader && authHeader.startsWith('Bearer ')) {
       authSessionId = authHeader.substring(7);
@@ -62,10 +62,16 @@ export async function GET(request) {
       );
     }
 
-    // Get user accounts
+    // Get user accounts (now excluding the removed columns)
     const accounts = await prisma.account.findMany({
       where: {
         UserID: session.user.UserID
+      },
+      select: {
+        AccountID: true,
+        Status: true,
+        Balance: true,
+        AccountType: true
       }
     });
 

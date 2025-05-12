@@ -37,7 +37,7 @@ export async function GET(req: NextRequest) {
       await prisma.session.delete({
         where: { SessionID: sessionId }
       });
-      
+
       return NextResponse.json(
         { error: 'Session expired' },
         { status: 401 }
@@ -69,6 +69,11 @@ export async function GET(req: NextRequest) {
           { ToAccountID: { in: accountIds } }
         ]
       },
+      include: {
+        fromAccount: true,
+        toAccount: true
+      }
+      ,
       orderBy: {
         CreatedAt: 'desc'
       },
@@ -94,14 +99,14 @@ export async function GET(req: NextRequest) {
     const processedTransfers = transfers.map(transfer => {
       // Check if this transfer is outgoing from the user's account
       const isOutgoing = accountIds.includes(transfer.FromAccountID);
-      
+
       // For outgoing transfers, make amount negative (money leaving account)
       // For incoming transfers, keep amount positive (money entering account)
       const amount = isOutgoing ? -Number(transfer.Amount) : Number(transfer.Amount);
 
       // Determine source/destination account names (for better descriptions)
       let description = transfer.Description || 'Transfer';
-      
+
       return {
         ...transfer,
         // Handle BigInt/Decimal conversion for JSON serialization
