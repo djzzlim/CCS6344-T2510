@@ -23,8 +23,8 @@ export async function POST(req: Request) {
     }
     
     // Get session cookie
-    const cookieStore = await cookies();
-    const sessionId = (await cookieStore).get('session_id')?.value;
+    const cookieStore = cookies();
+    const sessionId = cookieStore.get('session_id')?.value;
     
     if (!sessionId) {
       return NextResponse.json({ 
@@ -54,24 +54,15 @@ export async function POST(req: Request) {
     const randomDigits = Math.floor(10000000 + Math.random() * 90000000).toString();
     const accountId = `${prefix}-${randomDigits}`;
     
-    // Set account properties based on type
-    const monthlyFee = accountType === 'Checking' ? 5.00 : 0.00;
-    const dailyATMLimit = accountType === 'Checking' ? 500.00 : 250.00;
-    const dailyPurchaseLimit = accountType === 'Checking' ? 2000.00 : 1000.00;
-    const overdraftProtection = accountType === 'Checking';
-    
     // Create the account - ensure accountType is explicitly set to the correctly capitalized string
+    // Only include fields that exist in your schema
     const account = await prisma.account.create({
       data: {
         AccountID: accountId,
         UserID: session.UserID,
-        AccountType: accountType, // This should now be properly capitalized
+        AccountType: accountType,
         Balance: 0,
         Status: 'Active',
-        MonthlyFee: monthlyFee,
-        DailyATMLimit: dailyATMLimit, 
-        DailyPurchaseLimit: dailyPurchaseLimit,
-        OverdraftProtection: overdraftProtection
       }
     });
     
@@ -80,7 +71,7 @@ export async function POST(req: Request) {
       data: {
         actor_type: session.user.Role,
         actor_id: session.UserID,
-        action: `Created ${accountType} account`, // Properly capitalized in the log
+        action: `Created ${accountType} account`,
         target_id: accountId,
         status: 'success'
       }
@@ -91,11 +82,7 @@ export async function POST(req: Request) {
       account: {
         id: account.AccountID,
         type: account.AccountType,
-        balance: account.Balance,
-        monthlyFee: account.MonthlyFee,
-        dailyATMLimit: account.DailyATMLimit,
-        dailyPurchaseLimit: account.DailyPurchaseLimit,
-        overdraftProtection: account.OverdraftProtection
+        balance: account.Balance
       }
     }, { status: 201 });
     
@@ -104,7 +91,7 @@ export async function POST(req: Request) {
     
     // Add failed audit log if possible
     try {
-      const sessionId = (await cookies()).get('session_id')?.value;
+      const sessionId = cookies().get('session_id')?.value;
       if (sessionId) {
         const session = await prisma.session.findUnique({
           where: { SessionID: sessionId }
