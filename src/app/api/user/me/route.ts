@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
 
 export async function GET(req: Request) {
-    const sessionId = cookies().get('session_id')?.value;
+    const sessionId = (await cookies()).get('session_id')?.value;
 
     if (!sessionId) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

@@ -11,20 +11,33 @@ interface Session {
  */
 export async function getCurrentUserId(req?: NextRequest): Promise<string | null> {
   try {
+    let sessionValue: string | undefined;
+    
+    // Extract the cookie based on the context
     if (req) {
+      // Using the request directly
       const sessionCookie = req.cookies.get('user_session');
-      if (sessionCookie) {
-        const session: Session = JSON.parse(sessionCookie.value);
-        return session.userId;
-      }
+      sessionValue = sessionCookie?.value;
     } else {
-      const cookieStore = cookies(); // Allowed here because it's inside a server function
+      // Using the Next.js cookies API
+      const cookieStore = cookies();
       const sessionCookie = cookieStore.get('user_session');
-      if (sessionCookie) {
-        const session: Session = JSON.parse(sessionCookie.value);
-        return session.userId;
+      sessionValue = sessionCookie?.value;
+    }
+
+    // If we have a session value, try to parse it
+    if (sessionValue) {
+      try {
+        const session = JSON.parse(sessionValue) as Session;
+        // Validate that the session has the expected structure
+        if (session && typeof session === 'object' && 'userId' in session) {
+          return session.userId;
+        }
+      } catch (parseError) {
+        console.error('Error parsing session cookie:', parseError);
       }
     }
+    
     return null;
   } catch (error) {
     console.error('Error getting current user ID:', error);

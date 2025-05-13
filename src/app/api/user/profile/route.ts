@@ -1,51 +1,55 @@
-// api/user/profile/route.ts
+// api/user/profile/route.ts (Updated version)
 import { NextRequest, NextResponse } from "next/server";
 import prisma from '@/lib/prisma';
-import { getCurrentUserId } from "@/lib/auth";
+import { cookies } from 'next/headers';
 
 // GET endpoint to fetch user profile data
 export async function GET(req: NextRequest) {
   try {
-    // Get the authenticated user's ID
-    const userId = await getCurrentUserId(req);
-    
-    // Check if user is authenticated
-    if (!userId) {
+    // Get the session ID from cookies
+    const sessionId = (await cookies()).get('session_id')?.value;
+
+    // Check if session exists
+    if (!sessionId) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
       );
     }
 
-    // Fetch user data from the database
-    const user = await prisma.user.findUnique({
-      where: {
-        UserID: userId,
-      },
-      select: {
-        UserID: true,
-        Email: true,
-        FirstName: true,
-        LastName: true,
-        ContactNumber: true,
-        AddressLine1: true,
-        AddressLine2: true,
-        City: true,
-        State: true,
-        ZipCode: true,
-        DateOfBirth: true,
-        // Not returning sensitive data like PasswordHash
-      },
+    // Find the session and include the associated user
+    const session = await prisma.session.findUnique({
+      where: { SessionID: sessionId },
+      include: {
+        user: {
+          select: {
+            UserID: true,
+            Email: true,
+            FirstName: true,
+            LastName: true,
+            ContactNumber: true,
+            AddressLine1: true,
+            AddressLine2: true,
+            City: true,
+            State: true,
+            ZipCode: true,
+            DateOfBirth: true,
+            Role: true,
+            // Not selecting PasswordHash
+          }
+        }
+      }
     });
 
-    if (!user) {
+    if (!session || !session.user) {
       return NextResponse.json(
-        { error: "User not found" },
-        { status: 404 }
+        { error: "Session not found or invalid" },
+        { status: 401 }
       );
     }
 
-    return NextResponse.json(user);
+    // Return user profile data
+    return NextResponse.json(session.user);
   } catch (error) {
     console.error("Error fetching user profile:", error);
     return NextResponse.json(
@@ -58,16 +62,37 @@ export async function GET(req: NextRequest) {
 // PUT endpoint to update user profile data
 export async function PUT(req: NextRequest) {
   try {
-    // Get the authenticated user's ID
-    const userId = await getCurrentUserId(req);
-    
-    // Check if user is authenticated
-    if (!userId) {
+    // Get the session ID from cookies
+    const sessionId = cookies().get('session_id')?.value;
+
+    // Check if session exists
+    if (!sessionId) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
       );
     }
+
+    // Find the session to get the user ID
+    const session = await prisma.session.findUnique({
+      where: { SessionID: sessionId },
+      select: {
+        user: {
+          select: {
+            UserID: true
+          }
+        }
+      }
+    });
+
+    if (!session || !session.user) {
+      return NextResponse.json(
+        { error: "Session not found or invalid" },
+        { status: 401 }
+      );
+    }
+
+    const userId = session.user.UserID;
 
     // Parse the request body
     const data = await req.json();
@@ -98,7 +123,7 @@ export async function PUT(req: NextRequest) {
         City: true,
         State: true,
         ZipCode: true,
-        // Not returning sensitive data like PasswordHash
+        Role: true,
       },
     });
 
