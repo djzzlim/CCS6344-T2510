@@ -157,14 +157,6 @@ export default function Sidebar({ isMenuOpen, setIsMenuOpen }: SidebarProps) {
                             <span className="text-sm">Profile</span>
                         </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                        <Link
-                            href="/settings"
-                            className="flex items-center space-x-2 w-full h-full"
-                        >
-                            <span className="text-sm">Settings</span>
-                        </Link>
-                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600" onClick={handleLogout}>
                         <LogOut className="mr-2 h-4 w-4" />
