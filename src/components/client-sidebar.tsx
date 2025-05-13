@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from 'react';
 import {
     ArrowDownRight,
     ArrowUpRight,
@@ -29,6 +30,13 @@ type SidebarProps = {
     setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
+type UserProfile = {
+    firstName: string;
+    lastName: string;
+    email: string;
+    role: string;
+};
+
 const navLinks = [
     { path: "/dashboard", label: "Dashboard", icon: PieChart },
     { path: "/accounts", label: "Accounts", icon: CreditCard },
@@ -40,6 +48,32 @@ const navLinks = [
 export default function Sidebar({ isMenuOpen, setIsMenuOpen }: SidebarProps) {
     const router = useRouter();
     const pathname = usePathname();
+    const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            try {
+                const response = await fetch('/api/user/me');
+                
+                if (!response.ok) {
+                    // If unauthorized, redirect to login
+                    router.push('/auth/login');
+                    return;
+                }
+
+                const userData = await response.json();
+                setUserProfile(userData);
+            } catch (error) {
+                console.error('Error fetching user profile:', error);
+                router.push('/auth/login');
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchUserProfile();
+    }, [router]);
 
     const isActive = (path: string) => pathname === path;
 
@@ -81,46 +115,69 @@ export default function Sidebar({ isMenuOpen, setIsMenuOpen }: SidebarProps) {
         </ul>
     );
 
-    const UserProfile = () => (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+    const UserProfile = () => {
+        if (isLoading || !userProfile) {
+            return (
                 <Button variant="ghost" className="w-full p-0 h-auto hover:bg-gray-100 rounded-lg">
                     <div className="flex items-center gap-3 p-2 w-full">
                         <Avatar className="h-10 w-10">
-                            <AvatarFallback>SJ</AvatarFallback>
+                            <AvatarFallback>...</AvatarFallback>
                         </Avatar>
                         <div className="text-left">
-                            <p className="text-sm font-medium">Sarah Johnson</p>
-                            <p className="text-xs text-gray-500">sarah.j@example.com</p>
+                            <p className="text-sm font-medium">Loading...</p>
                         </div>
                     </div>
                 </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuItem asChild>
-                    <Link
-                        href="/profile"
-                        className="flex items-center space-x-2 w-full h-full"
-                    >
-                        <span className="text-sm">Profile</span>
-                    </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                    <Link
-                        href="/settings"
-                        className="flex items-center space-x-2 w-full h-full"
-                    >
-                        <span className="text-sm">Settings</span>
-                    </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600" onClick={handleLogout}>
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Log out
-                </DropdownMenuItem>
-            </DropdownMenuContent>
-        </DropdownMenu>
-    );
+            );
+        }
+
+        return (
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="w-full p-0 h-auto hover:bg-gray-100 rounded-lg">
+                        <div className="flex items-center gap-3 p-2 w-full">
+                            <Avatar className="h-10 w-10">
+                                <AvatarFallback>
+                                    {userProfile.firstName[0]}{userProfile.lastName[0]}
+                                </AvatarFallback>
+                            </Avatar>
+                            <div className="text-left">
+                                <p className="text-sm font-medium">{userProfile.firstName} {userProfile.lastName}</p>
+                                <p className="text-xs text-gray-500">{userProfile.email}</p>
+                            </div>
+                        </div>
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                    <DropdownMenuItem asChild>
+                        <Link
+                            href="/profile"
+                            className="flex items-center space-x-2 w-full h-full"
+                        >
+                            <span className="text-sm">Profile</span>
+                        </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                        <Link
+                            href="/settings"
+                            className="flex items-center space-x-2 w-full h-full"
+                        >
+                            <span className="text-sm">Settings</span>
+                        </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600" onClick={handleLogout}>
+                        <LogOut className="mr-2 h-4 w-4" />
+                        Log out
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        );
+    };
+
+    if (isLoading) {
+        return null; // Or a loading spinner
+    }
 
     return (
         <>

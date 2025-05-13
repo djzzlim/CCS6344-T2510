@@ -155,7 +155,7 @@ export async function POST(req: NextRequest) {
     const isAutoApproved = Amount < 100;
     
     // Now all transfers are immediate, with status depending on amount
-    const transferStatus = isAutoApproved ? 'Completed' : 'Pending Approval';
+    const transferStatus = isAutoApproved ? 'Completed' : 'Pending';
 
     // Use database transaction to ensure atomicity
     const result = await prisma.$transaction(async (prisma) => {
