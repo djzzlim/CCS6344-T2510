@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
   try {
     // Get session ID from cookies
     const cookieStore = cookies();
-    const sessionId = cookieStore.get('session_id')?.value;
+    const sessionId = (await cookieStore).get('session_id')?.value;
 
     if (!sessionId) {
       return NextResponse.json(
