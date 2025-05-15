@@ -7,9 +7,10 @@ const prisma = new PrismaClient();
 // GET - Get a user by ID
 export async function GET(
   request: Request,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
+    const { userId: targetUserId } = await params;
     const userId = await getCurrentUserId();
 
     if (!userId) {
@@ -29,7 +30,7 @@ export async function GET(
 
     // Get requested user
     const user = await prisma.user.findUnique({
-      where: { UserID: params.userId },
+      where: { UserID: targetUserId },
       include: {
         accounts: true
       }
@@ -45,7 +46,7 @@ export async function GET(
         actor_type: 'Admin',
         actor_id: currentUser.UserID,
         action: 'Viewed user details',
-        target_id: params.userId,
+        target_id: targetUserId,
         status: 'success'
       }
     });
@@ -65,9 +66,10 @@ export async function GET(
 // PUT - Update a user
 export async function PUT(
   request: Request,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
+    const { userId: targetUserId } = await params;
     const userId = await getCurrentUserId();
 
     if (!userId) {
@@ -102,7 +104,7 @@ export async function PUT(
 
     // Check if user exists
     const userExists = await prisma.user.findUnique({
-      where: { UserID: params.userId }
+      where: { UserID: targetUserId }
     });
 
     if (!userExists) {
@@ -111,7 +113,7 @@ export async function PUT(
 
     // Update user
     const updatedUser = await prisma.user.update({
-      where: { UserID: params.userId },
+      where: { UserID: targetUserId },
       data: {
         Email: email,
         FirstName: firstName,
@@ -133,7 +135,7 @@ export async function PUT(
         actor_type: 'Admin',
         actor_id: currentUser.UserID,
         action: 'Updated user',
-        target_id: params.userId,
+        target_id: targetUserId,
         status: 'success'
       }
     });
@@ -153,9 +155,10 @@ export async function PUT(
 // DELETE - Delete a user
 export async function DELETE(
   request: Request,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
+    const { userId: targetUserId } = await params;
     const userId = await getCurrentUserId();
 
     if (!userId) {
@@ -175,7 +178,7 @@ export async function DELETE(
 
     // Check if user exists
     const userExists = await prisma.user.findUnique({
-      where: { UserID: params.userId }
+      where: { UserID: targetUserId }
     });
 
     if (!userExists) {
@@ -184,17 +187,17 @@ export async function DELETE(
 
     // Delete user's accounts first (due to foreign key constraints)
     await prisma.account.deleteMany({
-      where: { UserID: params.userId }
+      where: { UserID: targetUserId }
     });
 
     // Delete user's sessions
     await prisma.session.deleteMany({
-      where: { UserID: params.userId }
+      where: { UserID: targetUserId }
     });
 
     // Delete user
     await prisma.user.delete({
-      where: { UserID: params.userId }
+      where: { UserID: targetUserId }
     });
 
     // Log deletion for audit
@@ -203,7 +206,7 @@ export async function DELETE(
         actor_type: 'Admin',
         actor_id: currentUser.UserID,
         action: 'Deleted user',
-        target_id: params.userId,
+        target_id: targetUserId,
         status: 'success'
       }
     });

@@ -308,24 +308,19 @@ export default function Payments() {
                                 ) : (
                                     recentPayments.slice(0, 3).map(payment => {
                                         // Format date similar to transfers component
-                                        const formatRelativeDate = (dateString) => {
+                                        const formatRelativeDate = (dateString: string) => {
                                             const date = new Date(dateString);
                                             const now = new Date();
-                                            const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+                                            const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
 
-                                            if (diffDays === 0) {
-                                                return "Today";
-                                            } else if (diffDays === 1) {
-                                                return "Yesterday";
-                                            } else if (diffDays < 7) {
-                                                return `${diffDays} days ago`;
-                                            } else {
-                                                return date.toLocaleDateString('en-US', {
-                                                    month: 'short',
-                                                    day: 'numeric',
-                                                    year: 'numeric'
-                                                });
-                                            }
+                                            if (diffDays === 0) return 'Today';
+                                            if (diffDays === 1) return 'Yesterday';
+                                            if (diffDays < 7) return `${diffDays} days ago`;
+                                            
+                                            return date.toLocaleDateString('en-US', {
+                                                month: 'short',
+                                                day: 'numeric'
+                                            });
                                         };
 
                                         return (

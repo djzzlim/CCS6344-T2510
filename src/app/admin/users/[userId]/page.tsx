@@ -29,9 +29,13 @@ interface User {
   }[];
 }
 
-export default function EditUserPage({ params }: { params: { userId: string } }) {
+interface PageProps {
+  params: Promise<{ userId: string }>;
+}
+
+export default function EditUserPage({ params }: PageProps) {
   const router = useRouter();
-  const userId = use(Promise.resolve(params.userId));
+  const { userId } = use(params);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
