@@ -228,7 +228,12 @@ export default function OfficerDashboard() {
       });
 
       if (response.ok) {
-        router.refresh(); // Refresh the current route
+        // Refresh the data by calling fetchTransactions instead of router.refresh()
+        await fetchTransactions();
+        // If we were viewing a transaction detail, reset it
+        if (selectedTransaction?.id === transactionId) {
+          setSelectedTransaction(null);
+        }
       } else {
         throw new Error('Failed to approve transaction');
       }
@@ -248,7 +253,12 @@ export default function OfficerDashboard() {
       });
 
       if (response.ok) {
-        router.refresh(); // Refresh the current route
+        // Refresh the data by calling fetchTransactions instead of router.refresh()
+        await fetchTransactions();
+        // If we were viewing a transaction detail, reset it
+        if (selectedTransaction?.id === transactionId) {
+          setSelectedTransaction(null);
+        }
       } else {
         throw new Error('Failed to reject transaction');
       }
@@ -258,12 +268,11 @@ export default function OfficerDashboard() {
     }
   };
 
-
   const handleViewCustomer = () => {
     // Set loading state while fetching customer details
     setCustomerLoading(true);
     setCustomerError(null);
-    
+
     // If we already have the transaction data, convert it to the Customer format
     if (selectedTransaction) {
       const transaction = selectedTransaction;
@@ -273,7 +282,7 @@ export default function OfficerDashboard() {
         email: transaction.user.email,
         phone: transaction.user.phone || 'N/A',
         address: transaction.user.address || 'N/A',
-        accountOpenDate: transaction.user.accountOpenDate ? 
+        accountOpenDate: transaction.user.accountOpenDate ?
           formatDate(transaction.user.accountOpenDate, true) : 'N/A',
         accounts: transaction.user.accounts.map(account => ({
           accountId: account.id,
@@ -294,7 +303,7 @@ export default function OfficerDashboard() {
           }
         ]
       };
-      
+
       setSelectedCustomer(customer);
       setShowCustomerDetails(true);
       setCustomerLoading(false);
@@ -385,7 +394,7 @@ export default function OfficerDashboard() {
 
         <div className="flex-1 overflow-auto p-4">
           {showCustomerDetails && selectedCustomer ? (
-            <CustomerDetails 
+            <CustomerDetails
               title='Transaction Queue'
               selectedCustomer={selectedCustomer}
               setSelectedCustomer={() => {
@@ -477,7 +486,7 @@ export default function OfficerDashboard() {
                                 'bg-red-100 text-red-800'}`}>
                             {transaction.status === 'pending' ?
                               <Clock className="w-3 h-3 mr-1 mt-0.5" /> :
-                              transaction.status === 'approved' || 'completed'?
+                              transaction.status === 'approved' || 'completed' ?
                                 <CheckCircle className="w-3 h-3 mr-1 mt-0.5" /> :
                                 <XCircle className="w-3 h-3 mr-1 mt-0.5" />
                             }

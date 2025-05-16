@@ -102,7 +102,6 @@ export default function Sidebar({ isMenuOpen, setIsMenuOpen }: SidebarProps) {
         { path: '/admin/users', label: 'Users', icon: Users },
         { path: '/admin/accounts', label: 'Accounts', icon: CreditCard },
         { path: '/admin/audit', label: 'Audit Logs', icon: AlertCircle },
-        { path: '/admin/settings', label: 'Settings', icon: Settings },
     ];
 
     const NavList = () => (

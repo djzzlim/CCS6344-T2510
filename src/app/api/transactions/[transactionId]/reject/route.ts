@@ -79,6 +79,7 @@ export async function PATCH(request: Request, props: { params: Promise<{ transac
   } catch (error) {
     console.error('[REJECT_TRANSFER_ERROR]', error);
 
+
     // Attempt to log audit FAILURE
     try {
       const sessionId = (await cookies()).get('session_id')?.value;
