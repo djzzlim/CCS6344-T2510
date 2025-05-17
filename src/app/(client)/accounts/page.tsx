@@ -7,13 +7,20 @@ import Header from '@/components/client-header';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+interface Account {
+  AccountID: string;
+  AccountType: string;
+  Balance: number;
+  Status: string;
+}
+
 export default function AccountsPage() {
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('all');
-  const [accounts, setAccounts] = useState([]);
+  const [accounts, setAccounts] = useState<Account[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [userName, setUserName] = useState('');
 
   useEffect(() => {
@@ -96,7 +103,7 @@ export default function AccountsPage() {
         } else {
           throw new Error('Invalid accounts format received from server');
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error('Failed to fetch accounts:', error);
         setError(error.message || 'An error occurred while fetching your accounts');
       } finally {

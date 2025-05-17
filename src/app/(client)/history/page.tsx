@@ -7,6 +7,57 @@ import { useRouter } from 'next/navigation';
 import Sidebar from '@/components/client-sidebar';
 import Header from '@/components/client-header';
 
+interface Account {
+  AccountID: string;
+  AccountType: string;
+  Balance: number;
+  Status: string;
+}
+
+interface Transfer {
+  TransferID: string;
+  FromAccountID: string;
+  ToAccountID: string;
+  Amount: number;
+  Description?: string;
+  CreatedAt: string;
+  Status?: string;
+}
+
+interface Payment {
+  PaymentID: string;
+  AccountID: string;
+  Amount: number;
+  Description?: string;
+  Timestamp: string;
+  UtilityID?: string;
+  utility?: {
+    AccountName: string;
+  };
+}
+
+interface Income {
+  IncomeID: string;
+  AccountID: string;
+  Amount: number;
+  Description?: string;
+  Timestamp: string;
+}
+
+interface CombinedTransaction {
+  id: string;
+  date: string;
+  timestamp: Date;
+  description: string;
+  category?: string;
+  amount: number;
+  type: 'transfer' | 'payment' | 'income';
+  accountId: string;
+  status: string;
+  utilityId?: string;
+  raw: any;
+}
+
 export default function History() {
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -19,9 +70,13 @@ export default function History() {
 
   // State variables for API data
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [accounts, setAccounts] = useState([]);
-  const [transactions, setTransactions] = useState({ transfers: [], payments: [], incomes: [] });
+  const [error, setError] = useState<string | null>(null);
+  const [accounts, setAccounts] = useState<Account[]>([]);
+  const [transactions, setTransactions] = useState<{
+    transfers: Transfer[];
+    payments: Payment[];
+    incomes: Income[];
+  }>({ transfers: [], payments: [], incomes: [] });
   const [userName, setUserName] = useState('');
 
   useEffect(() => {
@@ -67,7 +122,7 @@ export default function History() {
         } else {
           throw new Error('Invalid accounts format received from server');
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error('Failed to fetch accounts:', error);
         setError(error.message || 'An error occurred while fetching your accounts');
       }
@@ -99,7 +154,7 @@ export default function History() {
         const data = await response.json();
         console.log('Fetched Transactions:', data);
         setTransactions(data);
-      } catch (error) {
+      } catch (error: any) {
         console.error('Failed to fetch transactions:', error);
         setError(error.message || 'An error occurred while fetching your transactions');
       } finally {
@@ -120,7 +175,7 @@ export default function History() {
   // Fix in the combineTransactions function to properly handle transfer amounts
 
 const combineTransactions = () => {
-  const combined = [];
+  const combined: CombinedTransaction[] = [];
 
   // Process transfers
   if (transactions.transfers && transactions.transfers.length > 0) {
@@ -199,7 +254,7 @@ const combineTransactions = () => {
   }
 
   // Sort by date (newest first)
-  return combined.sort((a, b) => b.timestamp - a.timestamp);
+  return combined.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
 };
 
   const allTransactions = combineTransactions();
@@ -264,17 +319,9 @@ const combineTransactions = () => {
   };
 
   // Helper function to get account information
-  const getAccountName = (accountId) => {
-    const account = accounts.find(acc => acc.AccountID === accountId);
-
-    if (!account) return 'Unknown Account';
-
-    // Based on your Prisma schema, accounts might not have AccountName and AccountNumber fields
-    // Instead, we'll display account type and last 4 of the ID
-    const accountType = account.AccountType || 'Account';
-    const lastFour = account.AccountID.slice(-4).padStart(4, '*');
-
-    return `${accountType} (${lastFour})`;
+  const getAccountName = (accountId: string) => {
+    const account = accounts.find((acc) => acc.AccountID === accountId);
+    return account ? `${account.AccountType} (${account.AccountID})` : 'Unknown Account';
   };
 
   // Loading state

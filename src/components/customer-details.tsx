@@ -77,15 +77,6 @@ export default function CustomerDetails({
                     <ArrowLeft className="w-4 h-4 mr-1" />
                     Back to {title}
                 </button>
-                <div className="flex space-x-3">
-                    <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 flex items-center">
-                        <Download className="w-4 h-4 mr-2" />
-                        Export Profile
-                    </button>
-                    <Link href={`/edit-customer/${selectedCustomer.id}`} className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                        Edit Profile
-                    </Link>
-                </div>
             </div>
 
             <div className="mb-6">

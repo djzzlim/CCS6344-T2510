@@ -27,6 +27,14 @@ interface Transfer {
   TransferType?: string;
 }
 
+interface Payment {
+  PaymentID: string;
+  Amount?: number;
+  Description?: string;
+  UtilityName?: string;
+  Timestamp?: string;
+}
+
 // Combined type for all transactions display
 interface Transaction {
   id: string;
@@ -126,7 +134,7 @@ export default function Home() {
         } else {
           throw new Error('Invalid accounts format received from server');
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error('Failed to fetch accounts:', error);
         setError(error.message || 'An error occurred while fetching your accounts');
       } finally {
@@ -151,7 +159,7 @@ export default function Home() {
         }
 
         const data = await response.json();
-        let allTransactions = [];
+        let allTransactions: Transaction[] = [];
 
         // Process transfers
         if (data.transfers && Array.isArray(data.transfers)) {
@@ -179,7 +187,7 @@ export default function Home() {
 
         // Process payments
         if (data.payments && Array.isArray(data.payments)) {
-          const formattedPayments = data.payments.map((payment) => {
+          const formattedPayments = data.payments.map((payment: Payment) => {
             // Format date
             const date = payment.Timestamp
               ? new Date(payment.Timestamp)
@@ -207,7 +215,7 @@ export default function Home() {
           .slice(0, 5);
 
         setTransactions(sortedTransactions);
-      } catch (error) {
+      } catch (error: any) {
         console.error('Failed to fetch transactions:', error);
       }
     };

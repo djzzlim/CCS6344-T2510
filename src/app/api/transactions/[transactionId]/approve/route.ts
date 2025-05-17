@@ -98,7 +98,8 @@ export async function PATCH(request: Request, props: { params: Promise<{ transac
       }),
     ]);
 
-    // Add audit log (SUCCESS)
+
+    // // Add audit log (SUCCESS)
     await prisma.aUDIT_LOGS.create({
       data: {
         actor_type: user.Role,
@@ -147,4 +148,5 @@ export async function PATCH(request: Request, props: { params: Promise<{ transac
       { status: 500 }
     );
   }
+
 }
